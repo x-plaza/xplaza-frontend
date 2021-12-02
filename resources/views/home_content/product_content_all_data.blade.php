@@ -37,9 +37,9 @@
                             </a>
                         </div>
                         <div class="product-content">
-                            <a href="#" class="cata">Catagory</a>
+                            <!-- <a href="#" class="cata">Catagory</a> -->
                             <h6><a href="product-detail.html" class="product-title">{{$product->name}}
-                                    Graves</a><span class="quantity_custom">{{$product->product_var_type_value." ".$product->product_var_type_name}}</span></h6>
+                                </a><span class="quantity_custom">{{$product->product_var_type_value." ".$product->product_var_type_name}}</span></h6>
 
                             <div class="d-flex justify-content-between align-items-center">
                                 <div class="price">{{$product->selling_price ." ". $product->currency_name}}</div>
