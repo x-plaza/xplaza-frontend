@@ -3,3 +3,5 @@
 storage/debugbar/
 
 /.idea
+
+/node_modules
