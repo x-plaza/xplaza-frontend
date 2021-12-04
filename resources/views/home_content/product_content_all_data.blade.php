@@ -21,11 +21,18 @@
                             <a class="product_modal_open_button" data-itemcode="{{$product->id}}"
                                data-itemimage="{{$imagePath}}"
                                data-itemdetails="{{$product->description}}"
-                               data-itemprice="{{$product->selling_price ." ". $product->currency_name}}"
+                               <?php if($product->discounted_price):?>
+                               data-itemprice="{{ $product->currency_sign." ". $product->discounted_price}} <del>{{$product->currency_sign ." ". $product->selling_price}}</del>"
+                               <?php else:?>
+                               data-itemprice="{{ $product->currency_sign." ". $product->selling_price}}"
+                               <?php endif;?>
                                data-itemquantity="{{$product->product_var_type_value." ".$product->product_var_type_name}}"
-                               data-itemname="{{$product->name}}" onclick="openModal()"><img src="{{$imagePath}}"
-                                                                                             alt="product"></a>
-                            <span class="batch sale">Sale</span>
+                               data-itemname="{{$product->name}}" onclick="openModal()">
+                               <img src="{{$imagePath}}" alt="product">
+                            </a>
+                            @if($product->discounted_price)
+                                    <span class="batch sale">Sale</span>
+                            @endif
                             <a class="wish-link" href="#">
                                 <svg aria-hidden="true" focusable="false" data-prefix="fas"
                                      data-icon="heart" class="svg-inline--fa fa-heart fa-w-16"
@@ -42,7 +49,18 @@
                                 </a><span class="quantity_custom">{{$product->product_var_type_value." ".$product->product_var_type_name}}</span></h6>
 
                             <div class="d-flex justify-content-between align-items-center">
-                                <div class="price">{{$product->selling_price ." ". $product->currency_name}}</div>
+
+                                @if($product->discounted_price == null)
+                                    <div class="price">
+                                        {{$product->currency_sign ." ". $product->selling_price}}
+                                    </div>
+                                @else
+                                    <div class="price">
+                                        {{$product->currency_sign ." ". $product->discounted_price}} <del>{{$product->currency_sign ." ". $product->selling_price}}</del>
+                                    </div>
+                                @endif
+
+                                <!-- <div class="price">{{$product->selling_price ." ". $product->currency_name}}</div> -->
 
                                 <div class="cart-btn-toggle cart-btn-custom add_to_cart_button"
                                      data-itemcode="{{$product->id}}"

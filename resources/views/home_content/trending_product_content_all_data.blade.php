@@ -21,11 +21,19 @@
                             <a class="product_modal_open_button" data-itemcode="{{$product->id}}"
                                data-itemimage="{{$imagePath}}"
                                data-itemdetails="{{$product->description}}"
-                               data-itemprice="{{$product->selling_price ." ". $product->currency_name}}"
+                               <?php if($product->discounted_price):?>
+                               data-itemprice="{{ $product->currency_sign." ". $product->discounted_price}} <del>{{$product->currency_sign ." ". $product->selling_price}}</del>"
+                               <?php else:?>
+                               data-itemprice="{{ $product->currency_sign." ". $product->selling_price}}"
+                               <?php endif;?>
                                data-itemquantity="{{$product->product_var_type_value." ".$product->product_var_type_name}}"
-                               data-itemname="{{$product->name}}" onclick="openModal()"><img src="{{$imagePath}}"
-                                                                                             alt="product"></a>
-                            <span class="batch sale">Sale</span>
+                               data-itemname="{{$product->name}}" onclick="openModal()">
+                               <img src="{{$imagePath}}" alt="product">
+                            </a>
+                            @if($product->discounted_price)
+                                    <span class="batch sale">Sale</span>
+                            @endif
+                            <!-- <span class="batch sale">Sale</span> -->
                             <a class="wish-link" href="#">
                                 <svg aria-hidden="true" focusable="false" data-prefix="fas"
                                      data-icon="heart" class="svg-inline--fa fa-heart fa-w-16"
