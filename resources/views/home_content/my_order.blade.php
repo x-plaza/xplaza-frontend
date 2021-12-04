@@ -36,7 +36,7 @@
                     <h6>Ordered item</h6>
                     <ul>
                         @foreach($product->orderItemPlaceLists as $item)
-                            <li><i class="fas fa-check"></i>{{$item->item_name}} ( {{$item->quantity}} {{$item->quantity_type}} )</li>
+                            <li><i class="fas fa-check"></i>{{$item->item_name}} ( unit: {{$item->quantity}} )</li>
                         @endforeach
                     </ul>
                 </div>
