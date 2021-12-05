@@ -67,7 +67,11 @@
                                      data-itemimage="{{$imagePath}}"
                                      data-itemname="{{$product->name}}"
                                      data-itemunit="{{$product->product_var_type_value." ".$product->product_var_type_name}}"
-                                     data-itemprice="{{$product->selling_price}}"
+                                     @if($product->discounted_price == null)
+                                        data-itemprice="{{$product->selling_price}}"
+                                     @else
+                                        data-itemprice="{{$product->discounted_price}}"
+                                     @endif
                                      data-itembrandid="{{$product->brand_id}}"
                                      data-itemcurrencyid="{{$product->currency_id}}"
                                      data-itemcategoryid="{{$product->category_id}}"
