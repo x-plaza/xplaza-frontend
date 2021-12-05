@@ -620,7 +620,7 @@
                             </div>
                             <div class="info-content">
                                 <h6>Easy order placement</h6>
-                                <p>Lorem ipsum dolor sit amet, conse ctetur adipisicing elit, sed do.</p>
+                                <p>We offer you the most convenient online grocery shopping experience.</p>
                             </div>
                         </div>
                     </div>
@@ -632,7 +632,7 @@
                             </div>
                             <div class="info-content">
                                 <h6>Cash on delivery</h6>
-                                <p>Lorem ipsum dolor sit amet, conse ctetur adipisicing elit, sed do.</p>
+                                <p>You do not need to worry, we provide cash on delivery</p>
                             </div>
                         </div>
                     </div>
@@ -644,7 +644,7 @@
                             </div>
                             <div class="info-content">
                                 <h6>Fast delivery</h6>
-                                <p>Lorem ipsum dolor sit amet, conse ctetur adipisicing elit, sed do.</p>
+                                <p>We promise you to deliver on time with our dedicated delivery heroes.</p>
                             </div>
                         </div>
                     </div>
