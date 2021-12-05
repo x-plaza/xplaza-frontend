@@ -48,7 +48,16 @@
                                 <a href="#" class="cata">{{$product_data->category_name}}</a>
                                 <h2>{{$product_data->name}}</h2>
                                 <p class="quantity">{{$product_data->product_var_type_value}} {{$product_data->product_var_type_name}}</p>
-                                <h3 class="price">{{$product_data->selling_price}} {{$product_data->currency_name}}</h3>
+                                @if($product_data->discounted_price == null)
+                                    <div class="price">
+                                        {{$product_data->currency_sign ." ". $product_data->selling_price}}
+                                    </div>
+                                @else
+                                    <div class="price">
+                                        {{$product_data->currency_sign ." ". $product_data->discounted_price}} <del>{{$product_data->currency_sign ." ". $product_data->selling_price}}</del>
+                                    </div>
+                                @endif
+                                <!-- <h3 class="price">{{$product_data->selling_price}} {{$product_data->currency_name}}</h3> -->
                                 <div class="price-increase-decrese-group d-flex">
 {{--                                    <span class="decrease-btn">--}}
 {{--                                        <button type="button"--}}
