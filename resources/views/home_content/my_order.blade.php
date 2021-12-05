@@ -3,7 +3,8 @@
 <div class="order-card mb--30">
     <div class="order-card-header d-flex justify-content-between align-items-center">
         <span class="deliver">{{$product->status_name}}</span>
-        <span class="date"><i class="far fa-clock"></i> {{$product->received_time}}</span>
+        <span class="date"><i class="far fa-clock"></i> Order Date: {{$product->received_time}}</span>
+        <span class="date"><i class="far fa-clock"></i> Date to deliver: {{$product->date_to_deliver}}</span>
     </div>
     @php
      $totalItem = 0;
