@@ -210,6 +210,10 @@
 
         loadOrderList();
 
+        $(".right-nav-menu-toggle").on("click",function(e){
+        $('.right-nav-menu').toggleClass('open');
+        });
+
         function loadOrderList(){
             $('.order_loader').css({"display":"block"});
             $.ajax({

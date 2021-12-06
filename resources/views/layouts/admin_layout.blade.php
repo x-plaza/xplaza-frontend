@@ -48,6 +48,31 @@
     </div>
 </div>
 
+<!-- user Modal for mobile view-->
+<div class="modal fade" id="useradmin1" tabindex="-1" aria-labelledby="useradmin1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-body">
+                    <div class="header-top-action-dropdown">
+                    @php
+                        $authUserId = Session::get( 'auth_user_id' );
+                    @endphp
+                    @if($authUserId != null)
+                        <ul>
+                            <li><a href="{{url('/my-dashboard')}}">Dashboard</a></li>
+                            <li><a href="{{url('/sign-out')}}">Sign Out</a></li>
+                        </ul>
+                    @else
+                        <ul>
+                            <li class="signin-option"><a onclick="OpenSignUpForm()" href="#" data-dismiss="modal"><i class="fas fa-user mr-2"></i>Sign In</a></li>
+                        </ul>
+                    @endif
+                    </div>
+                </div>
+            </div>
+        </div>
+</div>
+
 @php
     $shopArray = Session::get( 'session_others_array' );
     $shopName = isset($shopArray['shop_name']) ? $shopArray['shop_name'] : null;
