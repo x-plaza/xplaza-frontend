@@ -1,10 +1,12 @@
 
 @foreach($product_data as $product)
 <div class="order-card mb--30">
-    <div class="order-card-header d-flex justify-content-between align-items-center">
+    <div class="order-card-header d-flex flex-column">
         <span class="deliver">{{$product->status_name}}</span>
-        <span class="date"><i class="far fa-clock"></i> Order Date: {{$product->received_time}}</span>
-        <span class="date"><i class="far fa-clock"></i> Date to deliver: {{$product->date_to_deliver}}</span>
+        <span class="date"><STRONG>Order Date:</STRONG> {{$product->received_time}}</span>
+        <span class="date"><STRONG>Date to deliver:</STRONG> {{$product->date_to_deliver}}</span>
+        <span><STRONG>Timing:</STRONG> {{$product->allotted_time}}</span>
+        <span><STRONG>Address: </STRONG>{{$product->delivery_address}}</span>
     </div>
     @php
      $totalItem = 0;
