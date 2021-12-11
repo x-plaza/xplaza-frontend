@@ -29,7 +29,7 @@
             <tr>
                 <td class="text-center">Order#INVXPLZ{{$product->invoice_number}}</td>
                 <td class="text-center">{{$totalItem}} Items</td>
-                <td class="text-right">{{$product->grand_total_price}} {{$product->currency_sign}}</td>
+                <td class="text-right">{{$product->currency_sign}} {{$product->grand_total_price}}</td>
             </tr>
             </tbody>
         </table>
@@ -47,9 +47,9 @@
                     <h6>Price section</h6>
                     <div class="destination-box">
                         <ul>
-                            <li>Total Price : {{$product->total_price}} {{$product->currency_sign}}</li>
-                            <li>Delivery Cost : {{$product->delivery_cost}} {{$product->currency_sign}}</li>
-                            <li>Grand Total : {{$product->grand_total_price}} {{$product->currency_sign}}</li>
+                            <li>Total Price : {{$product->currency_sign}} {{$product->total_price}}</li>
+                            <li>Delivery Cost :{{$product->currency_sign}} {{$product->delivery_cost}}</li>
+                            <li>Grand Total : {{$product->currency_sign}} {{$product->grand_total_price}}</li>
                         </ul>
                     </div>
                 </div>
