@@ -290,7 +290,7 @@ class websiteController extends Controller
         $details['item_code'] = $request_itemcode;
         $details['item_image'] = $request_itemimage;
         $details['item_unit'] = $product->product_var_type_value." ".$product->product_var_type_name;
-        $details['item_unit_price'] = $product->selling_price;
+        $details['item_unit_price'] = ($product->discounted_price) ? $product->discounted_price : $product->selling_price;
         $details['quantity'] = $request_addedQuantity;
         $details['currency_id'] = $product->currency_id;
         $details['product_id'] = $product->id;
@@ -336,6 +336,7 @@ class websiteController extends Controller
         foreach ($session_cart_item_array as $item){
             $totalPrice += $item['item_unit_price']*$item['quantity'];
         }
+
         session()->put( 'cart_item_array', $session_cart_item_array );
         Session::save();
 
