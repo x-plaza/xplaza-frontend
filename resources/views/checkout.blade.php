@@ -51,7 +51,7 @@
                     <div class="form-item time-schedule bg-color-white box-shadow p-3 p-lg-5 border-radius5">
                         <h6>Delivery Date</h6>
                         <div style="margin-bottom: 10px;">
-                            <input type="text" value="" class="form-control delivery_date" placeholder="Please select date" autocomplete="off" name="delivery_date" required>
+                            <input type="text" value="" class="form-control delivery_date" placeholder="Please select date" autocomplete="off" name="delivery_date" readonly required>
                         </div>
                         <h6>Delivery Schedule</h6>
                         <div class="time-schedule-container">
@@ -243,12 +243,15 @@
 
         $(function () {
             $(".delivery_date").datepicker({
+               // setDate: new Date(),
                 autoclose: true,
                 todayHighlight: true,
                 format: 'yyyy/mm/dd',
                 minDate: 'now',
                 maxDate: '+7d'
-            }).datepicker('update', new Date());
+            }).datepicker("setDate", new Date());
+
+            $(".delivery_date").trigger('change');
         });
 
         $(document).on('click', '.coupon_validate_btn', function () {
@@ -346,9 +349,9 @@
                 },
                 success: function (response) {
                     if (response.responseCode == 1) {
-                        $('.total_price_section').html(response.price);
+                        $('.total_price_section').html(response.price.toFixed(2));
                         $('.delivery_cost_section').html(response.delivery_cost);
-                        $('.grand_total_price_section').html(response.grand_totL);
+                        $('.grand_total_price_section').html(response.grand_totL.toFixed(2));
                     }
                 },
                 error: function (jqXHR, textStatus, errorThrown) {
@@ -377,9 +380,9 @@
                 },
                 success: function (response) {
                     if (response.responseCode == 1) {
-                        $('.total_price_section').html(response.price);
+                        $('.total_price_section').html(response.price.toFixed(2));
                         $('.delivery_cost_section').html(response.delivery_cost);
-                        $('.grand_total_price_section').html(response.grand_totL);
+                        $('.grand_total_price_section').html(response.grand_totL.toFixed(2));
                     }
                 },
                 error: function (jqXHR, textStatus, errorThrown) {
