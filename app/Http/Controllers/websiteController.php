@@ -76,7 +76,7 @@ class websiteController extends Controller
         $othersDataArray = ( Session::get( 'session_others_array' ) ) ? Session::get( 'session_others_array' ) : null;
         $othersDataArray['shop_id'] = $request->get('shop_id');
         $othersDataArray['shop_name'] = $request->get('shop_name');
-        $othersDataArray['location_id'] = $request->get('location_id');
+      //  $othersDataArray['location_id'] = $request->get('location_id');
         $othersDataArray['city_id'] = $request->get('city_id');$othersDataArray = ( Session::get( 'session_others_array' ) ) ? Session::get( 'session_others_array' ) : null;
         $othersDataArray['shop_id'] = $request->get('shop_id');
         $othersDataArray['shop_name'] = $request->get('shop_name');

@@ -77,7 +77,11 @@
     $shopArray = Session::get( 'session_others_array' );
     $shopName = isset($shopArray['shop_name']) ? $shopArray['shop_name'] : null;
     $cityId = isset($shopArray['city_id']) ? $shopArray['city_id'] : null;
+    $sessionShopId = isset($shopArray['shop_id']) ? $shopArray['shop_id'] : null;
+    $sessionLocationId = isset($shopArray['location_id']) ? $shopArray['location_id'] : null;
 @endphp
+<input type="hidden" class="sessionShopId" value="{{$sessionShopId}}">
+<input type="hidden" class="sessionLocationId" value="{{$sessionLocationId}}">
 <!--shop Modal -->
 <div class="modal fade" id="shop-modal-id" tabindex="-1" aria-labelledby="shop-select-id" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
@@ -1037,6 +1041,7 @@
 
 
     $(document).on('change', '.select_city_dropdown_val', function () {
+        var sessionLocationId = $('.sessionLocationId').val();
         var city_id = jQuery(this).val();
         $('.location_loading').html('<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Loading ......');
 
@@ -1063,12 +1068,17 @@
                         text: d.name
                     }));
                 });
+                if (sessionLocationId != ''){
+                    $('.location_option').val(sessionLocationId).attr("selected", "selected");
+                    $('.select_location_dropdown_val').trigger('change');
+                }
             }
         });
     })
 
     $(document).on('change', '.select_location_dropdown_val', function () {
         var location_id = jQuery(this).val();
+        var sessionShopId = $('.sessionShopId').val();
         $('.shop_loading').html('<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Loading ......');
         $.ajax({
             url: '{{ url('/website/get-shop-data') }}',
@@ -1088,6 +1098,9 @@
                             text: d.name
                         }));
                     });
+                    if (sessionShopId != ''){
+                        $('.shop_option').val(sessionShopId).attr("selected", "selected");
+                    }
                 } else {
                     $('.shop_option').append($('<option>', {
                         value: '',
