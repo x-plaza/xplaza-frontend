@@ -159,7 +159,7 @@ class checkoutController extends Controller
         $response = json_decode($curlOutput,true);
 
         if (!isset($response['status']) || $response['status'] != 201){
-            return response()->json(['responseCode' => 0, 'message' => $response['message'],'Total_price'=> $totalPrice.' BDT','invoice'=>'']);
+            return response()->json(['responseCode' => 0, 'message' => $response['message'],'Total_price'=> 'R '.$totalPrice,'invoice'=>'']);
         }
 
         session()->put( 'cart_item_array', [] );

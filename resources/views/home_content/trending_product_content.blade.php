@@ -36,7 +36,7 @@
                 <div class="swiper-wrapper">
                     @foreach($product_data as $product)
                         <div class="swiper-slide swiper-slide-custom trending-products-custom-style">
-                        <div class="product-item">
+                        <div @if($product->quantity > 0)class="product-item"@else class="product-item stock-out" @endif>
                             <div class="product-thumb">
                                 @php
                                     $imagePath = 'website_src/product_sample.png';

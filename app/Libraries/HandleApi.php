@@ -152,7 +152,14 @@ class HandleApi {
         $curlOutput  = HandleApi::getCURLOutput( $api_url, 'GET', [] );
         $decodedData = json_decode($curlOutput);
         $product_data = isset($decodedData->data) ? $decodedData->data : [];
-        return $product_data;
+        $allData = [];
+        foreach ($product_data as $data){
+            if ($data->quantity < 1){continue;}
+            $subData['id'] = $data->id;
+            $subData['name'] = $data->name;
+            $allData[] =  $subData;
+        }
+        return $allData;
 
     }
     public static function getSubCat($catId){
