@@ -151,13 +151,14 @@ class websiteController extends Controller
         $product_data = isset($decodedData->data) ? $decodedData->data : [];
 
         $output = array();
+
         if(count($product_data) > 0)
         {
             foreach($product_data as $row)
             {
                 $image_full_img = 'website_src/product_sample.png';
-                if(isset($row->productImageList[0]->name)){
-                    $image_full_img = "https://admin.xwinkel.com/item_image/".$row->productImageList[0]->name;
+                if(isset($row->productImages[0]->name)){
+                    $image_full_img = "https://admin.xwinkel.com/item_image/".$row->productImages[0]->name;
                 }
                 $full_url = url('/website/item-details/'.$row->id);
                 $temp_array = array();

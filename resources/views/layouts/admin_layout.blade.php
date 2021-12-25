@@ -190,10 +190,16 @@
                                 <option value="0">Select Shop</option>
                             </select>
                         </div> -->
-                        <form action="#" class="search-form">
-                            <input type="text" name="search" placeholder="Search Products...">
-                            <button class="submit-btn"><i class="fas fa-search"></i></button>
-                        </form>
+{{--                        <form action="#" class="search-form">--}}
+{{--                            <input type="text" name="search" placeholder="Search Products...">--}}
+{{--                            <button class="submit-btn"><i class="fas fa-search"></i></button>--}}
+{{--                        </form>--}}
+                        <select class="search_product_section form-control">
+                            <option value="-99999"> Search product</option>
+                            @foreach(App\Libraries\HandleApi::searchProductData() as $product)
+                                <option value="{{$product['id']}}"> {{$product['name']}}</option>
+                            @endforeach
+                        </select>
                     </div>
                 </div>
             </div>
@@ -223,14 +229,14 @@
                                     <option value="changeshop">Change Shop</option>
                                 </select>
                             </div> -->
-                            {{--                            <form action="#" class="search-form">--}}
-                            {{--                                <input type="text" name="search" id="search_data" placeholder="Search Products.....">--}}
-                            {{--                                <button class="submit-btn"><i class="fas fa-search"></i></button>--}}
-                            {{--                            </form>--}}
+{{--                                                        <form action="#" class="search-form">--}}
+{{--                                                            <input type="text" name="search" id="search_data" placeholder="Search Products.....">--}}
+{{--                                                            <button class="submit-btn"><i class="fas fa-search"></i></button>--}}
+{{--                                                        </form>--}}
                             <select class="search_product_section form-control">
                                 <option value="-99999"> Search product</option>
                                 @foreach(App\Libraries\HandleApi::searchProductData() as $product)
-                                    <option value="{{$product->id}}"> {{$product->name}}</option>
+                                    <option value="{{$product['id']}}"> {{$product['name']}}</option>
                                 @endforeach
                             </select>
                         </div>
@@ -609,23 +615,23 @@
         }
     })
 
-    {{--$(document).ready(function(){--}}
+    $(document).ready(function(){
 
-    {{--    $('#search_data').autocomplete({--}}
-    {{--        source: '{{ url('/website/product-search-data') }}',--}}
-    {{--        minLength: 1,--}}
-    {{--        select: function(event, ui)--}}
-    {{--        {--}}
-    {{--            $('#search_data').val(ui.item.value);--}}
-    {{--        }--}}
-    {{--    }).data('ui-autocomplete')._renderItem = function(ul, item){--}}
-    {{--        $('.product_search_web').html('');--}}
-    {{--        return $("<li class='ui-autocomplete-row'></li>")--}}
-    {{--            .data("item.autocomplete", item)--}}
-    {{--            .append(item.label)--}}
-    {{--            .appendTo(ul);--}}
-    {{--    };--}}
-    {{--});--}}
+        $('#search_data').autocomplete({
+            source: '{{ url('/website/product-search-data') }}',
+            minLength: 1,
+            select: function(event, ui)
+            {
+                $('#search_data').val(ui.item.value);
+            }
+        }).data('ui-autocomplete')._renderItem = function(ul, item){
+            $('.product_search_web').html('');
+            return $("<li class='ui-autocomplete-row'></li>")
+                .data("item.autocomplete", item)
+                .append(item.label)
+                .appendTo(ul);
+        };
+    });
 
     var selected_shop = $('.selected_shop_id').val();
     if (selected_shop == '') {

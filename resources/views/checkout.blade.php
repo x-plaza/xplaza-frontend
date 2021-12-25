@@ -26,7 +26,7 @@
                                 <div class="col-lg-6">
                                     <div class="input-item">
                                         <label>Mobile*</label>
-                                        <input type="text" class="customer_mobile" name="mobile">
+                                        <input type="text" class="customer_mobile" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*?)\..*/g, '$1');" name="mobile">
                                     </div>
                                 </div>
                                 <div class="col-lg-6">
@@ -349,9 +349,9 @@
                 },
                 success: function (response) {
                     if (response.responseCode == 1) {
-                        $('.total_price_section').html(response.price.toFixed(2));
-                        $('.delivery_cost_section').html(response.delivery_cost);
-                        $('.grand_total_price_section').html(response.grand_totL.toFixed(2));
+                        $('.total_price_section').html('R '+response.price.toFixed(2));
+                        $('.delivery_cost_section').html('R '+response.delivery_cost);
+                        $('.grand_total_price_section').html('R '+response.grand_totL.toFixed(2));
                     }
                 },
                 error: function (jqXHR, textStatus, errorThrown) {
@@ -380,9 +380,9 @@
                 },
                 success: function (response) {
                     if (response.responseCode == 1) {
-                        $('.total_price_section').html(response.price.toFixed(2));
-                        $('.delivery_cost_section').html(response.delivery_cost);
-                        $('.grand_total_price_section').html(response.grand_totL.toFixed(2));
+                        $('.total_price_section').html('R '+response.price.toFixed(2));
+                        $('.delivery_cost_section').html('R '+response.delivery_cost);
+                        $('.grand_total_price_section').html('R '+response.grand_totL.toFixed(2));
                     }
                 },
                 error: function (jqXHR, textStatus, errorThrown) {
@@ -407,9 +407,9 @@
                 success: function (response) {
                     if (response.responseCode == 1) {
                         div_pointer.closest('.cart-product-item').remove();
-                        $('.total_price_section').html(response.price);
-                        $('.delivery_cost_section').html(response.delivery_cost);
-                        $('.grand_total_price_section').html(response.grand_totL);
+                        $('.total_price_section').html('R '+response.price.toFixed(2));
+                        $('.delivery_cost_section').html('R '+response.delivery_cost.toFixed(2));
+                        $('.grand_total_price_section').html('R '+response.grand_totL.toFixed(2));
                     }
                 },
                 error: function (jqXHR, textStatus, errorThrown) {

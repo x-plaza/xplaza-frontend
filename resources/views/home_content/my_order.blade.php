@@ -49,6 +49,7 @@
                         <ul>
                             <li>Total Price : {{$product->currency_sign}} {{$product->total_price}}</li>
                             <li>Delivery Cost :{{$product->currency_sign}} {{$product->delivery_cost}}</li>
+                            <li>Coupon Amount :{{$product->currency_sign}} {{$product->coupon_amount}}</li>
                             <li>Grand Total : {{$product->currency_sign}} {{$product->grand_total_price}}</li>
                         </ul>
                     </div>
