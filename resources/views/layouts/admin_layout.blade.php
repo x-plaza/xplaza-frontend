@@ -6,8 +6,8 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
-    <title>xwinkel</title>
-    <link rel="shortcut icon" type="image/png" href="assets/images/favicon.png"/>
+    <title>x-winkel</title>
+    <link rel="shortcut icon" type="image/png" href="website_src/images/Asset 4.png"/>
 
     @section('styles')
     @show
@@ -48,11 +48,40 @@
     </div>
 </div>
 
+<!-- user Modal for mobile view-->
+<div class="modal fade" id="useradmin1" tabindex="-1" aria-labelledby="useradmin1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-body">
+                    <div class="header-top-action-dropdown">
+                    @php
+                        $authUserId = Session::get( 'auth_user_id' );
+                    @endphp
+                    @if($authUserId != null)
+                        <ul>
+                            <li><a href="{{url('/my-dashboard')}}">Dashboard</a></li>
+                            <li><a href="{{url('/sign-out')}}">Sign Out</a></li>
+                        </ul>
+                    @else
+                        <ul>
+                            <li class="signin-option"><a onclick="OpenSignUpForm()" href="#" data-dismiss="modal"><i class="fas fa-user mr-2"></i>Sign In</a></li>
+                        </ul>
+                    @endif
+                    </div>
+                </div>
+            </div>
+        </div>
+</div>
+
 @php
     $shopArray = Session::get( 'session_others_array' );
     $shopName = isset($shopArray['shop_name']) ? $shopArray['shop_name'] : null;
     $cityId = isset($shopArray['city_id']) ? $shopArray['city_id'] : null;
+    $sessionShopId = isset($shopArray['shop_id']) ? $shopArray['shop_id'] : null;
+    $sessionLocationId = isset($shopArray['location_id']) ? $shopArray['location_id'] : null;
 @endphp
+<input type="hidden" class="sessionShopId" value="{{$sessionShopId}}">
+<input type="hidden" class="sessionLocationId" value="{{$sessionLocationId}}">
 <!--shop Modal -->
 <div class="modal fade" id="shop-modal-id" tabindex="-1" aria-labelledby="shop-select-id" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
@@ -161,10 +190,16 @@
                                 <option value="0">Select Shop</option>
                             </select>
                         </div> -->
-                        <form action="#" class="search-form">
-                            <input type="text" name="search" placeholder="Search Products...">
-                            <button class="submit-btn"><i class="fas fa-search"></i></button>
-                        </form>
+{{--                        <form action="#" class="search-form">--}}
+{{--                            <input type="text" name="search" placeholder="Search Products...">--}}
+{{--                            <button class="submit-btn"><i class="fas fa-search"></i></button>--}}
+{{--                        </form>--}}
+                        <select class="search_product_section form-control">
+                            <option value="-99999"> Search product</option>
+                            @foreach(App\Libraries\HandleApi::searchProductData() as $product)
+                                <option value="{{$product['id']}}"> {{$product['name']}}</option>
+                            @endforeach
+                        </select>
                     </div>
                 </div>
             </div>
@@ -194,14 +229,14 @@
                                     <option value="changeshop">Change Shop</option>
                                 </select>
                             </div> -->
-                            {{--                            <form action="#" class="search-form">--}}
-                            {{--                                <input type="text" name="search" id="search_data" placeholder="Search Products.....">--}}
-                            {{--                                <button class="submit-btn"><i class="fas fa-search"></i></button>--}}
-                            {{--                            </form>--}}
+{{--                                                        <form action="#" class="search-form">--}}
+{{--                                                            <input type="text" name="search" id="search_data" placeholder="Search Products.....">--}}
+{{--                                                            <button class="submit-btn"><i class="fas fa-search"></i></button>--}}
+{{--                                                        </form>--}}
                             <select class="search_product_section form-control">
                                 <option value="-99999"> Search product</option>
                                 @foreach(App\Libraries\HandleApi::searchProductData() as $product)
-                                    <option value="{{$product->id}}"> {{$product->name}}</option>
+                                    <option value="{{$product['id']}}"> {{$product['name']}}</option>
                                 @endforeach
                             </select>
                         </div>
@@ -580,23 +615,23 @@
         }
     })
 
-    {{--$(document).ready(function(){--}}
+    $(document).ready(function(){
 
-    {{--    $('#search_data').autocomplete({--}}
-    {{--        source: '{{ url('/website/product-search-data') }}',--}}
-    {{--        minLength: 1,--}}
-    {{--        select: function(event, ui)--}}
-    {{--        {--}}
-    {{--            $('#search_data').val(ui.item.value);--}}
-    {{--        }--}}
-    {{--    }).data('ui-autocomplete')._renderItem = function(ul, item){--}}
-    {{--        $('.product_search_web').html('');--}}
-    {{--        return $("<li class='ui-autocomplete-row'></li>")--}}
-    {{--            .data("item.autocomplete", item)--}}
-    {{--            .append(item.label)--}}
-    {{--            .appendTo(ul);--}}
-    {{--    };--}}
-    {{--});--}}
+        $('#search_data').autocomplete({
+            source: '{{ url('/website/product-search-data') }}',
+            minLength: 1,
+            select: function(event, ui)
+            {
+                $('#search_data').val(ui.item.value);
+            }
+        }).data('ui-autocomplete')._renderItem = function(ul, item){
+            $('.product_search_web').html('');
+            return $("<li class='ui-autocomplete-row'></li>")
+                .data("item.autocomplete", item)
+                .append(item.label)
+                .appendTo(ul);
+        };
+    });
 
     var selected_shop = $('.selected_shop_id').val();
     if (selected_shop == '') {
@@ -1012,6 +1047,7 @@
 
 
     $(document).on('change', '.select_city_dropdown_val', function () {
+        var sessionLocationId = $('.sessionLocationId').val();
         var city_id = jQuery(this).val();
         $('.location_loading').html('<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Loading ......');
 
@@ -1038,12 +1074,17 @@
                         text: d.name
                     }));
                 });
+                if (sessionLocationId != ''){
+                    $('.location_option').val(sessionLocationId).attr("selected", "selected");
+                    $('.select_location_dropdown_val').trigger('change');
+                }
             }
         });
     })
 
     $(document).on('change', '.select_location_dropdown_val', function () {
         var location_id = jQuery(this).val();
+        var sessionShopId = $('.sessionShopId').val();
         $('.shop_loading').html('<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Loading ......');
         $.ajax({
             url: '{{ url('/website/get-shop-data') }}',
@@ -1063,6 +1104,9 @@
                             text: d.name
                         }));
                     });
+                    if (sessionShopId != ''){
+                        $('.shop_option').val(sessionShopId).attr("selected", "selected");
+                    }
                 } else {
                     $('.shop_option').append($('<option>', {
                         value: '',

@@ -6929,17 +6929,18 @@ blockquote span span {
   background-color: white;
   box-shadow: 0px 0px 20px 0px rgba(89, 184, 40, 0.06);
   overflow: hidden;
+  font-size: smaller;
 }
 .order-card .order-card-header {
   padding: 20px 20px 5px 20px;
 }
 .order-card .order-card-header .deliver {
-  font-size: 14px;
-  font-weight: 500;
+  font-size: 12px;
+  font-weight: 400;
   background-color: #43bf55;
   color: white;
   border-radius: 3px;
-  padding: 1px 12px;
+  padding: 1px 10px;
 }
 .order-card .order-card-header .deliver.process {
   background-color: #ffc107;
@@ -6958,7 +6959,7 @@ blockquote span span {
 }
 @media only screen and (max-width: 991px) {
   .order-card .order-card-body table th, .order-card .order-card-body table td {
-    font-size: 13px;
+    font-size: 10px;
   }
 }
 .order-card .order-card-body .order-info-extra {
@@ -6966,10 +6967,10 @@ blockquote span span {
 }
 .order-card .order-card-body .order-info-extra h6 {
   font-size: 14px;
-  font-weight: 700;
+  /* font-weight: 700; */
 }
 .order-card .order-card-body .order-info-extra ul li {
-  font-size: 13px;
+  font-size: 10px;
 }
 .order-card .order-card-body .order-info-extra ul li i {
   color: #52af45;
@@ -6983,14 +6984,14 @@ blockquote span span {
   overflow: hidden;
 }
 .order-card .order-card-body .order-info-extra .order-detail {
-  font-size: 13px;
+  font-size: 10px;
   background-color: #6c6c6c;
   padding: 1px 10px;
   color: white;
   border-radius: 4px;
 }
 .order-card .order-card-body .order-info-extra .review {
-  font-size: 13px;
+  font-size: 10px;
   background-color: #52af45;
   padding: 1px 10px;
   color: white;

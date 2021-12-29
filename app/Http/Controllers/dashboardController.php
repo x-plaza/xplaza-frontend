@@ -55,6 +55,7 @@ class dashboardController extends Controller
         $auth_user_id = ( Session::get( 'auth_user_id' ) ) ? Session::get( 'auth_user_id' ) : null;
 
         $api_url = env('API_BASE_URL')."/api/order/by-customer?customer_id=".intval($auth_user_id);
+      //  $api_url = env('API_BASE_URL')."/api/order/by-customer/".intval($auth_user_id);
         $curlOutput  = HandleApi::getCURLOutput( $api_url, 'GET', [] );
         $decodedData = json_decode($curlOutput);
         $product_data = isset($decodedData->data) ? $decodedData->data : [];

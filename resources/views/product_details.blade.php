@@ -48,7 +48,16 @@
                                 <a href="#" class="cata">{{$product_data->category_name}}</a>
                                 <h2>{{$product_data->name}}</h2>
                                 <p class="quantity">{{$product_data->product_var_type_value}} {{$product_data->product_var_type_name}}</p>
-                                <h3 class="price">{{$product_data->selling_price}} {{$product_data->currency_name}}</h3>
+                                @if($product_data->discounted_price == null)
+                                    <div class="price">
+                                        {{$product_data->currency_sign ." ". $product_data->selling_price}}
+                                    </div>
+                                @else
+                                    <div class="price">
+                                        {{$product_data->currency_sign ." ". $product_data->discounted_price}} <del>{{$product_data->currency_sign ." ". $product_data->selling_price}}</del>
+                                    </div>
+                                @endif
+                                <!-- <h3 class="price">{{$product_data->selling_price}} {{$product_data->currency_name}}</h3> -->
                                 <div class="price-increase-decrese-group d-flex">
 {{--                                    <span class="decrease-btn">--}}
 {{--                                        <button type="button"--}}
@@ -64,7 +73,7 @@
                                 </div>
                                 <p>{{$product_data->description}}</p>
                                 <div class="d-flex justify-content-end">
-                                    <button class="buy-now add_to_cart_button_by_id" data-itemcode="{{$product_data->id}}">Add to cart</button>
+                                    <button class="buy-now add_to_cart_button_by_id" data-itemcode="{{$product_data->id}}" data-itemimage="{{$imagePath}}">Add to cart</button>
                                 </div>
                             </div>
                         </div>
@@ -98,7 +107,7 @@
             jQuery(this).closest('.price-increase-decrese-group').find('.input-number').val(addedQuantity);
 
             $.ajax({
-                url: '{{ url('/website/item-quantity-add-from-checkout') }}',
+                url: '{{ url('/website/item-quantity-add-from-sitebar') }}',
                 type: "POST",
                 //dataType: 'json',
                 headers: {
@@ -109,10 +118,13 @@
                     addedQuantity: addedQuantity
                 },
                 success: function (response) {
+                    // if (response.responseCode == 1) {
+                    //     $('.total_price_section').html(response.price);
+                    //     $('.delivery_cost_section').html(response.delivery_cost);
+                    //     $('.grand_total_price_section').html(response.grand_totL);
+                    // }
                     if (response.responseCode == 1) {
-                        $('.total_price_section').html(response.price);
-                        $('.delivery_cost_section').html(response.delivery_cost);
-                        $('.grand_total_price_section').html(response.grand_totL);
+                        $('.sitebarItemData').html(response.html);
                     }
                 },
                 error: function (jqXHR, textStatus, errorThrown) {
@@ -129,7 +141,7 @@
             jQuery(this).closest('.price-increase-decrese-group').find('.input-number').val(removedQuantity);
 
             $.ajax({
-                url: '{{ url('/website/item-quantity-remove-from-checkout') }}',
+                url: '{{ url('/website/item-quantity-minus-from-sitebar') }}',
                 type: "POST",
                 //dataType: 'json',
                 headers: {
@@ -140,10 +152,14 @@
                     removedQuantity: removedQuantity
                 },
                 success: function (response) {
+                    // if (response.responseCode == 1) {
+                    //     $('.total_price_section').html(response.price);
+                    //     $('.delivery_cost_section').html(response.delivery_cost);
+                    //     $('.grand_total_price_section').html(response.grand_totL);
+                    // }
+
                     if (response.responseCode == 1) {
-                        $('.total_price_section').html(response.price);
-                        $('.delivery_cost_section').html(response.delivery_cost);
-                        $('.grand_total_price_section').html(response.grand_totL);
+                        $('.sitebarItemData').html(response.html);
                     }
                 },
                 error: function (jqXHR, textStatus, errorThrown) {

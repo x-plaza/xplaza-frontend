@@ -1,9 +1,12 @@
 
 @foreach($product_data as $product)
 <div class="order-card mb--30">
-    <div class="order-card-header d-flex justify-content-between align-items-center">
+    <div class="order-card-header d-flex flex-column">
         <span class="deliver">{{$product->status_name}}</span>
-        <span class="date"><i class="far fa-clock"></i> {{$product->received_time}}</span>
+        <span class="date"><STRONG>Order Date:</STRONG> {{$product->received_time}}</span>
+        <span class="date"><STRONG>Date to deliver:</STRONG> {{$product->date_to_deliver}}</span>
+        <span><STRONG>Timing:</STRONG> {{$product->allotted_time}}</span>
+        <span><STRONG>Address: </STRONG>{{$product->delivery_address}}</span>
     </div>
     @php
      $totalItem = 0;
@@ -26,7 +29,7 @@
             <tr>
                 <td class="text-center">Order#INVXPLZ{{$product->invoice_number}}</td>
                 <td class="text-center">{{$totalItem}} Items</td>
-                <td class="text-right">{{$product->grand_total_price}} {{$product->currency_sign}}</td>
+                <td class="text-right">{{$product->currency_sign}} {{$product->grand_total_price}}</td>
             </tr>
             </tbody>
         </table>
@@ -36,7 +39,7 @@
                     <h6>Ordered item</h6>
                     <ul>
                         @foreach($product->orderItemPlaceLists as $item)
-                            <li><i class="fas fa-check"></i>{{$item->item_name}} ( {{$item->quantity}} {{$item->quantity_type}} )</li>
+                            <li><i class="fas fa-check"></i>{{$item->item_name}} ( unit: {{$item->quantity}} )</li>
                         @endforeach
                     </ul>
                 </div>
@@ -44,9 +47,10 @@
                     <h6>Price section</h6>
                     <div class="destination-box">
                         <ul>
-                            <li>Total Price : {{$product->total_price}} {{$product->currency_sign}}</li>
-                            <li>Delivery Cost : {{$product->delivery_cost}} {{$product->currency_sign}}</li>
-                            <li>Grand Total : {{$product->grand_total_price}} {{$product->currency_sign}}</li>
+                            <li>Total Price : {{$product->currency_sign}} {{$product->total_price}}</li>
+                            <li>Delivery Cost :{{$product->currency_sign}} {{$product->delivery_cost}}</li>
+                            <li>Coupon Amount :{{$product->currency_sign}} {{$product->coupon_amount}}</li>
+                            <li>Grand Total : {{$product->currency_sign}} {{$product->grand_total_price}}</li>
                         </ul>
                     </div>
                 </div>
