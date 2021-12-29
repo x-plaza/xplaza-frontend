@@ -174,7 +174,7 @@ class checkoutController extends Controller
 
 
         $invoice = 'INV'.date('ymdhis');
-        return response()->json(['responseCode' => 1, 'message' => 'Order placed successfully','Total_price'=> $totalPrice.' BDT','invoice'=>$invoice]);
+        return response()->json(['responseCode' => 1, 'message' => 'Order placed successfully','Total_price'=> 'R '.$grandTotalPrice,'invoice'=>$invoice]);
     }
 
 
