@@ -2,9 +2,9 @@ name: Customer Panel Laravel CI/CD
 
 on:
   push:
-    branches: [ server-deploy ]
+    branches: [ server-deploy1 ]
   pull_request:
-    branches: [ server-deploy ]
+    branches: [ server-deploy1 ]
 
 jobs:
 
