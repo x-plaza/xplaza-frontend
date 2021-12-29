@@ -9,6 +9,7 @@ on:
 jobs:
 
   test:
+    name: Test
     runs-on: ubuntu-latest
     steps:
     - uses: shivammathur/setup-php@15c43e89cdef867065b0213be354c2841860869e
@@ -39,18 +40,15 @@ jobs:
       steps:
           -   name: Checkout Repository
               uses: actions/checkout@v2
-          -   name: Setup Enviroment
-              uses: shivammathur/setup-php@v2
-              with:
-                  php-version: '7.4'
-          -   name: Install Packages
-              run: composer install --no-dev
           -   name: Deploy to Server
               uses: ngocquyhoang/deploy@laravel
               with:
-                  user: ${{ secrets.SSH_USER }}
-                  host: ${{ secrets.HOST }}
-                  path: ${{ secrets.PATH }}
+                  command: |
+                      cd ${{ secrets.PATH }} &&  composer install &
+                  user:  ${{ secrets.SSH_USER }}
+                  host:  ${{ secrets.HOST }}
+                  path:  ${{ secrets.PATH }}
                   owner: ${{ secrets.OWNER }}
+                  args: "-tt"
               env:
                   DEPLOY_KEY: ${{ secrets.SSH_KEY }}
