@@ -158,8 +158,11 @@ class checkoutController extends Controller
         $curlOutput  = HandleApi::getCURLOutput( $api_url, 'POST', json_encode($finalOrderData) );
         $response = json_decode($curlOutput,true);
 
+        $orderResp = json_decode($response['data']);
+        $grandTotalPrice = isset($orderResp->grand_total_price) ? $orderResp->grand_total_price : '';
+        $invoice = isset($orderResp->invoice_number) ? $orderResp->invoice_number : '';
         if (!isset($response['status']) || $response['status'] != 201){
-            return response()->json(['responseCode' => 0, 'message' => $response['message'],'Total_price'=> 'R '.$totalPrice,'invoice'=>'']);
+            return response()->json(['responseCode' => 0, 'message' => $response['message'],'Total_price'=> 'R '.$grandTotalPrice,'invoice'=>$invoice]);
         }
 
         session()->put( 'cart_item_array', [] );
