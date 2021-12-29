@@ -13,7 +13,7 @@ jobs:
     steps:
     - uses: shivammathur/setup-php@15c43e89cdef867065b0213be354c2841860869e
       with:
-        php-version: '7.3'
+        php-version: '7.4'
     - uses: actions/checkout@v2
     - name: Copy .env
       run: php -r "file_exists('.env') || copy('.env.example', '.env');"
@@ -33,17 +33,26 @@ jobs:
         DB_DATABASE: database/database.sqlite
       run: vendor/bin/phpunit
 
-  deploy:
-    runs-on: ubuntu-latest
-    name: Deploy the project file to the remote server
-    steps:
-      - uses: actions/checkout@v2
-      - name: Laravel Deploy
-        uses: ngocquyhoang/laravel-deploy@44ec6bf06ce9f68f68f614033fb57a8851f60b53
-        with:
-          user: ${{ secrets.SSH_USER }}
-          host: ${{ secrets.HOST }}
-          path: ${{ secrets.PATH }}
-          owner: ${{ secrets.OWNER }}
-    env:
-        DEPLOY_KEY: ${{ secrets.SSH_KEY }}
+  build:
+      name: Build and Deploy
+      runs-on: ubuntu-latest
+      steps:
+          -   name: Checkout Repository
+              uses: actions/checkout@v2
+          -   name: Setup Enviroment
+              uses: shivammathur/setup-php@v2
+              with:
+                  php-version: '7.4'
+          -   name: Speed up the packages installation process
+              run: composer global require hirak/prestissimo
+          -   name: Install Packages
+              run: composer install --no-dev
+          -   name: Deploy to Server
+              uses: ngocquyhoang/deploy@laravel
+              with:
+                  user: ${{ secrets.SSH_USER }}
+                  host: ${{ secrets.HOST }}
+                  path: ${{ secrets.PATH }}
+                  owner: ${{ secrets.OWNER }}
+              env:
+                  DEPLOY_KEY: ${{ secrets.DEPLOY_KEY }}
