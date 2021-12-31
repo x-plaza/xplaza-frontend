@@ -10,7 +10,7 @@
                         $productCounter ++;
                     @endphp
                     <div class="col-sm-6 col-lg-4 col-xl-3">
-                    <div class="product-item">
+                    <div @if($product->quantity > 0)class="product-item"@else class="product-item stock-out" @endif>
                         <div class="product-thumb">
                             @php
                                 $imagePath = 'website_src/product_sample.png';

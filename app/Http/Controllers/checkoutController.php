@@ -172,8 +172,6 @@ class checkoutController extends Controller
 //        session()->put( 'selected_shop_id', null );
 //        Session::save();
 
-
-        $invoice = 'INV'.date('ymdhis');
         return response()->json(['responseCode' => 1, 'message' => 'Order placed successfully','Total_price'=> 'R '.$grandTotalPrice,'invoice'=>$invoice]);
     }
 
@@ -223,8 +221,17 @@ class checkoutController extends Controller
         foreach ($deliverySchedule as $data){
             $subData = [];
             if (strtoupper($data['day_name']) == strtoupper($selectedDay)){
-                $subData['id'] = $data['schedule_id'];
-                $subData['day_slot'] = $data['day_slot'];
+                if (date('D') == $selectedDay){
+                    if (intval(date('H')) < intval(substr(explode('-',$data['day_slot'])[1],0,2))){
+                        $subData['id'] = $data['schedule_id'];
+                        $subData['day_slot'] = $data['day_slot'];
+                    }else{
+                        continue;
+                    }
+                }else{
+                    $subData['id'] = $data['schedule_id'];
+                    $subData['day_slot'] = $data['day_slot'];
+                }
             }else{
                 continue;
             }

@@ -181,7 +181,7 @@
                             <p class="order_number_section"></p>
                         </li>
                         <li>
-                            <h6>Total</h6>
+                            <h6>Total Price</h6>
                             <span>:</span>
                             <p class="total_price_section"></p>
                         </li>
