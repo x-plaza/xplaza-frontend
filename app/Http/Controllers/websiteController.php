@@ -158,7 +158,7 @@ class websiteController extends Controller
             {
                 $image_full_img = 'website_src/product_sample.png';
                 if(isset($row->productImages[0]->name)){
-                    $image_full_img = "https://admin.xwinkel.com/item_image/".$row->productImages[0]->name;
+                    $image_full_img = env('IMAGE_BASE_URL')."/item_image/".$row->productImages[0]->name;
                 }
                 $full_url = url('/website/item-details/'.$row->id);
                 $temp_array = array();
@@ -220,7 +220,7 @@ class websiteController extends Controller
         $imageName = isset($product_data->productImageList[0]->name) ? $product_data->productImageList[0]->name : null;
         $imagePath = 'website_src/product_sample.png';
         if (isset($imageName)){
-            $imagePath = "https://admin.xwinkel.com/item_image/".$imageName;
+            $imagePath = env('IMAGE_BASE_URL')."/item_image/".$imageName;
         }
 
         return view('product_details',compact('city_data','category_data','cubCat','authId','product_data','has_product_data','imagePath'));

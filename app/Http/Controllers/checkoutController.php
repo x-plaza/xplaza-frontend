@@ -213,6 +213,7 @@ class checkoutController extends Controller
      */
     public function deliveryTimeSlot(Request $request)
     {
+        date_default_timezone_set("Asia/Seoul");
         $deliveryDate = $request->get('delivery_date');
         $selectedDay = date('D', strtotime($deliveryDate));
         $deliverySchedule  = HandleApi::getDeliverySchedule();
