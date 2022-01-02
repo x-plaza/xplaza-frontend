@@ -194,7 +194,7 @@
 {{--                            <input type="text" name="search" placeholder="Search Products...">--}}
 {{--                            <button class="submit-btn"><i class="fas fa-search"></i></button>--}}
 {{--                        </form>--}}
-                        <select class="search_product_section form-control" id="item_selector">
+                        <select class="search_product_section form-control" id="item_selector" onchange="getProductVal(this);">
                             @foreach(App\Libraries\HandleApi::searchProductData() as $product)
                                 <option value="{{$product['id']}}"> {{$product['name']}}</option>
                             @endforeach
@@ -232,7 +232,7 @@
 {{--                                                            <input type="text" name="search" id="search_data" placeholder="Search Products.....">--}}
 {{--                                                            <button class="submit-btn"><i class="fas fa-search"></i></button>--}}
 {{--                                                        </form>--}}
-                            <select class="search_product_section form-control" id="item_selector">
+                            <select class="search_product_section form-control" id="item_selector" onchange="getProductVal(this);">
                                 @foreach(App\Libraries\HandleApi::searchProductData() as $product)
                                     <option value="{{$product['id']}}"> {{$product['name']}}</option>
                                 @endforeach
@@ -606,14 +606,23 @@
         $(".search_product_section").select2();
     });
 
-    $(document).on('change', '.search_product_section', function () {
-      //  var productId = $('#item_selector option:selected').val();
-        var productId = $('#item_selector :selected').val();
-     //   alert(productId)
+    {{--$(document).on('change', '.search_product_section', function () {--}}
+    {{--    var productId = $('#item_selector option:selected').val();--}}
+    {{--  //  var productId = $('#item_selector :selected').val();--}}
+    {{--    alert(productId);return false;--}}
+    {{--    if (productId != -99999) {--}}
+    {{--        location.href = "{{url('website/item-details')}}" + '/' + parseInt(productId);--}}
+    {{--    }--}}
+    {{--})--}}
+
+    function getProductVal(sel)
+    {
+        var productId = sel.value;
+       // alert(productId);return false;
         if (productId != -99999) {
             location.href = "{{url('website/item-details')}}" + '/' + parseInt(productId);
         }
-    })
+    }
 
     $(document).ready(function(){
 
