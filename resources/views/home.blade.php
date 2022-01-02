@@ -915,7 +915,7 @@
             if(location_id == ''){alert('Please select location');return false;}
             if(shop_id == ''){alert('Please select shop');return false;}
 
-            $('.dashboard_loader').css({"display":"block"});
+           // $('.dashboard_loader').css({"display":"block"});
 
             var btn = jQuery(this);
             var btn_content = btn.html();

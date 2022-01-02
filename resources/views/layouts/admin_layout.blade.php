@@ -195,7 +195,6 @@
 {{--                            <button class="submit-btn"><i class="fas fa-search"></i></button>--}}
 {{--                        </form>--}}
                         <select class="search_product_section form-control" id="item_selector">
-{{--                            <option value="-99999"> Search product</option>--}}
                             @foreach(App\Libraries\HandleApi::searchProductData() as $product)
                                 <option value="{{$product['id']}}"> {{$product['name']}}</option>
                             @endforeach
@@ -234,7 +233,6 @@
 {{--                                                            <button class="submit-btn"><i class="fas fa-search"></i></button>--}}
 {{--                                                        </form>--}}
                             <select class="search_product_section form-control" id="item_selector">
-{{--                                <option value="-99999"> Search product</option>--}}
                                 @foreach(App\Libraries\HandleApi::searchProductData() as $product)
                                     <option value="{{$product['id']}}"> {{$product['name']}}</option>
                                 @endforeach
@@ -611,6 +609,7 @@
     $(document).on('change', '.search_product_section', function () {
       //  var productId = $('#item_selector option:selected').val();
         var productId = $('#item_selector :selected').val();
+     //   alert(productId)
         if (productId != -99999) {
             location.href = "{{url('website/item-details')}}" + '/' + parseInt(productId);
         }
