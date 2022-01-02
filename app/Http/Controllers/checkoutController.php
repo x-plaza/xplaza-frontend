@@ -167,8 +167,8 @@ class checkoutController extends Controller
 
         session()->put( 'cart_item_array', [] );
         Session::save();
-        session()->put( 'session_others_array', null );
-        Session::save();
+//        session()->put( 'session_others_array', null );
+//        Session::save();
 //        session()->put( 'selected_shop_id', null );
 //        Session::save();
 
