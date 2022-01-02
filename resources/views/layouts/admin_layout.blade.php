@@ -177,7 +177,7 @@
         $shopName = isset($shopArray['shop_name']) ? $shopArray['shop_name'] : null;
     @endphp
     <!-- Mobile View -->
-        @if(Request::is('home/*') || Request::is('/'))
+        @if(Request::is('home/*') || Request::is('/') || Request::is('website/item-details/*') || Request::is('product-by-category/sub/*') || Request::is('all-trending-products'))
             <div class="mobile-header row align-items-center d-xl-none">
                 <div class="banner-search">
                     <div class="select-search-option d-md-flex">
@@ -194,8 +194,8 @@
 {{--                            <input type="text" name="search" placeholder="Search Products...">--}}
 {{--                            <button class="submit-btn"><i class="fas fa-search"></i></button>--}}
 {{--                        </form>--}}
-                        <select class="search_product_section form-control">
-                            <option value="-99999"> Search product</option>
+                        <select class="search_product_section form-control" id="item_selector">
+{{--                            <option value="-99999"> Search product</option>--}}
                             @foreach(App\Libraries\HandleApi::searchProductData() as $product)
                                 <option value="{{$product['id']}}"> {{$product['name']}}</option>
                             @endforeach
@@ -216,7 +216,7 @@
                 </div>
             </div>
             <div class="col-md-8">
-                @if(Request::is('home/*') || Request::is('/') || Request::is('website/item-details/*') || Request::is('product-by-category/sub/*'))
+                @if(Request::is('home/*') || Request::is('/') || Request::is('website/item-details/*') || Request::is('product-by-category/sub/*') || Request::is('all-trending-products'))
                     <div class="banner-search">
                         <div class="select-search-option d-md-flex">
                             <button id="btn-shop-id" type="button" data-toggle="modal" data-target="#shop-modal-id"
@@ -233,8 +233,8 @@
 {{--                                                            <input type="text" name="search" id="search_data" placeholder="Search Products.....">--}}
 {{--                                                            <button class="submit-btn"><i class="fas fa-search"></i></button>--}}
 {{--                                                        </form>--}}
-                            <select class="search_product_section form-control">
-                                <option value="-99999"> Search product</option>
+                            <select class="search_product_section form-control" id="item_selector">
+{{--                                <option value="-99999"> Search product</option>--}}
                                 @foreach(App\Libraries\HandleApi::searchProductData() as $product)
                                     <option value="{{$product['id']}}"> {{$product['name']}}</option>
                                 @endforeach
@@ -609,7 +609,8 @@
     });
 
     $(document).on('change', '.search_product_section', function () {
-        var productId = $('.search_product_section').val();
+      //  var productId = $('#item_selector option:selected').val();
+        var productId = $('#item_selector :selected').val();
         if (productId != -99999) {
             location.href = "{{url('website/item-details')}}" + '/' + parseInt(productId);
         }

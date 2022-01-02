@@ -943,123 +943,123 @@
                     btn.prop('disabled', false);
 
                     if (response.responseCode == 1) {
-                        $('.trending-product-section').css({"display":"block"});
-                        $('.trending-product-section').html(response.html);
+                        // $('.trending-product-section').css({"display":"block"});
+                        // $('.trending-product-section').html(response.html);
                         location.reload();
                         $('#shop-modal-id').modal('hide');
                     }
-                    (function ($) {
-                        // catagory-container swiper slider init
-                        var catagoryContainer2 = new Swiper('.category-container2', {
-                            slidesPerView: 6,
-                            autoplay: {
-                                delay: 2500,
-                                disableOnInteraction: false,
-                            },
-                            loop: true,
-                            navigation: {
-                                nextEl: '.catagory-slider-next',
-                                prevEl: '.catagory-slider-prev',
-                            },
-                            spaceBetween: 30,
-                            breakpoints: {
-                                1300: {
-                                    slidesPerView: 4
-                                },
-                                768: {
-                                    slidesPerView: 3
-                                },
-                                540: {
-                                    slidesPerView: 2
-                                },
-                                400: {
-                                    slidesPerView: 2
-                                }
-                            }
-                        });
-
-                        // catagory-container swiper slider init
-                        var catagoryContainer = new Swiper('.catagory-container', {
-                            slidesPerView: 6,
-                            loop: true,
-                            navigation: {
-                                nextEl: '.catagory-slider-next',
-                                prevEl: '.catagory-slider-prev',
-                            },
-                            spaceBetween: 30,
-                            breakpoints: {
-                                990: {
-                                    slidesPerView: 4
-                                },
-                                768: {
-                                    slidesPerView: 2
-                                },
-                                540: {
-                                    slidesPerView: 2
-                                },
-                                400: {
-                                    slidesPerView: 2
-                                }
-                            }
-                        });
-
-                        // trending-product-container swiper slider init
-                        var trendingContainer = new Swiper('.trending-product-container', {
-                            slidesPerView: 4,
-                            loop: true,
-                            navigation: {
-                                nextEl: '.trending-slider-next',
-                                prevEl: '.trending-slider-prev',
-                            },
-                            spaceBetween: 30,
-                            breakpoints: {
-                                1200: {
-                                    slidesPerView: 3
-                                },
-                                990: {
-                                    slidesPerView: 3
-                                },
-                                768: {
-                                    slidesPerView: 2
-                                },
-                                540: {
-                                    slidesPerView: 1
-                                },
-                                400: {
-                                    slidesPerView: 1
-                                }
-                            }
-                        });
-
-                        // trending-product-container swiper slider init
-                        var recommendContainer = new Swiper('.recommend-product-container', {
-                            slidesPerView: 4,
-                            loop: true,
-                            navigation: {
-                                nextEl: '.trending-slider-next',
-                                prevEl: '.trending-slider-prev',
-                            },
-                            spaceBetween: 30,
-                            breakpoints: {
-                                1200: {
-                                    slidesPerView: 3
-                                },
-                                990: {
-                                    slidesPerView: 3
-                                },
-                                768: {
-                                    slidesPerView: 2
-                                },
-                                540: {
-                                    slidesPerView: 1
-                                },
-                                400: {
-                                    slidesPerView: 1
-                                }
-                            }
-                        });
-
-                    })(jQuery);
+                    // (function ($) {
+                    //     // catagory-container swiper slider init
+                    //     var catagoryContainer2 = new Swiper('.category-container2', {
+                    //         slidesPerView: 6,
+                    //         autoplay: {
+                    //             delay: 2500,
+                    //             disableOnInteraction: false,
+                    //         },
+                    //         loop: true,
+                    //         navigation: {
+                    //             nextEl: '.catagory-slider-next',
+                    //             prevEl: '.catagory-slider-prev',
+                    //         },
+                    //         spaceBetween: 30,
+                    //         breakpoints: {
+                    //             1300: {
+                    //                 slidesPerView: 4
+                    //             },
+                    //             768: {
+                    //                 slidesPerView: 3
+                    //             },
+                    //             540: {
+                    //                 slidesPerView: 2
+                    //             },
+                    //             400: {
+                    //                 slidesPerView: 2
+                    //             }
+                    //         }
+                    //     });
+                    //
+                    //     // catagory-container swiper slider init
+                    //     var catagoryContainer = new Swiper('.catagory-container', {
+                    //         slidesPerView: 6,
+                    //         loop: true,
+                    //         navigation: {
+                    //             nextEl: '.catagory-slider-next',
+                    //             prevEl: '.catagory-slider-prev',
+                    //         },
+                    //         spaceBetween: 30,
+                    //         breakpoints: {
+                    //             990: {
+                    //                 slidesPerView: 4
+                    //             },
+                    //             768: {
+                    //                 slidesPerView: 2
+                    //             },
+                    //             540: {
+                    //                 slidesPerView: 2
+                    //             },
+                    //             400: {
+                    //                 slidesPerView: 2
+                    //             }
+                    //         }
+                    //     });
+                    //
+                    //     // trending-product-container swiper slider init
+                    //     var trendingContainer = new Swiper('.trending-product-container', {
+                    //         slidesPerView: 4,
+                    //         loop: true,
+                    //         navigation: {
+                    //             nextEl: '.trending-slider-next',
+                    //             prevEl: '.trending-slider-prev',
+                    //         },
+                    //         spaceBetween: 30,
+                    //         breakpoints: {
+                    //             1200: {
+                    //                 slidesPerView: 3
+                    //             },
+                    //             990: {
+                    //                 slidesPerView: 3
+                    //             },
+                    //             768: {
+                    //                 slidesPerView: 2
+                    //             },
+                    //             540: {
+                    //                 slidesPerView: 1
+                    //             },
+                    //             400: {
+                    //                 slidesPerView: 1
+                    //             }
+                    //         }
+                    //     });
+                    //
+                    //     // trending-product-container swiper slider init
+                    //     var recommendContainer = new Swiper('.recommend-product-container', {
+                    //         slidesPerView: 4,
+                    //         loop: true,
+                    //         navigation: {
+                    //             nextEl: '.trending-slider-next',
+                    //             prevEl: '.trending-slider-prev',
+                    //         },
+                    //         spaceBetween: 30,
+                    //         breakpoints: {
+                    //             1200: {
+                    //                 slidesPerView: 3
+                    //             },
+                    //             990: {
+                    //                 slidesPerView: 3
+                    //             },
+                    //             768: {
+                    //                 slidesPerView: 2
+                    //             },
+                    //             540: {
+                    //                 slidesPerView: 1
+                    //             },
+                    //             400: {
+                    //                 slidesPerView: 1
+                    //             }
+                    //         }
+                    //     });
+                    //
+                    // })(jQuery);
                 }
             });
         });
