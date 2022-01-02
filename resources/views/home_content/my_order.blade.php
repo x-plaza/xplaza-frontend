@@ -27,7 +27,7 @@
             </thead>
             <tbody>
             <tr>
-                <td class="text-center">Order#INVXPLZ{{$product->invoice_number}}</td>
+                <td class="text-center">Order - {{$product->invoice_number}}</td>
                 <td class="text-center">{{$totalItem}} Items</td>
                 <td class="text-right">{{$product->currency_sign}} {{$product->grand_total_price}}</td>
             </tr>

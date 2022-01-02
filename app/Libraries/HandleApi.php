@@ -156,7 +156,7 @@ class HandleApi {
         foreach ($product_data as $data){
             if ($data->quantity < 1){continue;}
             $subData['id'] = $data->id;
-            $subData['name'] = $data->name;
+            $subData['name'] = $data->name .' ( '.$data->product_var_type_value.' '.$data->product_var_type_name.' )';
             $allData[] =  $subData;
         }
         return $allData;
