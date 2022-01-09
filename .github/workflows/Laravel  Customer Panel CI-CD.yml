@@ -2,9 +2,9 @@ name: Customer Panel Laravel CI/CD
 
 on:
   push:
-    branches: [dev]
+    branches: [server-deploy]
   pull_request:
-    branches: [dev]
+    branches: [server-deploy]
 
 jobs:
   test:
@@ -45,7 +45,7 @@ jobs:
         with:
           user: ${{ secrets.SSH_USER }}
           host: ${{ secrets.HOST }}
-          path: ${{ secrets.DEV_PATH }}
+          path: ${{ secrets.PATH }}
           owner: ${{ secrets.OWNER }}
         env:
           DEPLOY_KEY: ${{ secrets.SSH_KEY }}
@@ -55,7 +55,7 @@ jobs:
         uses: fifsky/ssh-action@master
         with:
           command: |
-            cd ${{ secrets.DEV_PATH }} && composer install && find . -type f -exec chmod 644 {} \; && find . -type d -exec chmod 755 {} \; &
+            cd ${{ secrets.PATH }} && composer install && find . -type f -exec chmod 644 {} \; && find . -type d -exec chmod 755 {} \; &
           host: ${{ secrets.HOST }}
           user: ${{ secrets.SSH_USER }}
           pass: ${{ secrets.SSH_PASSWORD }}
