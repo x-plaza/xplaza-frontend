@@ -186,8 +186,8 @@ class apiAuthenticationsController extends Controller
         Session::save();
         session()->put( 'session_others_array', null );
         Session::save();
-//        session()->put( 'selected_shop_id', null );
-//        Session::save();
+        session()->put( 'selected_shop_id', null );
+        Session::save();
         session()->put( 'auth_user_id', null );
         Session::save();
 
