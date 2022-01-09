@@ -37,9 +37,8 @@
             <div class="modal-body">
                 <div class="header-top-action-dropdown">
                     <ul>
-                        <li class="site-phone"><a href="tel:000-000-000"><i class="fas fa-phone"></i> 000 000
-                                000</a></li>
-                        <li class="site-help"><a href="#"><i class="fas fa-question-circle"></i> Help & More</a>
+                        <li class="site-phone"><a href="https://wa.me/27846347530" target="_blank"><i class="fas fa-phone"></i> +27 84 634 7530 </a></li>
+                        <li class="site-help"><a href="https://wa.me/27846347530" target="_blank"><i class="fas fa-question-circle"></i> Help & More</a>
                         </li>
                     </ul>
                 </div>
@@ -162,8 +161,7 @@
             </div>
             <div class="col-5 col-md-9 col-lg-5">
                 <ul class="site-action d-none d-lg-flex justify-content-start align-items-center topbar-info">
-                    <li class="site-phone mr-4"><a href="tel:000-000-000"><i class="fas fa-phone"></i> +49 178 929
-                            1398</a></li>
+                    <li class="site-phone mr-4"><a href="https://wa.me/27846347530" target="_blank"><i class="fas fa-phone"></i> +27 84 634 7530</a></li>
                     <li class="site-help"><a href="#"><i class="fas fa-question-circle"></i> Help & More</a></li>
                 </ul>
             </div>
@@ -210,9 +208,9 @@
             <div class="col-md-2 p-0 d-none d-xl-block">
                 <div class="all-catagory-option">
                     <a class="bar-btn"><i class="fas fa-bars"></i><span class="ml-2 d-none d-md-inline">All
-                                Catagories</span></a>
+                                categories</span></a>
                     <a class="close-btn"><i class="fas fa-times"></i><span class="ml-2 d-none d-md-inline">All
-                                Catagories</span></a>
+                                categories</span></a>
                 </div>
             </div>
             <div class="col-md-8">
@@ -378,6 +376,7 @@
                                 <p>xwinkel.com is an online supermarket available in Jeffreys Bay, Aston Bay, Paradise Beach and St.Francis Bay. We believe time is valuable to our fellow residents and they should not waste hours in traffic, bad weather and wait in line just to buy basic necessities! This is why "X-winkel" delivers everything you need right at your door-step.</p>
                                 <ul class="social-media-list d-flex flex-wrap">
                                     <li><a href="https://www.facebook.com/winkelx"><i class="fab fa-facebook-f"></i></a>
+                                    <li><a href="https://wa.me/27846347530" target="_blank"><i class="fab fa-whatsapp"></i></a>
                                     </li>
                                     {{--                                    <li><a href="#"><i class="fab fa-twitter"></i></a></li>--}}
                                     {{--                                    <li><a href="#"><i class="fab fa-vimeo-v"></i></a></li>--}}
@@ -687,6 +686,10 @@
                     $('.reg_otp_message_section').html('<span style="color: red">Could not sent otp. Please try again</span>');
                 }
 
+            },
+            error: function (jqXHR, textStatus, errorThrown) {
+                location.reload();
+
             }
         });
     })
@@ -804,6 +807,10 @@
                     $('.reg_message_section').html('<span style="color: red;font-weight: bold;">' + response.message + '</span>');
                 }
 
+            },
+            error: function (jqXHR, textStatus, errorThrown) {
+                location.reload();
+
             }
         });
     })
@@ -848,6 +855,10 @@
                 } else {
                     $('.login_message_section').html('<span style="color: red;font-weight: bold;">' + response.message + '</span>');
                 }
+
+            },
+            error: function (jqXHR, textStatus, errorThrown) {
+                location.reload();
 
             }
         });
@@ -968,6 +979,7 @@
 
             },
             error: function (jqXHR, textStatus, errorThrown) {
+                location.reload();
 
             }
         });
@@ -993,6 +1005,7 @@
 
             },
             error: function (jqXHR, textStatus, errorThrown) {
+                location.reload();
 
             }
         });
@@ -1022,6 +1035,7 @@
 
             },
             error: function (jqXHR, textStatus, errorThrown) {
+                location.reload();
 
             }
         })

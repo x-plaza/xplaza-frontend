@@ -34,7 +34,7 @@
                                         <label>Coupon</label>
                                         <div class="row">
                                             <div class="col-md-8">
-                                                <input type="text" class="coupon_number" name="email">
+                                                <input type="text" class="coupon_number" name="coupon">
                                             </div>
                                             <div class="col-md-4">
                                                 <button class="btn btn-primary btn-md coupon_validate_btn"
@@ -293,6 +293,10 @@
                         $('.coupon_validate_message_section').html('<span style="color: red">'+response.message+'</span>');
                     }
 
+                },
+                error: function (jqXHR, textStatus, errorThrown) {
+                    location.reload();
+
                 }
             });
         })
@@ -327,6 +331,10 @@
                             text: 'No schedule'
                         }));
                     }
+                },
+                error: function (jqXHR, textStatus, errorThrown) {
+                    location.reload();
+
                 }
             });
         })
@@ -355,6 +363,7 @@
                     }
                 },
                 error: function (jqXHR, textStatus, errorThrown) {
+                    location.reload();
 
                 }
             });
@@ -386,6 +395,7 @@
                     }
                 },
                 error: function (jqXHR, textStatus, errorThrown) {
+                    location.reload();
 
                 }
             });
@@ -413,6 +423,7 @@
                     }
                 },
                 error: function (jqXHR, textStatus, errorThrown) {
+                    location.reload();
 
                 }
             });
@@ -476,6 +487,7 @@
                     }
                 },
                 error: function (jqXHR, textStatus, errorThrown) {
+                    location.reload();
 
                 }
             });
@@ -507,6 +519,7 @@
                     }
                 },
                 error: function (jqXHR, textStatus, errorThrown) {
+                    location.reload();
 
                 }
             });
