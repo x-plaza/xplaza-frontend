@@ -153,10 +153,13 @@ class HandleApi {
         $decodedData = json_decode($curlOutput);
         $product_data = isset($decodedData->data) ? $decodedData->data : [];
         $allData = [];
+        $subData['id'] = -99999;
+        $subData['name'] = 'Search product';
+        $allData[] =  $subData;
         foreach ($product_data as $data){
             if ($data->quantity < 1){continue;}
             $subData['id'] = $data->id;
-            $subData['name'] = $data->name;
+            $subData['name'] = $data->name .' ( '.$data->product_var_type_value.' '.$data->product_var_type_name.' )';
             $allData[] =  $subData;
         }
         return $allData;

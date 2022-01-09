@@ -41,7 +41,7 @@
                                 @php
                                     $imagePath = 'website_src/product_sample.png';
                                     if (isset($product->productImageList[0])){
-                                        $imagePath = "https://admin.xwinkel.com/item_image/".$product->productImageList[0]->name;
+                                        $imagePath = env('IMAGE_BASE_URL')."/item_image/".$product->productImageList[0]->name;
                                     }
                                 @endphp
                                 <a class="product_modal_open_button" data-itemcode="{{$product->id}}"

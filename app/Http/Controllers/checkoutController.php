@@ -167,14 +167,12 @@ class checkoutController extends Controller
 
         session()->put( 'cart_item_array', [] );
         Session::save();
-        session()->put( 'session_others_array', null );
-        Session::save();
+//        session()->put( 'session_others_array', null );
+//        Session::save();
 //        session()->put( 'selected_shop_id', null );
 //        Session::save();
 
-
-        $invoice = 'INV'.date('ymdhis');
-        return response()->json(['responseCode' => 1, 'message' => 'Order placed successfully','Total_price'=> $totalPrice.' BDT','invoice'=>$invoice]);
+        return response()->json(['responseCode' => 1, 'message' => 'Order placed successfully','Total_price'=> 'R '.$grandTotalPrice,'invoice'=>$invoice]);
     }
 
 
@@ -215,6 +213,7 @@ class checkoutController extends Controller
      */
     public function deliveryTimeSlot(Request $request)
     {
+        // date_default_timezone_set("Africa/Johannesburg");
         $deliveryDate = $request->get('delivery_date');
         $selectedDay = date('D', strtotime($deliveryDate));
         $deliverySchedule  = HandleApi::getDeliverySchedule();
@@ -223,8 +222,17 @@ class checkoutController extends Controller
         foreach ($deliverySchedule as $data){
             $subData = [];
             if (strtoupper($data['day_name']) == strtoupper($selectedDay)){
-                $subData['id'] = $data['schedule_id'];
-                $subData['day_slot'] = $data['day_slot'];
+                if (date('D') == $selectedDay){
+                    if (intval(date('H')) < intval(substr(explode('-',$data['day_slot'])[1],0,2))){
+                        $subData['id'] = $data['schedule_id'];
+                        $subData['day_slot'] = $data['day_slot'];
+                    }else{
+                        continue;
+                    }
+                }else{
+                    $subData['id'] = $data['schedule_id'];
+                    $subData['day_slot'] = $data['day_slot'];
+                }
             }else{
                 continue;
             }
