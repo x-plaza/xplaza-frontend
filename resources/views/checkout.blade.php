@@ -17,10 +17,14 @@
                         <h6>Delivery Info</h6>
                         <form action="#" class="billing-form">
                             <div class="row">
-                                <div class="col-lg-12">
-                                    <div class="input-item">
+                                <div class="row col-lg-12">
+                                    <div class="col-md-6 input-item">
                                         <label>Delivery Address*</label>
                                         <textarea class="form-control customer_address"></textarea>
+                                    </div>
+                                    <div class="col-md-6 input-item">
+                                        <label>Additional Info</label>
+                                        <textarea class="form-control order_additional_info"></textarea>
                                     </div>
                                 </div>
                                 <div class="col-lg-6">
@@ -63,6 +67,9 @@
                     </div>
 
                     <div class="form-item payment-item bg-color-white box-shadow p-3 p-lg-5 border-radius5">
+                        <div class="alert alert-info">
+                            <strong>Payment Type : Cash on delivery</strong>
+                        </div>
                         <div class="text-left">
                             <p class="error_message_section" style="color: darkred;font-weight: bold;"></p>
                         </div>
@@ -440,6 +447,7 @@
             var delivery_schedule_text  = $('.checkout_delivery_schedule_id').text();
          //   var customer_full_name  = $('.customer_full_name').val();
             var customer_address  = $('.customer_address').val();
+            var order_additional_info  = $('.order_additional_info').val();
             var coupon_number  = $('.coupon_number').val();
             var customer_mobile  = $('.customer_mobile').val();
             var delivery_date  = $('.delivery_date').val();
@@ -467,6 +475,7 @@
                     delivery_date: delivery_date,
                  //   customer_full_name: customer_full_name,
                     customer_address: customer_address,
+                    order_additional_info : order_additional_info,
                     coupon_number: coupon_number,
                     customer_mobile: customer_mobile
                 },

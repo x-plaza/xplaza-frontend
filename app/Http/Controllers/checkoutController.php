@@ -81,6 +81,7 @@ class checkoutController extends Controller
         $coupon_number  = $request->get('coupon_number');
         $customer_mobile  = $request->get('customer_mobile');
         $delivery_date  = $request->get('delivery_date');
+        $order_additional_info  = $request->get('order_additional_info');
 
         if (!isset($delivery_schedule_text)  || !isset($customer_address) || !isset($customer_mobile) ){
             return response()->json(['responseCode' => 0, 'message' => 'Input data missing']);
@@ -120,7 +121,7 @@ class checkoutController extends Controller
            "customer_name"=>trim($customer_full_name),
            "mobile_no"=>trim($customer_mobile),
            "delivery_address"=>trim($customer_address),
-           "additional_info"=>"No",
+           "additional_info"=>$order_additional_info,
            "delivery_schedule_start"=>explode('-',$delivery_schedule_id)[0],
            "delivery_schedule_end"=>explode('-',$delivery_schedule_id)[1],
            "received_time"=>date('Y-m-d',strtotime($delivery_date))."T15:14:26.637Z",
