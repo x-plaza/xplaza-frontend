@@ -157,7 +157,6 @@ class checkoutController extends Controller
 
         $api_url = env('API_BASE_URL')."/api/order/add";
         $curlOutput  = HandleApi::getCURLOutput( $api_url, 'POST', json_encode($finalOrderData) );
-        dd($curlOutput, json_encode($finalOrderData));
         $response = json_decode($curlOutput,true);
 
         $orderResp = json_decode($response['data']);
