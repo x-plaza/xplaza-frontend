@@ -496,7 +496,7 @@
                     }
                 },
                 error: function (jqXHR, textStatus, errorThrown) {
-                    location.reload();
+                  //  location.reload();
 
                 }
             });
