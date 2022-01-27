@@ -83,6 +83,7 @@
         </section>
         <!-- product-zoom-info section end -->
 
+        <input type="hidden" class="product_name_for_title" value="{{$product_data->name}}">
     </div>
    @else
          <center><h2>No product found</h2></center>
@@ -99,7 +100,8 @@
 
     <script language="javascript">
 
-
+        var product_name_for_title = jQuery('.product_name_for_title').val();
+        document.title = product_name_for_title;
 
         $(document).on('click','.quantity-right-plus-btn',function () {
             var itemcode = jQuery(this).data('itemcode');

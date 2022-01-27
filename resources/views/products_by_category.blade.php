@@ -115,6 +115,9 @@
     </section>
     <!-- product-details-popup end -->
     <input type="hidden" class="product_cat_id" value="{{$cat_id}}">
+    <input type="hidden" class="product_cat_name_val" value="{{$category_name}}">
+    <input type="hidden" class="title_flag" value="@if( Request::is('product-by-category/sub/*')) 1 @else 0 @endif">
+
 
 @endsection
 
@@ -125,6 +128,11 @@
     <input type="hidden" name="_token" value="<?php echo csrf_token(); ?>"/>
 
     <script language="javascript">
+        var title_flag = jQuery('.title_flag').val();
+        if(title_flag == 1){
+            var category_name = jQuery('.product_cat_name_val').val();
+            document.title = category_name;
+        }
 
         $('.product-list>.col-sm-6').hide();
         $('.product-list>.col-sm-6').slice(0,12).show();

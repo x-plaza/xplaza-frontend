@@ -53,9 +53,16 @@ class websiteController extends Controller
             Session::save();
         }
 
+        $cat_api_url = env('API_BASE_URL')."/api/category/".intval($cat_id);
+        $cat_curlOutput  = HandleApi::getCURLOutput( $cat_api_url, 'GET', [] );
+        $cat_decodedData = json_decode($cat_curlOutput);
+        $cat_data = isset($cat_decodedData->data) ? $cat_decodedData->data : [];
+
+        $category_name = isset($cat_data->name) ? $cat_data->name : 'x-winkel';
+
         $cubCat = [];
 
-        return view('products_by_category',compact('city_data','category_data','cubCat','cat_id'));
+        return view('products_by_category',compact('city_data','category_data','cubCat','cat_id','category_name'));
 
     }
     /**
