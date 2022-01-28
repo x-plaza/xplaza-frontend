@@ -73,18 +73,12 @@ class websiteController extends Controller
     public function shopSelection(Request $request)
     {
         $shop_id = $request->get('shop_id');
-
         $session_selected_shop_id = Session::get( 'selected_shop_id' );
         if($session_selected_shop_id != null && ($session_selected_shop_id != $shop_id)){
             session()->put( 'cart_item_array', [] );
             Session::save();
         }
-
         $othersDataArray = ( Session::get( 'session_others_array' ) ) ? Session::get( 'session_others_array' ) : null;
-        $othersDataArray['shop_id'] = $request->get('shop_id');
-        $othersDataArray['shop_name'] = $request->get('shop_name');
-      //  $othersDataArray['location_id'] = $request->get('location_id');
-        $othersDataArray['city_id'] = $request->get('city_id');$othersDataArray = ( Session::get( 'session_others_array' ) ) ? Session::get( 'session_others_array' ) : null;
         $othersDataArray['shop_id'] = $request->get('shop_id');
         $othersDataArray['shop_name'] = $request->get('shop_name');
         $othersDataArray['location_id'] = $request->get('location_id');
@@ -94,13 +88,7 @@ class websiteController extends Controller
         Session::save();
         session()->put( 'selected_shop_id', $shop_id );
         Session::save();
-
-        $api_url = env('API_BASE_URL')."/api/product/by-shop?shop_id=".intval($shop_id);
-        $curlOutput  = HandleApi::getCURLOutput( $api_url, 'GET', [] );
-        $decodedData = json_decode($curlOutput);
-        $product_data = isset($decodedData->data) ? $decodedData->data : [];
-        $public_html = strval(view("home_content.trending_product_content", compact('product_data')));
-        return response()->json(['responseCode' => 1, 'html' => $public_html]);
+        return response()->json(['responseCode' => 1]);
     }
 
     public function trendingProductListForShop(Request $request)
