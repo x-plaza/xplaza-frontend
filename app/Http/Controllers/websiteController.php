@@ -94,7 +94,7 @@ class websiteController extends Controller
     public function trendingProductListForShop(Request $request)
     {
         $shop_id = intval($request->get('shop_id'));
-        $api_url = env('API_BASE_URL')."/api/product/by-shop?shop_id=".$shop_id;
+        $api_url = env('API_BASE_URL')."/api/product/by-trending?shop_id=".$shop_id;
         $curlOutput  = HandleApi::getCURLOutput( $api_url, 'GET', [] );
         $decodedData = json_decode($curlOutput);
         $product_data = isset($decodedData->data) ? $decodedData->data : [];
@@ -105,7 +105,7 @@ class websiteController extends Controller
     public function trendingProductListAllData(Request $request)
     {
         $shop_id = intval($request->get('shop_id'));
-        $api_url = env('API_BASE_URL')."/api/product/by-shop?shop_id=".$shop_id;
+        $api_url = env('API_BASE_URL')."/api/product/by-trending?shop_id=".$shop_id;
         $curlOutput  = HandleApi::getCURLOutput( $api_url, 'GET', [] );
         $decodedData = json_decode($curlOutput);
         $product_data = isset($decodedData->data) ? $decodedData->data : [];
