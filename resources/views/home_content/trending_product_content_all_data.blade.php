@@ -81,7 +81,7 @@
                             >
                                                         <span class="cart-btn"><i class="fas fa-shopping-cart"></i> <b
                                                                     class="cart-text-conditional-show">Cart</b></span>
-
+                                <div style="height: 6px;"></div>
                                 <div class="price-btn">
                                     <div class="price-increase-decrese-group d-flex">
                                                                 <span class="decrease-btn">

@@ -106,24 +106,25 @@
                                 >
                                                         <span class="cart-btn"><i class="fas fa-shopping-cart"></i> <b
                                                                     class="cart-text-conditional-show">Cart</b></span>
+                                    <div style="height: 6px;"></div>
 
                                     <div class="price-btn">
-                                        <div class="price-increase-decrese-group d-flex">
-                                                                <span class="decrease-btn">
-                                                                    <button type="button"
-                                                                            class="btn quantity-left-minus"
-                                                                            data-type="minus" data-field="">-
-                                                                    </button>
-                                                                </span>
-                                            <input type="text" name="quantity"
-                                                   class="form-controls input-number" value="1">
-                                            <span class="increase">
-                                                                    <button type="button"
-                                                                            class="btn quantity-right-plus" data-type="plus"
-                                                                            data-field="">+
-                                                                    </button>
-                                                                </span>
-                                        </div>
+{{--                                        <div class="price-increase-decrese-group d-flex">--}}
+{{--                                                                <span class="decrease-btn">--}}
+{{--                                                                    <button type="button"--}}
+{{--                                                                            class="btn quantity-left-minus"--}}
+{{--                                                                            data-type="minus" data-field="">---}}
+{{--                                                                    </button>--}}
+{{--                                                                </span>--}}
+{{--                                            <input type="text" name="quantity"--}}
+{{--                                                   class="form-controls input-number" value="1">--}}
+{{--                                            <span class="increase">--}}
+{{--                                                                    <button type="button"--}}
+{{--                                                                            class="btn quantity-right-plus" data-type="plus"--}}
+{{--                                                                            data-field="">+--}}
+{{--                                                                    </button>--}}
+{{--                                                                </span>--}}
+{{--                                        </div>--}}
                                     </div>
                                 </div>
                             </div>

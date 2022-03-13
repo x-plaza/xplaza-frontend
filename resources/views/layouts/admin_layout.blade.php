@@ -12,6 +12,22 @@
     @section('styles')
     @show
 
+<!-- Matomo -->
+    <script>
+        var _paq = window._paq = window._paq || [];
+        /* tracker methods like "setCustomDimension" should be called before "trackPageView" */
+        _paq.push(['trackPageView']);
+        _paq.push(['enableLinkTracking']);
+        (function() {
+            var u="//analytics.xwinkel.com/";
+            _paq.push(['setTrackerUrl', u+'matomo.php']);
+            _paq.push(['setSiteId', '1']);
+            var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0];
+            g.async=true; g.src=u+'matomo.js'; s.parentNode.insertBefore(g,s);
+        })();
+    </script>
+    <!-- End Matomo Code -->
+
 </head>
 
 <style type="text/css">
@@ -571,17 +587,30 @@
 
 <input type="hidden" class="selected_shop_id" value="{{Session::get( 'selected_shop_id' )}}">
 <a href="#top-page" class="to-top js-scroll-trigger"><span><i class="fas fa-arrow-up"></i></span></a>
+
+@if( Request::is('all-trending-products'))
+<script>
+    document.title = 'all trending products';
+</script>
+@endif
+
+@if( Request::is('checkout'))
+    <script>
+        document.title = 'checkout';
+    </script>
+@endif
+
 @section('scripts')
 @show
 <!-- <script>
-    $(document).ready(function () { //Make script DOM ready
-        $('#myselect').change(function () { //jQuery Change Function
-            var opval = $(this).val(); //Get value from select element
-            if (opval == "changeshop") { //Compare it and if true
-                $('#shopselectid').modal("show"); //Open Modal
-            }
-        });
-    });
+   $(document).ready(function () { //Make script DOM ready
+       $('#myselect').change(function () { //jQuery Change Function
+           var opval = $(this).val(); //Get value from select element
+           if (opval == "changeshop") { //Compare it and if true
+               $('#shopselectid').modal("show"); //Open Modal
+           }
+       });
+   });
 </script> -->
 
 {{--<script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.js"></script>--}}
@@ -594,552 +623,552 @@
 <script>
 
 
-    $(document).on('keyup', '#search_data', function () {
-        var search_data = $('#search_data').val();
-        if (search_data != '') {
-            $('.product_search_web').html('<i class="fa fa-spinner fa-spin"></i> Loading ....');
-        }
-    })
+   $(document).on('keyup', '#search_data', function () {
+       var search_data = $('#search_data').val();
+       if (search_data != '') {
+           $('.product_search_web').html('<i class="fa fa-spinner fa-spin"></i> Loading ....');
+       }
+   })
 
-    $(document).ready(function () {
-        $(".search_product_section").select2();
-    });
+   $(document).ready(function () {
+       $(".search_product_section").select2();
+   });
 
-    {{--$(document).on('change', '.search_product_section', function () {--}}
-    {{--    var productId = $('#item_selector option:selected').val();--}}
-    {{--  //  var productId = $('#item_selector :selected').val();--}}
-    {{--    alert(productId);return false;--}}
-    {{--    if (productId != -99999) {--}}
-    {{--        location.href = "{{url('website/item-details')}}" + '/' + parseInt(productId);--}}
-    {{--    }--}}
-    {{--})--}}
+   {{--$(document).on('change', '.search_product_section', function () {--}}
+   {{--    var productId = $('#item_selector option:selected').val();--}}
+   {{--  //  var productId = $('#item_selector :selected').val();--}}
+   {{--    alert(productId);return false;--}}
+   {{--    if (productId != -99999) {--}}
+   {{--        location.href = "{{url('website/item-details')}}" + '/' + parseInt(productId);--}}
+   {{--    }--}}
+   {{--})--}}
 
-    function getProductVal(sel)
-    {
-        var productId = sel.value;
-       // alert(productId);return false;
-        if (productId != -99999) {
-            location.href = "{{url('website/item-details')}}" + '/' + parseInt(productId);
-        }
-    }
+   function getProductVal(sel)
+   {
+       var productId = sel.value;
+      // alert(productId);return false;
+       if (productId != -99999) {
+           location.href = "{{url('website/item-details')}}" + '/' + parseInt(productId);
+       }
+   }
 
-    $(document).ready(function(){
+   $(document).ready(function(){
 
-        $('#search_data').autocomplete({
-            source: '{{ url('/website/product-search-data') }}',
-            minLength: 1,
-            select: function(event, ui)
-            {
-                $('#search_data').val(ui.item.value);
-            }
-        }).data('ui-autocomplete')._renderItem = function(ul, item){
-            $('.product_search_web').html('');
-            return $("<li class='ui-autocomplete-row'></li>")
-                .data("item.autocomplete", item)
-                .append(item.label)
-                .appendTo(ul);
-        };
-    });
+       $('#search_data').autocomplete({
+           source: '{{ url('/website/product-search-data') }}',
+           minLength: 1,
+           select: function(event, ui)
+           {
+               $('#search_data').val(ui.item.value);
+           }
+       }).data('ui-autocomplete')._renderItem = function(ul, item){
+           $('.product_search_web').html('');
+           return $("<li class='ui-autocomplete-row'></li>")
+               .data("item.autocomplete", item)
+               .append(item.label)
+               .appendTo(ul);
+       };
+   });
 
-    var selected_shop = $('.selected_shop_id').val();
-    if (selected_shop == '') {
-        $('#shop-modal-id').modal({
-            backdrop: 'static',
-            keyboard: false
-        });
-        $('#shop-modal-id').modal('show');
-    }
-    $(document).on('click', '.select_shop_btn_name', function () {
-        $('.select_city_dropdown_val').trigger('change');
-    })
+   var selected_shop = $('.selected_shop_id').val();
+   if (selected_shop == '') {
+       $('#shop-modal-id').modal({
+           backdrop: 'static',
+           keyboard: false
+       });
+       $('#shop-modal-id').modal('show');
+   }
+   $(document).on('click', '.select_shop_btn_name', function () {
+       $('.select_city_dropdown_val').trigger('change');
+   })
 
-    $(document).on('click', '.load_registration_form', function () {
-        $('.registration_content_section').css('display', 'block');
-        $('.login_content_section').css('display', 'none');
-    })
-    $(document).on('click', '.load_login_form', function () {
-        $('.registration_content_section').css('display', 'none');
-        $('.login_content_section').css('display', 'block');
-    })
+   $(document).on('click', '.load_registration_form', function () {
+       $('.registration_content_section').css('display', 'block');
+       $('.login_content_section').css('display', 'none');
+   })
+   $(document).on('click', '.load_login_form', function () {
+       $('.registration_content_section').css('display', 'none');
+       $('.login_content_section').css('display', 'block');
+   })
 
-    $(document).on('click', '.otp_sending_btn', function () {
-        var reg_email = $('.reg_email').val();
-        $('.reg_otp_message_section').html('');
-        if (reg_email == '') {
-            alert('Please enter valid email');
-            return false;
-        }
-        var btn = jQuery(this);
-        var btn_content = btn.html();
-        btn.html('<i class="fa fa-spinner fa-spin"></i>');
-        btn.prop('disabled', true);
+   $(document).on('click', '.otp_sending_btn', function () {
+       var reg_email = $('.reg_email').val();
+       $('.reg_otp_message_section').html('');
+       if (reg_email == '') {
+           alert('Please enter valid email');
+           return false;
+       }
+       var btn = jQuery(this);
+       var btn_content = btn.html();
+       btn.html('<i class="fa fa-spinner fa-spin"></i>');
+       btn.prop('disabled', true);
 
-        $.ajax({
-            url: '{{ url('/website/get-reg-otp') }}',
-            type: "POST",
-            //dataType: 'json',
-            headers: {
-                'X-CSRF-TOKEN': '{{ csrf_token() }}'
-            },
-            data: {
-                reg_email: reg_email
-            },
-            success: function (response) {
-                btn.html(btn_content);
-                btn.prop('disabled', false);
-                if (response.responseCode == 1) {
-                    $('.reg_otp_message_section').html('<span style="color: #0d3625">Successfully sent otp. Please check email</span>');
-                } else if (response.responseCode == 2) {
-                    $('.reg_otp_message_section').html('<span style="color: #0d3625">Not valid email</span>');
-                } else {
-                    $('.reg_otp_message_section').html('<span style="color: red">Could not sent otp. Please try again</span>');
-                }
+       $.ajax({
+           url: '{{ url('/website/get-reg-otp') }}',
+           type: "POST",
+           //dataType: 'json',
+           headers: {
+               'X-CSRF-TOKEN': '{{ csrf_token() }}'
+           },
+           data: {
+               reg_email: reg_email
+           },
+           success: function (response) {
+               btn.html(btn_content);
+               btn.prop('disabled', false);
+               if (response.responseCode == 1) {
+                   $('.reg_otp_message_section').html('<span style="color: #0d3625">Successfully sent otp. Please check email</span>');
+               } else if (response.responseCode == 2) {
+                   $('.reg_otp_message_section').html('<span style="color: #0d3625">Not valid email</span>');
+               } else {
+                   $('.reg_otp_message_section').html('<span style="color: red">Could not sent otp. Please try again</span>');
+               }
 
-            },
-            error: function (jqXHR, textStatus, errorThrown) {
-                location.reload();
+           },
+           error: function (jqXHR, textStatus, errorThrown) {
+               location.reload();
 
-            }
-        });
-    })
+           }
+       });
+   })
 
-    $(document).on('click', '.sign_up_button', function () {
+   $(document).on('click', '.sign_up_button', function () {
 
-        var reg_city = $('.reg_city').val();
-        var reg_country = $('.reg_country').val();
-        var reg_area = $('.reg_area').val();
-        var reg_street_name = $('.reg_street_name').val();
-        var reg_dob = $('.reg_dob').val();
-        var reg_f_name = $('.reg_f_name').val();
-        var reg_l_name = $('.reg_l_name').val();
-        var reg_house_no = $('.reg_house_no').val();
-        var reg_mobile = $('.reg_mobile').val();
-        var reg_post_code = $('.reg_post_code').val();
-        var reg_email = $('.reg_email').val();
-        var reg_password = $('.reg_password').val();
-        var reg_conf_password = $('.reg_conf_password').val();
-        var reg_otp = $('.reg_otp').val();
+       var reg_city = $('.reg_city').val();
+       var reg_country = $('.reg_country').val();
+       var reg_area = $('.reg_area').val();
+       var reg_street_name = $('.reg_street_name').val();
+       var reg_dob = $('.reg_dob').val();
+       var reg_f_name = $('.reg_f_name').val();
+       var reg_l_name = $('.reg_l_name').val();
+       var reg_house_no = $('.reg_house_no').val();
+       var reg_mobile = $('.reg_mobile').val();
+       var reg_post_code = $('.reg_post_code').val();
+       var reg_email = $('.reg_email').val();
+       var reg_password = $('.reg_password').val();
+       var reg_conf_password = $('.reg_conf_password').val();
+       var reg_otp = $('.reg_otp').val();
 
-        if (reg_country == '') {
-            alert('Please enter country');
-            return false;
-        }
-        if (reg_city == '') {
-            alert('Please enter city');
-            return false;
-        }
-        if (reg_area == '') {
-            alert('Please enter area');
-            return false;
-        }
-        if (reg_street_name == '') {
-            alert('Please enter street name');
-            return false;
-        }
-        if (reg_dob == '') {
-            alert('Please enter date of birth');
-            return false;
-        }
-        if (reg_f_name == '') {
-            alert('Please enter first name');
-            return false;
-        }
-        if (reg_l_name == '') {
-            alert('Please enter last name');
-            return false;
-        }
-        if (reg_house_no == '') {
-            alert('Please enter house');
-            return false;
-        }
-        if (reg_mobile == '') {
-            alert('Please enter email');
-            return false;
-        }
-        if (reg_post_code == '') {
-            alert('Please enter post code');
-            return false;
-        }
-        if (reg_password == '') {
-            alert('Please enter password');
-            return false;
-        }
-        if (reg_conf_password == '') {
-            alert('Please enter confirm password');
-            return false;
-        }
-        if (reg_otp == '') {
-            alert('Please enter valid otp');
-            return false;
-        }
-        if (reg_email == '') {
-            alert('Please enter valid email');
-            return false;
-        }
+       if (reg_country == '') {
+           alert('Please enter country');
+           return false;
+       }
+       if (reg_city == '') {
+           alert('Please enter city');
+           return false;
+       }
+       if (reg_area == '') {
+           alert('Please enter area');
+           return false;
+       }
+       if (reg_street_name == '') {
+           alert('Please enter street name');
+           return false;
+       }
+       if (reg_dob == '') {
+           alert('Please enter date of birth');
+           return false;
+       }
+       if (reg_f_name == '') {
+           alert('Please enter first name');
+           return false;
+       }
+       if (reg_l_name == '') {
+           alert('Please enter last name');
+           return false;
+       }
+       if (reg_house_no == '') {
+           alert('Please enter house');
+           return false;
+       }
+       if (reg_mobile == '') {
+           alert('Please enter email');
+           return false;
+       }
+       if (reg_post_code == '') {
+           alert('Please enter post code');
+           return false;
+       }
+       if (reg_password == '') {
+           alert('Please enter password');
+           return false;
+       }
+       if (reg_conf_password == '') {
+           alert('Please enter confirm password');
+           return false;
+       }
+       if (reg_otp == '') {
+           alert('Please enter valid otp');
+           return false;
+       }
+       if (reg_email == '') {
+           alert('Please enter valid email');
+           return false;
+       }
 
-        $('.reg_message_section').html('');
-        var btn = jQuery(this);
-        var btn_content = btn.html();
-        btn.html('<i class="fa fa-spinner fa-spin"></i>');
-        btn.prop('disabled', true);
+       $('.reg_message_section').html('');
+       var btn = jQuery(this);
+       var btn_content = btn.html();
+       btn.html('<i class="fa fa-spinner fa-spin"></i>');
+       btn.prop('disabled', true);
 
-        $.ajax({
-            url: '{{ url('/website/init-registration') }}',
-            type: "POST",
-            //dataType: 'json',
-            headers: {
-                'X-CSRF-TOKEN': '{{ csrf_token() }}'
-            },
-            data: {
-                reg_country: reg_country,
-                reg_city: reg_city,
-                reg_area: reg_area,
-                reg_street_name: reg_street_name,
-                reg_dob: reg_dob,
-                reg_f_name: reg_f_name,
-                reg_l_name: reg_l_name,
-                reg_house_no: reg_house_no,
-                reg_mobile: reg_mobile,
-                reg_post_code: reg_post_code,
-                reg_password: reg_password,
-                reg_conf_password: reg_conf_password,
-                reg_otp: reg_otp,
-                reg_email: reg_email
-            },
-            success: function (response) {
-                btn.html(btn_content);
-                btn.prop('disabled', false);
-                if (response.responseCode == 1) {
-                    $('.reg_message_section').html('<span style="color: #0d3625;font-weight: bold;">Successfully registered</span>');
-                    location.reload();
-                } else {
-                    $('.reg_message_section').html('<span style="color: red;font-weight: bold;">' + response.message + '</span>');
-                }
+       $.ajax({
+           url: '{{ url('/website/init-registration') }}',
+           type: "POST",
+           //dataType: 'json',
+           headers: {
+               'X-CSRF-TOKEN': '{{ csrf_token() }}'
+           },
+           data: {
+               reg_country: reg_country,
+               reg_city: reg_city,
+               reg_area: reg_area,
+               reg_street_name: reg_street_name,
+               reg_dob: reg_dob,
+               reg_f_name: reg_f_name,
+               reg_l_name: reg_l_name,
+               reg_house_no: reg_house_no,
+               reg_mobile: reg_mobile,
+               reg_post_code: reg_post_code,
+               reg_password: reg_password,
+               reg_conf_password: reg_conf_password,
+               reg_otp: reg_otp,
+               reg_email: reg_email
+           },
+           success: function (response) {
+               btn.html(btn_content);
+               btn.prop('disabled', false);
+               if (response.responseCode == 1) {
+                   $('.reg_message_section').html('<span style="color: #0d3625;font-weight: bold;">Successfully registered</span>');
+                   location.reload();
+               } else {
+                   $('.reg_message_section').html('<span style="color: red;font-weight: bold;">' + response.message + '</span>');
+               }
 
-            },
-            error: function (jqXHR, textStatus, errorThrown) {
-                location.reload();
+           },
+           error: function (jqXHR, textStatus, errorThrown) {
+               location.reload();
 
-            }
-        });
-    })
+           }
+       });
+   })
 
-    $(document).on('click', '.login_up_button', function () {
+   $(document).on('click', '.login_up_button', function () {
 
-        var login_email = $('.login_email').val();
-        var login_password = $('.login_password').val();
+       var login_email = $('.login_email').val();
+       var login_password = $('.login_password').val();
 
-        if (login_email == '') {
-            alert('Please enter email');
-            return false;
-        }
-        if (login_password == '') {
-            alert('Please enter password');
-            return false;
-        }
+       if (login_email == '') {
+           alert('Please enter email');
+           return false;
+       }
+       if (login_password == '') {
+           alert('Please enter password');
+           return false;
+       }
 
-        $('.login_message_section').html('');
-        var btn = jQuery(this);
-        var btn_content = btn.html();
-        btn.html('<i class="fa fa-spinner fa-spin"></i>');
-        btn.prop('disabled', true);
+       $('.login_message_section').html('');
+       var btn = jQuery(this);
+       var btn_content = btn.html();
+       btn.html('<i class="fa fa-spinner fa-spin"></i>');
+       btn.prop('disabled', true);
 
-        $.ajax({
-            url: '{{ url('/website/init-login') }}',
-            type: "POST",
-            //dataType: 'json',
-            headers: {
-                'X-CSRF-TOKEN': '{{ csrf_token() }}'
-            },
-            data: {
-                login_email: login_email,
-                login_password: login_password
-            },
-            success: function (response) {
-                btn.html(btn_content);
-                btn.prop('disabled', false);
-                if (response.responseCode == 1) {
-                    $('.login_message_section').html('<span style="color: #0d3625;font-weight: bold;">Successfully logged in</span>');
-                    location.reload();
-                } else {
-                    $('.login_message_section').html('<span style="color: red;font-weight: bold;">' + response.message + '</span>');
-                }
+       $.ajax({
+           url: '{{ url('/website/init-login') }}',
+           type: "POST",
+           //dataType: 'json',
+           headers: {
+               'X-CSRF-TOKEN': '{{ csrf_token() }}'
+           },
+           data: {
+               login_email: login_email,
+               login_password: login_password
+           },
+           success: function (response) {
+               btn.html(btn_content);
+               btn.prop('disabled', false);
+               if (response.responseCode == 1) {
+                   $('.login_message_section').html('<span style="color: #0d3625;font-weight: bold;">Successfully logged in</span>');
+                   location.reload();
+               } else {
+                   $('.login_message_section').html('<span style="color: red;font-weight: bold;">' + response.message + '</span>');
+               }
 
-            },
-            error: function (jqXHR, textStatus, errorThrown) {
-                location.reload();
+           },
+           error: function (jqXHR, textStatus, errorThrown) {
+               location.reload();
 
-            }
-        });
-    })
-
-
-    $(document).on('click', '.product_modal_open_button', function () {
-        var itemcode = jQuery(this).data('itemcode');
-        var itemimage = jQuery(this).data('itemimage');
-        var itemname = jQuery(this).data('itemname');
-        var itemdetails = jQuery(this).data('itemdetails');
-        var itemquantity = jQuery(this).data('itemquantity');
-        var itemprice = jQuery(this).data('itemprice');
-
-        $('.product_title_in_modal').html(itemname);
-        $('.product_details_in_modal').html(itemdetails);
-        $('.product_image_in_modal').attr("src", itemimage);
-        $('.product_quantiry_in_modal').html(itemquantity);
-        $('.product_price_in_modal').html(itemprice);
-        //  document.getElementById("sitebar-cart").classList.add('open-cart');
-
-        $('.modal_add_to_cart_btn').attr('data-itemcode', itemcode);
-        $('.modal_add_to_cart_btn').attr('data-itemimage', itemimage);
-
-        document.getElementById("sitebar-drawar").classList.add('hide-drawer');
-
-        // alert(itemimage);
-    })
-
-    $(document).on('click', '.add_to_cart_button_by_id', function () {
-        var itemcode = jQuery(this).data('itemcode');
-        var itemimage = jQuery(this).data('itemimage');
-        var addedQuantity = 1;
-
-        var btn = jQuery(this);
-        var btn_content = btn.html();
-        btn.html('<i class="fa fa-spinner fa-spin"></i>');
-        btn.prop('disabled', true);
-
-        $.ajax({
-            url: '{{ url('/website/item-add-to-cart-by-id') }}',
-            type: "POST",
-            //dataType: 'json',
-            headers: {
-                'X-CSRF-TOKEN': '{{ csrf_token() }}'
-            },
-            data: {
-                itemcode: itemcode,
-                itemimage: itemimage,
-                addedQuantity: addedQuantity
-            },
-            success: function (response) {
-                btn.html(btn_content);
-                btn.prop('disabled', false);
-                if (response.responseCode == 1) {
-                    document.getElementById("sitebar-cart").classList.add('open-cart');
-                    //  document.getElementById("sitebar-drawar").classList.add('hide-drawer');
-                    // $(".open_cart_from_topbar").trigger('click');
-                    $('.sitebarItemData').html(response.html);
-                    itemCounter();
-                } else {
-                }
-
-            },
-            error: function (jqXHR, textStatus, errorThrown) {
-
-            }
-        });
-    })
-
-    $(document).on('click', '.add_to_cart_button', function () {
-        var itemcode = jQuery(this).data('itemcode');
-        var itemimage = jQuery(this).data('itemimage');
-        var itemname = jQuery(this).data('itemname');
-        var itemunit = jQuery(this).data('itemunit');
-        var itemprice = jQuery(this).data('itemprice');
-        var addedQuantity = 1;
-        var itembrandid = jQuery(this).data('itembrandid');
-        var itemcurrencyid = jQuery(this).data('itemcurrencyid');
-        var itemcategoryid = jQuery(this).data('itemcategoryid');
-        var itemcategoryname = jQuery(this).data('itemcategoryname');
-        var itemvartypename = jQuery(this).data('itemvartypename');
-        var itemvartypevalue = jQuery(this).data('itemvartypevalue');
-        var itemquantitytype = jQuery(this).data('itemquantitytype');
-
-        $.ajax({
-            url: '{{ url('/website/item-add-to-cart') }}',
-            type: "POST",
-            //dataType: 'json',
-            headers: {
-                'X-CSRF-TOKEN': '{{ csrf_token() }}'
-            },
-            data: {
-                itemcode: itemcode,
-                itemimage: itemimage,
-                itemname: itemname,
-                itemunit: itemunit,
-                itemprice: itemprice,
-                itembrandid: itembrandid,
-                addedQuantity: addedQuantity,
-                itemcurrencyid: itemcurrencyid,
-                itemcategoryid: itemcategoryid,
-                itemcategoryname: itemcategoryname,
-                itemvartypename: itemvartypename,
-                itemvartypevalue: itemvartypevalue,
-                itemquantitytype: itemquantitytype
-            },
-            success: function (response) {
-
-                if (response.responseCode == 1) {
-                    document.getElementById("sitebar-cart").classList.add('open-cart');
-                    //  document.getElementById("sitebar-drawar").classList.add('hide-drawer');
-                    // $(".open_cart_from_topbar").trigger('click');
-                    $('.sitebarItemData').html(response.html);
-                    itemCounter();
-                } else {
-                }
-
-            },
-            error: function (jqXHR, textStatus, errorThrown) {
-                location.reload();
-
-            }
-        });
-    })
-
-    $(document).on('click', '.open_cart_from_topbar', function () {
-
-        $.ajax({
-            url: '{{ url('/website/open-cart-list') }}',
-            type: "POST",
-            //dataType: 'json',
-            headers: {
-                'X-CSRF-TOKEN': '{{ csrf_token() }}'
-            },
-            data: {},
-            success: function (response) {
-
-                if (response.responseCode == 1) {
-                    document.getElementById("sitebar-cart").classList.add('open-cart');
-                    $('.sitebarItemData').html(response.html);
-                } else {
-                }
-
-            },
-            error: function (jqXHR, textStatus, errorThrown) {
-                location.reload();
-
-            }
-        });
-    })
-
-    $(document).on('click', '.remove_item_from_cart_sitebar', function () {
-        var itemcode = jQuery(this).data('itemcode');
-
-        $.ajax({
-            url: '{{ url('/website/remove-item-from-cart-sitebar') }}',
-            type: "POST",
-            //dataType: 'json',
-            headers: {
-                'X-CSRF-TOKEN': '{{ csrf_token() }}'
-            },
-            data: {
-                itemcode: itemcode
-            },
-            success: function (response) {
-
-                if (response.responseCode == 1) {
-                    //  document.getElementById("sitebar-cart").classList.add('open-cart');
-                    $('.sitebarItemData').html(response.html);
-                    itemCounter();
-                } else {
-                }
-
-            },
-            error: function (jqXHR, textStatus, errorThrown) {
-                location.reload();
-
-            }
-        })
-    })
-
-    function itemCounter() {
-        $.ajax({
-            url: '{{ url('/website/topber-item-counter') }}',
-            type: "POST",
-            //dataType: 'json',
-            headers: {
-                'X-CSRF-TOKEN': '{{ csrf_token() }}'
-            },
-            data: {},
-            success: function (response) {
-                if (response.responseCode == 1) {
-                    //  document.getElementById("sitebar-cart").classList.add('open-cart');
-                    $('.cart_item_counter').html(response.data);
-                }
-            }
-        })
-    }
+           }
+       });
+   })
 
 
-    $(document).on('change', '.select_city_dropdown_val', function () {
-        var sessionLocationId = $('.sessionLocationId').val();
-        var city_id = jQuery(this).val();
-        $('.location_loading').html('<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Loading ......');
+   $(document).on('click', '.product_modal_open_button', function () {
+       var itemcode = jQuery(this).data('itemcode');
+       var itemimage = jQuery(this).data('itemimage');
+       var itemname = jQuery(this).data('itemname');
+       var itemdetails = jQuery(this).data('itemdetails');
+       var itemquantity = jQuery(this).data('itemquantity');
+       var itemprice = jQuery(this).data('itemprice');
 
-        $.ajax({
-            url: '{{ url('/website/get-location-data') }}',
-            type: "POST",
-            headers: {
-                'X-CSRF-TOKEN': '{{ csrf_token() }}'
-            },
-            // dataType: "jsonp",
-            data: {city_id: city_id},
-            success: function (data) {
-                $('.location_loading').html('');
+       $('.product_title_in_modal').html(itemname);
+       $('.product_details_in_modal').html(itemdetails);
+       $('.product_image_in_modal').attr("src", itemimage);
+       $('.product_quantiry_in_modal').html(itemquantity);
+       $('.product_price_in_modal').html(itemprice);
+       //  document.getElementById("sitebar-cart").classList.add('open-cart');
 
-                $('.location_option').empty();
-                $('.shop_option').empty();
-                $('.location_option').append($('<option>', {
-                    value: '',
-                    text: 'Select location'
-                }));
-                $.each(data.locations, function (i, d) {
-                    $('.location_option').append($('<option>', {
-                        value: d.id,
-                        text: d.name
-                    }));
-                });
-                if (sessionLocationId != ''){
-                    $('.location_option').val(sessionLocationId).attr("selected", "selected");
-                    $('.select_location_dropdown_val').trigger('change');
-                }
-            }
-        });
-    })
+       $('.modal_add_to_cart_btn').attr('data-itemcode', itemcode);
+       $('.modal_add_to_cart_btn').attr('data-itemimage', itemimage);
 
-    $(document).on('change', '.select_location_dropdown_val', function () {
-        var location_id = jQuery(this).val();
-        var sessionShopId = $('.sessionShopId').val();
-        $('.shop_loading').html('<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Loading ......');
-        $.ajax({
-            url: '{{ url('/website/get-shop-data') }}',
-            type: "POST",
-            headers: {
-                'X-CSRF-TOKEN': '{{ csrf_token() }}'
-            },
-            data: {location_id: location_id},
-            success: function (data) {
-                $('.shop_loading').html('');
-                $('.shop_option').empty();
+       document.getElementById("sitebar-drawar").classList.add('hide-drawer');
 
-                if (data.responseCode == 1) {
-                    $.each(data.shops, function (i, d) {
-                        $('.shop_option').append($('<option>', {
-                            value: d.id,
-                            text: d.name
-                        }));
-                    });
-                    if (sessionShopId != ''){
-                        $('.shop_option').val(sessionShopId).attr("selected", "selected");
-                    }
-                } else {
-                    $('.shop_option').append($('<option>', {
-                        value: '',
-                        text: 'No shop'
-                    }));
-                }
+       // alert(itemimage);
+   })
 
-            }
-        });
-    })
+   $(document).on('click', '.add_to_cart_button_by_id', function () {
+       var itemcode = jQuery(this).data('itemcode');
+       var itemimage = jQuery(this).data('itemimage');
+       var addedQuantity = 1;
+
+       var btn = jQuery(this);
+       var btn_content = btn.html();
+       btn.html('<i class="fa fa-spinner fa-spin"></i>');
+       btn.prop('disabled', true);
+
+       $.ajax({
+           url: '{{ url('/website/item-add-to-cart-by-id') }}',
+           type: "POST",
+           //dataType: 'json',
+           headers: {
+               'X-CSRF-TOKEN': '{{ csrf_token() }}'
+           },
+           data: {
+               itemcode: itemcode,
+               itemimage: itemimage,
+               addedQuantity: addedQuantity
+           },
+           success: function (response) {
+               btn.html(btn_content);
+               btn.prop('disabled', false);
+               if (response.responseCode == 1) {
+                   document.getElementById("sitebar-cart").classList.add('open-cart');
+                   //  document.getElementById("sitebar-drawar").classList.add('hide-drawer');
+                   // $(".open_cart_from_topbar").trigger('click');
+                   $('.sitebarItemData').html(response.html);
+                   itemCounter();
+               } else {
+               }
+
+           },
+           error: function (jqXHR, textStatus, errorThrown) {
+
+           }
+       });
+   })
+
+   $(document).on('click', '.add_to_cart_button', function () {
+       var itemcode = jQuery(this).data('itemcode');
+       var itemimage = jQuery(this).data('itemimage');
+       var itemname = jQuery(this).data('itemname');
+       var itemunit = jQuery(this).data('itemunit');
+       var itemprice = jQuery(this).data('itemprice');
+       var addedQuantity = 1;
+       var itembrandid = jQuery(this).data('itembrandid');
+       var itemcurrencyid = jQuery(this).data('itemcurrencyid');
+       var itemcategoryid = jQuery(this).data('itemcategoryid');
+       var itemcategoryname = jQuery(this).data('itemcategoryname');
+       var itemvartypename = jQuery(this).data('itemvartypename');
+       var itemvartypevalue = jQuery(this).data('itemvartypevalue');
+       var itemquantitytype = jQuery(this).data('itemquantitytype');
+
+       $.ajax({
+           url: '{{ url('/website/item-add-to-cart') }}',
+           type: "POST",
+           //dataType: 'json',
+           headers: {
+               'X-CSRF-TOKEN': '{{ csrf_token() }}'
+           },
+           data: {
+               itemcode: itemcode,
+               itemimage: itemimage,
+               itemname: itemname,
+               itemunit: itemunit,
+               itemprice: itemprice,
+               itembrandid: itembrandid,
+               addedQuantity: addedQuantity,
+               itemcurrencyid: itemcurrencyid,
+               itemcategoryid: itemcategoryid,
+               itemcategoryname: itemcategoryname,
+               itemvartypename: itemvartypename,
+               itemvartypevalue: itemvartypevalue,
+               itemquantitytype: itemquantitytype
+           },
+           success: function (response) {
+
+               if (response.responseCode == 1) {
+                   document.getElementById("sitebar-cart").classList.add('open-cart');
+                   //  document.getElementById("sitebar-drawar").classList.add('hide-drawer');
+                   // $(".open_cart_from_topbar").trigger('click');
+                   $('.sitebarItemData').html(response.html);
+                   itemCounter();
+               } else {
+               }
+
+           },
+           error: function (jqXHR, textStatus, errorThrown) {
+               location.reload();
+
+           }
+       });
+   })
+
+   $(document).on('click', '.open_cart_from_topbar', function () {
+
+       $.ajax({
+           url: '{{ url('/website/open-cart-list') }}',
+           type: "POST",
+           //dataType: 'json',
+           headers: {
+               'X-CSRF-TOKEN': '{{ csrf_token() }}'
+           },
+           data: {},
+           success: function (response) {
+
+               if (response.responseCode == 1) {
+                   document.getElementById("sitebar-cart").classList.add('open-cart');
+                   $('.sitebarItemData').html(response.html);
+               } else {
+               }
+
+           },
+           error: function (jqXHR, textStatus, errorThrown) {
+               location.reload();
+
+           }
+       });
+   })
+
+   $(document).on('click', '.remove_item_from_cart_sitebar', function () {
+       var itemcode = jQuery(this).data('itemcode');
+
+       $.ajax({
+           url: '{{ url('/website/remove-item-from-cart-sitebar') }}',
+           type: "POST",
+           //dataType: 'json',
+           headers: {
+               'X-CSRF-TOKEN': '{{ csrf_token() }}'
+           },
+           data: {
+               itemcode: itemcode
+           },
+           success: function (response) {
+
+               if (response.responseCode == 1) {
+                   //  document.getElementById("sitebar-cart").classList.add('open-cart');
+                   $('.sitebarItemData').html(response.html);
+                   itemCounter();
+               } else {
+               }
+
+           },
+           error: function (jqXHR, textStatus, errorThrown) {
+               location.reload();
+
+           }
+       })
+   })
+
+   function itemCounter() {
+       $.ajax({
+           url: '{{ url('/website/topber-item-counter') }}',
+           type: "POST",
+           //dataType: 'json',
+           headers: {
+               'X-CSRF-TOKEN': '{{ csrf_token() }}'
+           },
+           data: {},
+           success: function (response) {
+               if (response.responseCode == 1) {
+                   //  document.getElementById("sitebar-cart").classList.add('open-cart');
+                   $('.cart_item_counter').html(response.data);
+               }
+           }
+       })
+   }
+
+
+   $(document).on('change', '.select_city_dropdown_val', function () {
+       var sessionLocationId = $('.sessionLocationId').val();
+       var city_id = jQuery(this).val();
+       $('.location_loading').html('<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Loading ......');
+
+       $.ajax({
+           url: '{{ url('/website/get-location-data') }}',
+           type: "POST",
+           headers: {
+               'X-CSRF-TOKEN': '{{ csrf_token() }}'
+           },
+           // dataType: "jsonp",
+           data: {city_id: city_id},
+           success: function (data) {
+               $('.location_loading').html('');
+
+               $('.location_option').empty();
+               $('.shop_option').empty();
+               $('.location_option').append($('<option>', {
+                   value: '',
+                   text: 'Select location'
+               }));
+               $.each(data.locations, function (i, d) {
+                   $('.location_option').append($('<option>', {
+                       value: d.id,
+                       text: d.name
+                   }));
+               });
+               if (sessionLocationId != ''){
+                   $('.location_option').val(sessionLocationId).attr("selected", "selected");
+                   $('.select_location_dropdown_val').trigger('change');
+               }
+           }
+       });
+   })
+
+   $(document).on('change', '.select_location_dropdown_val', function () {
+       var location_id = jQuery(this).val();
+       var sessionShopId = $('.sessionShopId').val();
+       $('.shop_loading').html('<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Loading ......');
+       $.ajax({
+           url: '{{ url('/website/get-shop-data') }}',
+           type: "POST",
+           headers: {
+               'X-CSRF-TOKEN': '{{ csrf_token() }}'
+           },
+           data: {location_id: location_id},
+           success: function (data) {
+               $('.shop_loading').html('');
+               $('.shop_option').empty();
+
+               if (data.responseCode == 1) {
+                   $.each(data.shops, function (i, d) {
+                       $('.shop_option').append($('<option>', {
+                           value: d.id,
+                           text: d.name
+                       }));
+                   });
+                   if (sessionShopId != ''){
+                       $('.shop_option').val(sessionShopId).attr("selected", "selected");
+                   }
+               } else {
+                   $('.shop_option').append($('<option>', {
+                       value: '',
+                       text: 'No shop'
+                   }));
+               }
+
+           }
+       });
+   })
 </script>
 
 </body>
