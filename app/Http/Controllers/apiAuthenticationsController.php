@@ -139,6 +139,12 @@ class apiAuthenticationsController extends Controller
             session()->put( 'auth_user_id', $shop_data['id'] );
             Session::save();
 
+            $session_others_array = ( Session::get( 'session_others_array' ) ) ? Session::get( 'session_others_array' ) : null;
+            $session_others_array['user_email'] = $reg_email;
+            $session_others_array['user_name'] = $reg_f_name.' '.$reg_l_name;
+            session()->put( 'session_others_array', $session_others_array );
+            Session::save();
+
             return response()->json(['responseCode' => 1, 'message' => 'Successfully registered']);
 
         } catch (\Exception $e) {
