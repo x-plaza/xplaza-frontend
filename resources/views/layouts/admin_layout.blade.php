@@ -321,7 +321,7 @@ $searchableProductData = App\Libraries\HandleApi::searchProductData();
                                     <input type="text" placeholder="Search product.." id="myInput" onkeyup="filterFunction()">
                                     <div style="max-height: 250px; overflow-y: auto">
                                         @foreach($searchableProductData as $product)
-                                            <a href="website/item-details/{{$product['id']}}" class="searchable_item" style="display: none;">
+                                            <a href="/website/item-details/{{$product['id']}}" class="searchable_item" style="display: none;">
                                                 <img src="{{$product['img_url']}}" class="search_item_img">{{$product['name']}}
                                             </a>
                                         @endforeach
