@@ -42,10 +42,75 @@
         background-color: #ddd;
     }
 
+    .dropbtn {
+        background-color: #04AA6D;
+        color: white;
+        padding: 16px;
+        font-size: 16px;
+        border: none;
+        cursor: pointer;
+    }
+
+    .dropbtn:hover, .dropbtn:focus {
+        background-color: #3e8e41;
+    }
+
+    #myInput {
+        width: 100% !important;
+        box-sizing: border-box;
+        background-image: url('https://upload.wikimedia.org/wikipedia/commons/thumb/0/0b/Search_Icon.svg/1024px-Search_Icon.svg.png');
+        background-position: 14px 12px;
+        background-repeat: no-repeat;
+        font-size: 16px;
+        padding: 14px 20px 12px 45px;
+        border: none;
+        border-bottom: 1px solid #ddd;
+    }
+
+    #myInput:focus {outline: 3px solid #ddd;}
+
+    .dropdown {
+        margin-top: -50px;
+        position: relative;
+        display: inline-block;
+        width: 100%;
+    }
+
+    .dropdown-content {
+        /*display: none;*/
+        position: absolute;
+        background-color: #f6f6f6;
+        /*min-width: 230px;*/
+        overflow: auto;
+        border: 1px solid #ddd;
+        z-index: 1;
+        width: 100%;
+    }
+
+    .dropdown-content a {
+        color: black;
+        padding: 12px 16px;
+        text-decoration: none;
+        display: block;
+    }
+
+    .dropdown a:hover {background-color: #ddd;}
+
+    .search_item_img{
+        max-width: 100%;
+        height: 50px;
+        margin-right: 10px;
+        border: 1px solid darkgrey;
+        border-radius: 7px;
+    }
+    .show {display: block;}
+
 </style>
 
 <body id="top-page">
-
+<?php
+$searchableProductData = App\Libraries\HandleApi::searchProductData();
+?>
 <!--siteinfo Modal for Mobile View -->
 <div class="modal fade" id="siteinfo1" tabindex="-1" aria-labelledby="siteinfo1" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
@@ -209,7 +274,7 @@
 {{--                            <button class="submit-btn"><i class="fas fa-search"></i></button>--}}
 {{--                        </form>--}}
                         <select class="search_product_section form-control" id="item_selector" onchange="getProductVal(this);">
-                            @foreach(App\Libraries\HandleApi::searchProductData() as $product)
+                            @foreach($searchableProductData as $product)
                                 <option value="{{$product['id']}}"> {{$product['name']}}</option>
                             @endforeach
                         </select>
@@ -246,11 +311,23 @@
 {{--                                                            <input type="text" name="search" id="search_data" placeholder="Search Products.....">--}}
 {{--                                                            <button class="submit-btn"><i class="fas fa-search"></i></button>--}}
 {{--                                                        </form>--}}
-                            <select class="search_product_section form-control" id="item_selector" onchange="getProductVal(this);">
-                                @foreach(App\Libraries\HandleApi::searchProductData() as $product)
-                                    <option value="{{$product['id']}}"> {{$product['name']}}</option>
-                                @endforeach
-                            </select>
+{{--                            <select class="search_product_section form-control" id="item_selector" onchange="getProductVal(this);">--}}
+{{--                                @foreach(App\Libraries\HandleApi::searchProductData() as $product)--}}
+{{--                                    <option value="{{$product['id']}}"> {{$product['name']}}</option>--}}
+{{--                                @endforeach--}}
+{{--                            </select>--}}
+                            <div class="dropdown">
+                                <div id="myDropdown" class="dropdown-content">
+                                    <input type="text" placeholder="Search product.." id="myInput" onkeyup="filterFunction()">
+                                    <div style="max-height: 250px; overflow-y: auto">
+                                        @foreach($searchableProductData as $product)
+                                            <a href="/website/item-details/{{$product['id']}}" class="searchable_item" style="display: none;">
+                                                <img src="{{$product['img_url']}}" class="search_item_img">{{$product['name']}}
+                                            </a>
+                                        @endforeach
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 @endif
@@ -622,6 +699,29 @@
 <script src="{{asset('website_src/select2/select2.min.js')}}"></script>
 <script>
 
+    function filterFunction() {
+        var input, filter, ul, li, a, i;
+        input = document.getElementById("myInput");
+
+        if(input.value == ''){
+            document.querySelectorAll('.searchable_item').forEach(function(el) {
+                el.style.display = 'none';
+            });
+            return false;
+        }
+
+        filter = input.value.toUpperCase();
+        div = document.getElementById("myDropdown");
+        a = div.getElementsByTagName("a");
+        for (i = 0; i < a.length; i++) {
+            txtValue = a[i].textContent || a[i].innerText;
+            if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                a[i].style.display = "";
+            } else {
+                a[i].style.display = "none";
+            }
+        }
+    }
 
    $(document).on('keyup', '#search_data', function () {
        var search_data = $('#search_data').val();
@@ -652,23 +752,23 @@
        }
    }
 
-   $(document).ready(function(){
+   {{--$(document).ready(function(){--}}
 
-       $('#search_data').autocomplete({
-           source: '{{ url('/website/product-search-data') }}',
-           minLength: 1,
-           select: function(event, ui)
-           {
-               $('#search_data').val(ui.item.value);
-           }
-       }).data('ui-autocomplete')._renderItem = function(ul, item){
-           $('.product_search_web').html('');
-           return $("<li class='ui-autocomplete-row'></li>")
-               .data("item.autocomplete", item)
-               .append(item.label)
-               .appendTo(ul);
-       };
-   });
+   {{--    $('#search_data').autocomplete({--}}
+   {{--        source: '{{ url('/website/product-search-data') }}',--}}
+   {{--        minLength: 1,--}}
+   {{--        select: function(event, ui)--}}
+   {{--        {--}}
+   {{--            $('#search_data').val(ui.item.value);--}}
+   {{--        }--}}
+   {{--    }).data('ui-autocomplete')._renderItem = function(ul, item){--}}
+   {{--        $('.product_search_web').html('');--}}
+   {{--        return $("<li class='ui-autocomplete-row'></li>")--}}
+   {{--            .data("item.autocomplete", item)--}}
+   {{--            .append(item.label)--}}
+   {{--            .appendTo(ul);--}}
+   {{--    };--}}
+   {{--});--}}
 
    var selected_shop = $('.selected_shop_id').val();
    if (selected_shop == '') {
