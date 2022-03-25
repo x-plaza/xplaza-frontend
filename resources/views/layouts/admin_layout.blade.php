@@ -108,7 +108,9 @@
 </style>
 
 <body id="top-page">
-
+<?php
+$searchableProductData = App\Libraries\HandleApi::searchProductData();
+?>
 <!--siteinfo Modal for Mobile View -->
 <div class="modal fade" id="siteinfo1" tabindex="-1" aria-labelledby="siteinfo1" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
@@ -272,7 +274,7 @@
 {{--                            <button class="submit-btn"><i class="fas fa-search"></i></button>--}}
 {{--                        </form>--}}
                         <select class="search_product_section form-control" id="item_selector" onchange="getProductVal(this);">
-                            @foreach(App\Libraries\HandleApi::searchProductData() as $product)
+                            @foreach($searchableProductData as $product)
                                 <option value="{{$product['id']}}"> {{$product['name']}}</option>
                             @endforeach
                         </select>
@@ -318,7 +320,7 @@
                                 <div id="myDropdown" class="dropdown-content">
                                     <input type="text" placeholder="Search product.." id="myInput" onkeyup="filterFunction()">
                                     <div style="max-height: 250px; overflow-y: auto">
-                                        @foreach(App\Libraries\HandleApi::searchProductData() as $product)
+                                        @foreach($searchableProductData as $product)
                                             <a href="website/item-details/{{$product['id']}}" class="searchable_item" style="display: none;">
                                                 <img src="{{$product['img_url']}}" class="search_item_img">{{$product['name']}}
                                             </a>
