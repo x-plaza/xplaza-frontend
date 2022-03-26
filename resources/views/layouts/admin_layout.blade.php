@@ -61,16 +61,29 @@
         background-image: url('https://upload.wikimedia.org/wikipedia/commons/thumb/0/0b/Search_Icon.svg/1024px-Search_Icon.svg.png');
         background-position: 14px 12px;
         background-repeat: no-repeat;
-        font-size: 16px;
+        font-size: 14px;
         padding: 14px 20px 12px 45px;
         border: none;
         border-bottom: 1px solid #ddd;
+        height: 46px;
     }
-
+    #myInputMobile {
+        width: 100% !important;
+        box-sizing: border-box;
+        background-image: url('https://upload.wikimedia.org/wikipedia/commons/thumb/0/0b/Search_Icon.svg/1024px-Search_Icon.svg.png');
+        background-position: 14px 12px;
+        background-repeat: no-repeat;
+        font-size: 14px;
+        padding: 14px 20px 12px 45px;
+        border: none;
+        border-bottom: 1px solid #ddd;
+        height: 46px;
+    }
+    #myInputMobile:focus {outline: 3px solid #ddd;}
     #myInput:focus {outline: 3px solid #ddd;}
 
     .dropdown {
-        margin-top: -50px;
+        margin-top: -49px;
         position: relative;
         display: inline-block;
         width: 100%;
@@ -273,11 +286,29 @@ $searchableProductData = App\Libraries\HandleApi::searchProductData();
 {{--                            <input type="text" name="search" placeholder="Search Products...">--}}
 {{--                            <button class="submit-btn"><i class="fas fa-search"></i></button>--}}
 {{--                        </form>--}}
-                        <select class="search_product_section form-control" id="item_selector" onchange="getProductVal(this);">
-                            @foreach($searchableProductData as $product)
-                                <option value="{{$product['id']}}"> {{$product['name']}}</option>
-                            @endforeach
-                        </select>
+{{--                        <select class="search_product_section form-control" id="item_selector" onchange="getProductVal(this);">--}}
+{{--                            @foreach($searchableProductData as $product)--}}
+{{--                                <option value="{{$product['id']}}"> {{$product['name']}}</option>--}}
+{{--                            @endforeach--}}
+{{--                        </select>--}}
+                        <div class="dropdown">
+                            <div id="myDropdownMobile" class="dropdown-content">
+                                <input type="text" placeholder="Search product.." id="myInputMobile" onkeyup="filterFunctionMobile()">
+                                <div style="max-height: 250px; overflow-y: auto">
+                                    @foreach($searchableProductData as $product)
+                                        @if($product['quantity'] > 0)
+                                            <a href="/website/item-details/{{$product['id']}}" class="searchable_item" style="display: none;">
+                                                <img src="{{$product['img_url']}}" class="search_item_img">{{$product['name']}}
+                                            </a>
+                                        @else
+                                            <a href="#" class="searchable_item" style="display: none;background-color: #efb7b7">
+                                                <img src="{{$product['img_url']}}" class="search_item_img">{{$product['name']}} <b style="color: darkred">Stock out</b>
+                                            </a>
+                                        @endif
+                                    @endforeach
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -321,9 +352,15 @@ $searchableProductData = App\Libraries\HandleApi::searchProductData();
                                     <input type="text" placeholder="Search product.." id="myInput" onkeyup="filterFunction()">
                                     <div style="max-height: 250px; overflow-y: auto">
                                         @foreach($searchableProductData as $product)
+                                            @if($product['quantity'] > 0)
                                             <a href="/website/item-details/{{$product['id']}}" class="searchable_item" style="display: none;">
                                                 <img src="{{$product['img_url']}}" class="search_item_img">{{$product['name']}}
                                             </a>
+                                            @else
+                                                <a href="#" class="searchable_item" style="display: none;background-color: #efb7b7">
+                                                    <img src="{{$product['img_url']}}" class="search_item_img">{{$product['name']}} <b style="color: darkred">Stock out</b>
+                                                </a>
+                                            @endif
                                         @endforeach
                                     </div>
                                 </div>
@@ -712,6 +749,30 @@ $searchableProductData = App\Libraries\HandleApi::searchProductData();
 
         filter = input.value.toUpperCase();
         div = document.getElementById("myDropdown");
+        a = div.getElementsByTagName("a");
+        for (i = 0; i < a.length; i++) {
+            txtValue = a[i].textContent || a[i].innerText;
+            if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                a[i].style.display = "";
+            } else {
+                a[i].style.display = "none";
+            }
+        }
+    }
+
+    function filterFunctionMobile() {
+        var input, filter, ul, li, a, i;
+        input = document.getElementById("myInputMobile");
+
+        if(input.value == ''){
+            document.querySelectorAll('.searchable_item').forEach(function(el) {
+                el.style.display = 'none';
+            });
+            return false;
+        }
+
+        filter = input.value.toUpperCase();
+        div = document.getElementById("myDropdownMobile");
         a = div.getElementsByTagName("a");
         for (i = 0; i < a.length; i++) {
             txtValue = a[i].textContent || a[i].innerText;
