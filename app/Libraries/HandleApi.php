@@ -157,8 +157,9 @@ class HandleApi {
 //        $subData['name'] = 'Search product';
 //        $allData[] =  $subData;
         foreach ($product_data as $data){
-            if ($data->quantity < 1){continue;}
+          //  if ($data->quantity < 1){continue;}
             $image_name = isset($data->productImageList[0]->name) ? $data->productImageList[0]->name : '#';
+            $subData['quantity'] = $data->quantity;
             $subData['id'] = $data->id;
             $subData['name'] = $data->name .' ( '.$data->product_var_type_value.' '.$data->product_var_type_name.' )';
             $subData['img_url'] = env('IMAGE_BASE_URL','https://test-admin.xwinkel.com').'/item_image/'.$image_name;
