@@ -45,7 +45,7 @@
                         </div>
                         <div class="product-content">
                             <!-- <a href="#" class="cata">Catagory</a> -->
-                            <h6><a href="product-detail.html" class="product-title">{{$product->name}}
+                            <h6><a href="{{url('website/item-details/'.$product->id)}}" class="product-title">{{$product->name}}
                                 </a><span class="quantity_custom">{{$product->product_var_type_value." ".$product->product_var_type_name}}</span></h6>
 
                             <div class="d-flex justify-content-between align-items-center">
