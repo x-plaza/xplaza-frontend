@@ -160,7 +160,7 @@ class apiAuthenticationsController extends Controller
 
         try{
 
-            $api_url = env('API_BASE_URL')."/api/customer-login?password=".$login_password."&username=".$login_email;
+            $api_url = env('API_BASE_URL')."/api/customer-login?password=".urlencode($login_password)."&username=".urlencode($login_email);
             $curlOutput  = HandleApi::getCURLOutput( $api_url, 'POST', [] );
             $decodedData = json_decode($curlOutput,true);
             $auth_data = isset($decodedData['data']) ? $decodedData['data'] : [];

@@ -61,16 +61,29 @@
         background-image: url('https://upload.wikimedia.org/wikipedia/commons/thumb/0/0b/Search_Icon.svg/1024px-Search_Icon.svg.png');
         background-position: 14px 12px;
         background-repeat: no-repeat;
-        font-size: 16px;
+        font-size: 14px;
         padding: 14px 20px 12px 45px;
         border: none;
         border-bottom: 1px solid #ddd;
+        height: 46px;
     }
-
+    #myInputMobile {
+        width: 100% !important;
+        box-sizing: border-box;
+        background-image: url('https://upload.wikimedia.org/wikipedia/commons/thumb/0/0b/Search_Icon.svg/1024px-Search_Icon.svg.png');
+        background-position: 14px 12px;
+        background-repeat: no-repeat;
+        font-size: 14px;
+        padding: 14px 20px 12px 45px;
+        border: none;
+        border-bottom: 1px solid #ddd;
+        height: 46px;
+    }
+    #myInputMobile:focus {outline: 3px solid #ddd;}
     #myInput:focus {outline: 3px solid #ddd;}
 
     .dropdown {
-        margin-top: -50px;
+        margin-top: -49px;
         position: relative;
         display: inline-block;
         width: 100%;
@@ -273,11 +286,29 @@ $searchableProductData = App\Libraries\HandleApi::searchProductData();
 {{--                            <input type="text" name="search" placeholder="Search Products...">--}}
 {{--                            <button class="submit-btn"><i class="fas fa-search"></i></button>--}}
 {{--                        </form>--}}
-                        <select class="search_product_section form-control" id="item_selector" onchange="getProductVal(this);">
-                            @foreach($searchableProductData as $product)
-                                <option value="{{$product['id']}}"> {{$product['name']}}</option>
-                            @endforeach
-                        </select>
+{{--                        <select class="search_product_section form-control" id="item_selector" onchange="getProductVal(this);">--}}
+{{--                            @foreach($searchableProductData as $product)--}}
+{{--                                <option value="{{$product['id']}}"> {{$product['name']}}</option>--}}
+{{--                            @endforeach--}}
+{{--                        </select>--}}
+                        <div class="dropdown">
+                            <div id="myDropdownMobile" class="dropdown-content">
+                                <input type="text" placeholder="Search product.." id="myInputMobile" onkeyup="filterFunctionMobile()">
+                                <div style="max-height: 250px; overflow-y: auto">
+                                    @foreach($searchableProductData as $product)
+                                        @if($product['quantity'] > 0)
+                                            <a href="/website/item-details/{{$product['id']}}" class="searchable_item" style="display: none;">
+                                                <img src="{{$product['img_url']}}" class="search_item_img">{{$product['name']}}
+                                            </a>
+                                        @else
+                                            <a href="#" class="searchable_item" style="display: none;background-color: #efb7b7">
+                                                <img src="{{$product['img_url']}}" class="search_item_img">{{$product['name']}} <b style="color: darkred">Stock out</b>
+                                            </a>
+                                        @endif
+                                    @endforeach
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -321,9 +352,15 @@ $searchableProductData = App\Libraries\HandleApi::searchProductData();
                                     <input type="text" placeholder="Search product.." id="myInput" onkeyup="filterFunction()">
                                     <div style="max-height: 250px; overflow-y: auto">
                                         @foreach($searchableProductData as $product)
+                                            @if($product['quantity'] > 0)
                                             <a href="/website/item-details/{{$product['id']}}" class="searchable_item" style="display: none;">
                                                 <img src="{{$product['img_url']}}" class="search_item_img">{{$product['name']}}
                                             </a>
+                                            @else
+                                                <a href="#" class="searchable_item" style="display: none;background-color: #efb7b7">
+                                                    <img src="{{$product['img_url']}}" class="search_item_img">{{$product['name']}} <b style="color: darkred">Stock out</b>
+                                                </a>
+                                            @endif
                                         @endforeach
                                     </div>
                                 </div>
@@ -596,22 +633,22 @@ $searchableProductData = App\Libraries\HandleApi::searchProductData();
                         <input type="text" name="f_name" class="reg_f_name" placeholder="First name">
                         <label>Enter last name</label>
                         <input type="text" name="l_name" class="reg_l_name" placeholder="Last name">
-                        <label>Enter mobile</label>
-                        <input type="text" name="mobile" class="reg_mobile" placeholder="Mobile">
-                        <label>Enter country name</label>
-                        <input type="text" name="country" class="reg_country" placeholder="Country">
-                        <label>Enter area name</label>
-                        <input type="text" name="area" class="reg_area" placeholder="Area">
-                        <label>Enter city</label>
-                        <input type="text" name="city" class="reg_city" placeholder="City">
-                        <label>Enter state</label>
-                        <input type="text" name="street_name" class="reg_street_name" placeholder="Street name">
-                        <label>Enter house</label>
-                        <input type="text" name="house_no" class="reg_house_no" placeholder="House No">
-                        <label>Enter post code</label>
-                        <input type="text" name="post_code" class="reg_post_code" placeholder="Post code">
-                        <label>Enter date of birth</label>
-                        <input type="date" name="dob" class="reg_dob dob_val" placeholder="Date of birth">
+{{--                        <label>Enter mobile</label>--}}
+{{--                        <input type="text" name="mobile"  class="reg_mobile" placeholder="Mobile">--}}
+{{--                        <label>Enter country name</label>--}}
+{{--                        <input type="text" name="country"  class="reg_country" placeholder="Country">--}}
+{{--                        <label>Enter area name</label>--}}
+{{--                        <input type="text" name="area"  class="reg_area" placeholder="Area">--}}
+{{--                        <label>Enter city</label>--}}
+{{--                        <input type="text" name="city"  class="reg_city" placeholder="City">--}}
+{{--                        <label>Enter state</label>--}}
+{{--                        <input type="text" name="street_name"  class="reg_street_name" placeholder="Street name">--}}
+{{--                        <label>Enter house</label>--}}
+{{--                        <input type="text" name="house_no"  class="reg_house_no" placeholder="House No">--}}
+{{--                        <label>Enter post code</label>--}}
+{{--                        <input type="text" name="post_code"  class="reg_post_code" placeholder="Post code">--}}
+{{--                        <label>Enter date of birth</label>--}}
+{{--                        <input type="date" name="dob" class="reg_dob dob_val" placeholder="Date of birth">--}}
                         <label>Enter valid email</label>
                         <input type="email" name="email" class="reg_email" placeholder="Email" style="width: 75%;">
                         <span><button class="btn btn-primary btn-md otp_sending_btn"
@@ -712,6 +749,30 @@ $searchableProductData = App\Libraries\HandleApi::searchProductData();
 
         filter = input.value.toUpperCase();
         div = document.getElementById("myDropdown");
+        a = div.getElementsByTagName("a");
+        for (i = 0; i < a.length; i++) {
+            txtValue = a[i].textContent || a[i].innerText;
+            if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                a[i].style.display = "";
+            } else {
+                a[i].style.display = "none";
+            }
+        }
+    }
+
+    function filterFunctionMobile() {
+        var input, filter, ul, li, a, i;
+        input = document.getElementById("myInputMobile");
+
+        if(input.value == ''){
+            document.querySelectorAll('.searchable_item').forEach(function(el) {
+                el.style.display = 'none';
+            });
+            return false;
+        }
+
+        filter = input.value.toUpperCase();
+        div = document.getElementById("myDropdownMobile");
         a = div.getElementsByTagName("a");
         for (i = 0; i < a.length; i++) {
             txtValue = a[i].textContent || a[i].innerText;
@@ -834,41 +895,41 @@ $searchableProductData = App\Libraries\HandleApi::searchProductData();
 
    $(document).on('click', '.sign_up_button', function () {
 
-       var reg_city = $('.reg_city').val();
-       var reg_country = $('.reg_country').val();
-       var reg_area = $('.reg_area').val();
-       var reg_street_name = $('.reg_street_name').val();
-       var reg_dob = $('.reg_dob').val();
+       // var reg_city = $('.reg_city').val();
+       // var reg_country = $('.reg_country').val();
+       // var reg_area = $('.reg_area').val();
+       // var reg_street_name = $('.reg_street_name').val();
+       // var reg_dob = $('.reg_dob').val();
        var reg_f_name = $('.reg_f_name').val();
        var reg_l_name = $('.reg_l_name').val();
-       var reg_house_no = $('.reg_house_no').val();
-       var reg_mobile = $('.reg_mobile').val();
-       var reg_post_code = $('.reg_post_code').val();
+       // var reg_house_no = $('.reg_house_no').val();
+       // var reg_mobile = $('.reg_mobile').val();
+       // var reg_post_code = $('.reg_post_code').val();
        var reg_email = $('.reg_email').val();
        var reg_password = $('.reg_password').val();
        var reg_conf_password = $('.reg_conf_password').val();
        var reg_otp = $('.reg_otp').val();
 
-       if (reg_country == '') {
-           alert('Please enter country');
-           return false;
-       }
-       if (reg_city == '') {
-           alert('Please enter city');
-           return false;
-       }
-       if (reg_area == '') {
-           alert('Please enter area');
-           return false;
-       }
-       if (reg_street_name == '') {
-           alert('Please enter street name');
-           return false;
-       }
-       if (reg_dob == '') {
-           alert('Please enter date of birth');
-           return false;
-       }
+       // if (reg_country == '') {
+       //     alert('Please enter country');
+       //     return false;
+       // }
+       // if (reg_city == '') {
+       //     alert('Please enter city');
+       //     return false;
+       // }
+       // if (reg_area == '') {
+       //     alert('Please enter area');
+       //     return false;
+       // }
+       // if (reg_street_name == '') {
+       //     alert('Please enter street name');
+       //     return false;
+       // }
+       // if (reg_dob == '') {
+       //     alert('Please enter date of birth');
+       //     return false;
+       // }
        if (reg_f_name == '') {
            alert('Please enter first name');
            return false;
@@ -877,18 +938,18 @@ $searchableProductData = App\Libraries\HandleApi::searchProductData();
            alert('Please enter last name');
            return false;
        }
-       if (reg_house_no == '') {
-           alert('Please enter house');
-           return false;
-       }
-       if (reg_mobile == '') {
-           alert('Please enter email');
-           return false;
-       }
-       if (reg_post_code == '') {
-           alert('Please enter post code');
-           return false;
-       }
+       // if (reg_house_no == '') {
+       //     alert('Please enter house');
+       //     return false;
+       // }
+       // if (reg_mobile == '') {
+       //     alert('Please enter email');
+       //     return false;
+       // }
+       // if (reg_post_code == '') {
+       //     alert('Please enter post code');
+       //     return false;
+       // }
        if (reg_password == '') {
            alert('Please enter password');
            return false;
@@ -920,16 +981,16 @@ $searchableProductData = App\Libraries\HandleApi::searchProductData();
                'X-CSRF-TOKEN': '{{ csrf_token() }}'
            },
            data: {
-               reg_country: reg_country,
-               reg_city: reg_city,
-               reg_area: reg_area,
-               reg_street_name: reg_street_name,
-               reg_dob: reg_dob,
+               // reg_country: reg_country,
+               // reg_city: reg_city,
+               // reg_area: reg_area,
+               // reg_street_name: reg_street_name,
+               // reg_dob: reg_dob,
                reg_f_name: reg_f_name,
                reg_l_name: reg_l_name,
-               reg_house_no: reg_house_no,
-               reg_mobile: reg_mobile,
-               reg_post_code: reg_post_code,
+               // reg_house_no: reg_house_no,
+               // reg_mobile: reg_mobile,
+               // reg_post_code: reg_post_code,
                reg_password: reg_password,
                reg_conf_password: reg_conf_password,
                reg_otp: reg_otp,
