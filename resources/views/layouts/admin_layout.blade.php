@@ -633,22 +633,22 @@ $searchableProductData = App\Libraries\HandleApi::searchProductData();
                         <input type="text" name="f_name" class="reg_f_name" placeholder="First name">
                         <label>Enter last name</label>
                         <input type="text" name="l_name" class="reg_l_name" placeholder="Last name">
-                        <label>Enter mobile</label>
-                        <input type="text" name="mobile" class="reg_mobile" placeholder="Mobile">
-                        <label>Enter country name</label>
-                        <input type="text" name="country" class="reg_country" placeholder="Country">
-                        <label>Enter area name</label>
-                        <input type="text" name="area" class="reg_area" placeholder="Area">
-                        <label>Enter city</label>
-                        <input type="text" name="city" class="reg_city" placeholder="City">
-                        <label>Enter state</label>
-                        <input type="text" name="street_name" class="reg_street_name" placeholder="Street name">
-                        <label>Enter house</label>
-                        <input type="text" name="house_no" class="reg_house_no" placeholder="House No">
-                        <label>Enter post code</label>
-                        <input type="text" name="post_code" class="reg_post_code" placeholder="Post code">
-                        <label>Enter date of birth</label>
-                        <input type="date" name="dob" class="reg_dob dob_val" placeholder="Date of birth">
+{{--                        <label>Enter mobile</label>--}}
+{{--                        <input type="text" name="mobile"  class="reg_mobile" placeholder="Mobile">--}}
+{{--                        <label>Enter country name</label>--}}
+{{--                        <input type="text" name="country"  class="reg_country" placeholder="Country">--}}
+{{--                        <label>Enter area name</label>--}}
+{{--                        <input type="text" name="area"  class="reg_area" placeholder="Area">--}}
+{{--                        <label>Enter city</label>--}}
+{{--                        <input type="text" name="city"  class="reg_city" placeholder="City">--}}
+{{--                        <label>Enter state</label>--}}
+{{--                        <input type="text" name="street_name"  class="reg_street_name" placeholder="Street name">--}}
+{{--                        <label>Enter house</label>--}}
+{{--                        <input type="text" name="house_no"  class="reg_house_no" placeholder="House No">--}}
+{{--                        <label>Enter post code</label>--}}
+{{--                        <input type="text" name="post_code"  class="reg_post_code" placeholder="Post code">--}}
+{{--                        <label>Enter date of birth</label>--}}
+{{--                        <input type="date" name="dob" class="reg_dob dob_val" placeholder="Date of birth">--}}
                         <label>Enter valid email</label>
                         <input type="email" name="email" class="reg_email" placeholder="Email" style="width: 75%;">
                         <span><button class="btn btn-primary btn-md otp_sending_btn"
@@ -895,41 +895,41 @@ $searchableProductData = App\Libraries\HandleApi::searchProductData();
 
    $(document).on('click', '.sign_up_button', function () {
 
-       var reg_city = $('.reg_city').val();
-       var reg_country = $('.reg_country').val();
-       var reg_area = $('.reg_area').val();
-       var reg_street_name = $('.reg_street_name').val();
-       var reg_dob = $('.reg_dob').val();
+       // var reg_city = $('.reg_city').val();
+       // var reg_country = $('.reg_country').val();
+       // var reg_area = $('.reg_area').val();
+       // var reg_street_name = $('.reg_street_name').val();
+       // var reg_dob = $('.reg_dob').val();
        var reg_f_name = $('.reg_f_name').val();
        var reg_l_name = $('.reg_l_name').val();
-       var reg_house_no = $('.reg_house_no').val();
-       var reg_mobile = $('.reg_mobile').val();
-       var reg_post_code = $('.reg_post_code').val();
+       // var reg_house_no = $('.reg_house_no').val();
+       // var reg_mobile = $('.reg_mobile').val();
+       // var reg_post_code = $('.reg_post_code').val();
        var reg_email = $('.reg_email').val();
        var reg_password = $('.reg_password').val();
        var reg_conf_password = $('.reg_conf_password').val();
        var reg_otp = $('.reg_otp').val();
 
-       if (reg_country == '') {
-           alert('Please enter country');
-           return false;
-       }
-       if (reg_city == '') {
-           alert('Please enter city');
-           return false;
-       }
-       if (reg_area == '') {
-           alert('Please enter area');
-           return false;
-       }
-       if (reg_street_name == '') {
-           alert('Please enter street name');
-           return false;
-       }
-       if (reg_dob == '') {
-           alert('Please enter date of birth');
-           return false;
-       }
+       // if (reg_country == '') {
+       //     alert('Please enter country');
+       //     return false;
+       // }
+       // if (reg_city == '') {
+       //     alert('Please enter city');
+       //     return false;
+       // }
+       // if (reg_area == '') {
+       //     alert('Please enter area');
+       //     return false;
+       // }
+       // if (reg_street_name == '') {
+       //     alert('Please enter street name');
+       //     return false;
+       // }
+       // if (reg_dob == '') {
+       //     alert('Please enter date of birth');
+       //     return false;
+       // }
        if (reg_f_name == '') {
            alert('Please enter first name');
            return false;
@@ -938,18 +938,18 @@ $searchableProductData = App\Libraries\HandleApi::searchProductData();
            alert('Please enter last name');
            return false;
        }
-       if (reg_house_no == '') {
-           alert('Please enter house');
-           return false;
-       }
-       if (reg_mobile == '') {
-           alert('Please enter email');
-           return false;
-       }
-       if (reg_post_code == '') {
-           alert('Please enter post code');
-           return false;
-       }
+       // if (reg_house_no == '') {
+       //     alert('Please enter house');
+       //     return false;
+       // }
+       // if (reg_mobile == '') {
+       //     alert('Please enter email');
+       //     return false;
+       // }
+       // if (reg_post_code == '') {
+       //     alert('Please enter post code');
+       //     return false;
+       // }
        if (reg_password == '') {
            alert('Please enter password');
            return false;
@@ -981,16 +981,16 @@ $searchableProductData = App\Libraries\HandleApi::searchProductData();
                'X-CSRF-TOKEN': '{{ csrf_token() }}'
            },
            data: {
-               reg_country: reg_country,
-               reg_city: reg_city,
-               reg_area: reg_area,
-               reg_street_name: reg_street_name,
-               reg_dob: reg_dob,
+               // reg_country: reg_country,
+               // reg_city: reg_city,
+               // reg_area: reg_area,
+               // reg_street_name: reg_street_name,
+               // reg_dob: reg_dob,
                reg_f_name: reg_f_name,
                reg_l_name: reg_l_name,
-               reg_house_no: reg_house_no,
-               reg_mobile: reg_mobile,
-               reg_post_code: reg_post_code,
+               // reg_house_no: reg_house_no,
+               // reg_mobile: reg_mobile,
+               // reg_post_code: reg_post_code,
                reg_password: reg_password,
                reg_conf_password: reg_conf_password,
                reg_otp: reg_otp,
