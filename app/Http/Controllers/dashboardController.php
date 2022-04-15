@@ -62,6 +62,15 @@ class dashboardController extends Controller
         $public_html = strval(view("home_content.my_order", compact('product_data')));
         return response()->json(['responseCode' => 1, 'html' => $public_html]);
     }
+
+    public function myProfile(Request $request)
+    {
+        $auth_user_id = ( Session::get( 'auth_user_id' ) ) ? Session::get( 'auth_user_id' ) : null;
+        $session_others_array = ( Session::get( 'session_others_array' ) ) ? Session::get( 'session_others_array' ) : null;
+
+        $public_html = strval(view("home_content.my_profile", compact('session_others_array')));
+        return response()->json(['responseCode' => 1, 'html' => $public_html]);
+    }
     /**
      * Show the form for creating a new resource.
      *
