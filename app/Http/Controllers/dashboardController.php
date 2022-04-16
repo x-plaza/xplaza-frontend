@@ -68,7 +68,14 @@ class dashboardController extends Controller
         $auth_user_id = ( Session::get( 'auth_user_id' ) ) ? Session::get( 'auth_user_id' ) : null;
         $session_others_array = ( Session::get( 'session_others_array' ) ) ? Session::get( 'session_others_array' ) : null;
 
-        $public_html = strval(view("home_content.my_profile", compact('session_others_array')));
+       // $api_url = env('API_BASE_URL')."/api/customer/".urlencode($session_others_array['user_email']);
+        $api_url = env('API_BASE_URL')."/api/customer/".intval($auth_user_id);
+        $curlOutput  = HandleApi::getCURLOutput( $api_url, 'GET', [] );
+        $decodedData = json_decode($curlOutput);
+        $profile_data = isset($decodedData->data) ? $decodedData->data : [];
+      //  dd($api_url,$decodedData);
+
+        $public_html = strval(view("home_content.my_profile", compact('profile_data')));
         return response()->json(['responseCode' => 1, 'html' => $public_html]);
     }
     /**
@@ -76,7 +83,7 @@ class dashboardController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function updateProfile(Request $request)
     {
         //
     }

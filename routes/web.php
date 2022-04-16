@@ -63,5 +63,6 @@ Route::group(array('middleware' => ['authAndAcl']), function() {
     Route::get('/my-dashboard', 'dashboardController@index');
     Route::post('/get-my-order-list', 'dashboardController@myOrderList');
     Route::post('/get-my-profile-data', 'dashboardController@myProfile');
+    Route::post('/update-profile-data', 'dashboardController@updateProfile');
 });
 

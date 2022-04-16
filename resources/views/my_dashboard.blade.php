@@ -345,5 +345,55 @@
             $(".myProfileBtn").parent('li').removeClass("active");
             loadOrderList();
         });
+
+        $(".updateProfileBtn").on("click",function(e){
+            $('.profile_message_section').html('');
+            var btn = jQuery(this);
+            var btn_content = btn.html();
+            btn.html('<i class="fa fa-spinner fa-spin"></i>');
+            btn.prop('disabled', true);
+
+            var first_name = $('.first_name').val();
+            var last_name = $('.last_name').val();
+            var house_no = $('.house_no').val();
+            var street_name = $('.street_name').val();
+            var postcode = $('.postcode').val();
+            var area = $('.area').val();
+            var city = $('.city').val();
+            var country = $('.country').val();
+            var mobile_no = $('.mobile_no').val();
+
+            $.ajax({
+                url: '{{ url('/update-profile-data') }}',
+                type: "POST",
+                //dataType: 'json',
+                headers: {
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                },
+                data: {
+                    first_name: first_name,
+                    last_name: last_name,
+                    house_no: house_no,
+                    street_name: street_name,
+                    postcode: postcode,
+                    area: area,
+                    city: city,
+                    country: country,
+                    mobile_no: mobile_no,
+                },
+                success: function (response) {
+
+                    btn.html(btn_content);
+                    btn.prop('disabled', false);
+                    if (response.responseCode == 1) {
+                        $('.profile_message_section').html('<span style="color: #0d3625;font-weight: bold;">Successfully registered</span>');
+                        location.reload();
+                    } else {
+                        $('.profile_message_section').html('<span style="color: red;font-weight: bold;">' + response.message + '</span>');
+                    }
+
+                }
+            });
+        });
     </script>
 @endsection
