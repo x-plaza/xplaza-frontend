@@ -346,7 +346,7 @@
             loadOrderList();
         });
 
-        $(".updateProfileBtn").on("click",function(e){
+        $(document).on("click", ".updateProfileBtn", function() {
             $('.profile_message_section').html('');
             var btn = jQuery(this);
             var btn_content = btn.html();
@@ -386,8 +386,7 @@
                     btn.html(btn_content);
                     btn.prop('disabled', false);
                     if (response.responseCode == 1) {
-                        $('.profile_message_section').html('<span style="color: #0d3625;font-weight: bold;">Successfully registered</span>');
-                        location.reload();
+                        $('.profile_message_section').html('<span style="color: #0d3625;font-weight: bold;">' + response.message + '</span>');
                     } else {
                         $('.profile_message_section').html('<span style="color: red;font-weight: bold;">' + response.message + '</span>');
                     }

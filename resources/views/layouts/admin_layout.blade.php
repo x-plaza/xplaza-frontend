@@ -618,7 +618,9 @@ $searchableProductData = App\Libraries\HandleApi::searchProductData();
                     {{--                </div>--}}
 
                     <div class="text-center dont-account py-4">
-                        <p class="mb-0">Don't have any account <a href="#" class="load_registration_form">Sign Up</a>
+                        <p class="mb-0">Don't have any account ? <a href="#" class="load_registration_form">Sign Up</a>
+                        </p>
+                        <p class="mb-0">Forgot password ? <a href="#" class="forgot_pass_form">Reset password</a>
                         </p>
                     </div>
                 </div>
@@ -665,11 +667,39 @@ $searchableProductData = App\Libraries\HandleApi::searchProductData();
                     </form>
                     <div class="reg_message_section"></div>
                     <div class="text-center dont-account py-4">
-                        <p class="mb-0">Already have any account <a href="#" class="load_login_form">Sign In</a></p>
+                        <p class="mb-0">Already have any account ? <a href="#" class="load_login_form">Sign In</a></p>
+                    </div>
+                </div>
+            </div>
+            <div class="forgot_pass_content_section" style="display: none;">
+                <div class="login-header">
+                    <h4>Password reset</h4>
+                </div>
+                <div class="login-content">
+                    <form action="#" class="login-form">
+                        <label>Enter valid email</label>
+                        <input type="email" name="email" class="reset_email" placeholder="Email" style="width: 75%;">
+                        <span><button class="btn btn-primary btn-md otp_sending_btn_forgot_pass"
+                                      style="padding-top: 4%;padding-bottom: 3%;">Get OTP </button></span>
+                        <div class="reset_otp_message_section"></div>
+                        <label>Enter OTP</label>
+                        <input type="text" name="otp" class="reset_otp" placeholder="OTP">
+                        <label>Enter password</label>
+                        <input type="password" name="password" class="reset_password" placeholder="Password">
+                        <label>Enter confirm password</label>
+                        <input type="password" name="password" class="reset_conf_password" placeholder="Confirm Password">
+
+                        <button type="button" class="submit reset_pass_button">Reset</button>
+                    </form>
+                    <div class="reg_message_section"></div>
+                    <div class="text-center dont-account py-4">
+                        <p class="mb-0">Already have any account ? <a href="#" class="load_login_form">Sign In</a></p>
                     </div>
                 </div>
             </div>
         </div>
+
+    </div>
         {{--        <div class="forgot-password text-center">--}}
         {{--            <p>forgot Passowrd? <a href="#">Reset It</a></p>--}}
         {{--        </div>--}}
@@ -846,11 +876,18 @@ $searchableProductData = App\Libraries\HandleApi::searchProductData();
    $(document).on('click', '.load_registration_form', function () {
        $('.registration_content_section').css('display', 'block');
        $('.login_content_section').css('display', 'none');
+       $('.forgot_pass_content_section').css('display', 'none');
    })
    $(document).on('click', '.load_login_form', function () {
        $('.registration_content_section').css('display', 'none');
        $('.login_content_section').css('display', 'block');
+       $('.forgot_pass_content_section').css('display', 'none');
    })
+    $(document).on('click', '.forgot_pass_form', function () {
+        $('.registration_content_section').css('display', 'none');
+        $('.login_content_section').css('display', 'none');
+        $('.forgot_pass_content_section').css('display', 'block');
+    })
 
    $(document).on('click', '.otp_sending_btn', function () {
        var reg_email = $('.reg_email').val();
@@ -893,117 +930,219 @@ $searchableProductData = App\Libraries\HandleApi::searchProductData();
        });
    })
 
-   $(document).on('click', '.sign_up_button', function () {
-
-       // var reg_city = $('.reg_city').val();
-       // var reg_country = $('.reg_country').val();
-       // var reg_area = $('.reg_area').val();
-       // var reg_street_name = $('.reg_street_name').val();
-       // var reg_dob = $('.reg_dob').val();
-       var reg_f_name = $('.reg_f_name').val();
-       var reg_l_name = $('.reg_l_name').val();
-       // var reg_house_no = $('.reg_house_no').val();
-       // var reg_mobile = $('.reg_mobile').val();
-       // var reg_post_code = $('.reg_post_code').val();
-       var reg_email = $('.reg_email').val();
-       var reg_password = $('.reg_password').val();
-       var reg_conf_password = $('.reg_conf_password').val();
-       var reg_otp = $('.reg_otp').val();
-
-       // if (reg_country == '') {
-       //     alert('Please enter country');
-       //     return false;
-       // }
-       // if (reg_city == '') {
-       //     alert('Please enter city');
-       //     return false;
-       // }
-       // if (reg_area == '') {
-       //     alert('Please enter area');
-       //     return false;
-       // }
-       // if (reg_street_name == '') {
-       //     alert('Please enter street name');
-       //     return false;
-       // }
-       // if (reg_dob == '') {
-       //     alert('Please enter date of birth');
-       //     return false;
-       // }
-       if (reg_f_name == '') {
-           alert('Please enter first name');
-           return false;
-       }
-       if (reg_l_name == '') {
-           alert('Please enter last name');
-           return false;
-       }
-       // if (reg_house_no == '') {
-       //     alert('Please enter house');
-       //     return false;
-       // }
-       // if (reg_mobile == '') {
-       //     alert('Please enter email');
-       //     return false;
-       // }
-       // if (reg_post_code == '') {
-       //     alert('Please enter post code');
-       //     return false;
-       // }
-       if (reg_password == '') {
-           alert('Please enter password');
-           return false;
-       }
-       if (reg_conf_password == '') {
-           alert('Please enter confirm password');
-           return false;
-       }
-       if (reg_otp == '') {
-           alert('Please enter valid otp');
-           return false;
-       }
-       if (reg_email == '') {
+   $(document).on('click', '.otp_sending_btn_forgot_pass', function () {
+       var reset_email = $('.reset_email').val();
+       $('.reset_otp_message_section').html('');
+       if (reset_email == '') {
            alert('Please enter valid email');
            return false;
        }
-
-       $('.reg_message_section').html('');
        var btn = jQuery(this);
        var btn_content = btn.html();
        btn.html('<i class="fa fa-spinner fa-spin"></i>');
        btn.prop('disabled', true);
 
        $.ajax({
-           url: '{{ url('/website/init-registration') }}',
+           url: '{{ url('/website/get-reg-otp') }}',
            type: "POST",
            //dataType: 'json',
            headers: {
                'X-CSRF-TOKEN': '{{ csrf_token() }}'
            },
            data: {
-               // reg_country: reg_country,
-               // reg_city: reg_city,
-               // reg_area: reg_area,
-               // reg_street_name: reg_street_name,
-               // reg_dob: reg_dob,
-               reg_f_name: reg_f_name,
-               reg_l_name: reg_l_name,
-               // reg_house_no: reg_house_no,
-               // reg_mobile: reg_mobile,
-               // reg_post_code: reg_post_code,
-               reg_password: reg_password,
-               reg_conf_password: reg_conf_password,
-               reg_otp: reg_otp,
-               reg_email: reg_email
+               reg_email: reset_email
            },
            success: function (response) {
                btn.html(btn_content);
                btn.prop('disabled', false);
                if (response.responseCode == 1) {
-                   $('.reg_message_section').html('<span style="color: #0d3625;font-weight: bold;">Successfully registered</span>');
+                   $('.reset_otp_message_section').html('<span style="color: #0d3625">Successfully sent otp. Please check email</span>');
+               } else if (response.responseCode == 2) {
+                   $('.reset_otp_message_section').html('<span style="color: #0d3625">Not valid email</span>');
+               } else {
+                   $('.reset_otp_message_section').html('<span style="color: red">Could not sent otp. Please try again</span>');
+               }
+
+           },
+           error: function (jqXHR, textStatus, errorThrown) {
+             //  location.reload();
+
+           }
+       });
+   })
+
+    $(document).on('click', '.sign_up_button', function () {
+
+        // var reg_city = $('.reg_city').val();
+        // var reg_country = $('.reg_country').val();
+        // var reg_area = $('.reg_area').val();
+        // var reg_street_name = $('.reg_street_name').val();
+        // var reg_dob = $('.reg_dob').val();
+        var reg_f_name = $('.reg_f_name').val();
+        var reg_l_name = $('.reg_l_name').val();
+        // var reg_house_no = $('.reg_house_no').val();
+        // var reg_mobile = $('.reg_mobile').val();
+        // var reg_post_code = $('.reg_post_code').val();
+        var reg_email = $('.reg_email').val();
+        var reg_password = $('.reg_password').val();
+        var reg_conf_password = $('.reg_conf_password').val();
+        var reg_otp = $('.reg_otp').val();
+
+        // if (reg_country == '') {
+        //     alert('Please enter country');
+        //     return false;
+        // }
+        // if (reg_city == '') {
+        //     alert('Please enter city');
+        //     return false;
+        // }
+        // if (reg_area == '') {
+        //     alert('Please enter area');
+        //     return false;
+        // }
+        // if (reg_street_name == '') {
+        //     alert('Please enter street name');
+        //     return false;
+        // }
+        // if (reg_dob == '') {
+        //     alert('Please enter date of birth');
+        //     return false;
+        // }
+        if (reg_f_name == '') {
+            alert('Please enter first name');
+            return false;
+        }
+        if (reg_l_name == '') {
+            alert('Please enter last name');
+            return false;
+        }
+        // if (reg_house_no == '') {
+        //     alert('Please enter house');
+        //     return false;
+        // }
+        // if (reg_mobile == '') {
+        //     alert('Please enter email');
+        //     return false;
+        // }
+        // if (reg_post_code == '') {
+        //     alert('Please enter post code');
+        //     return false;
+        // }
+        if (reg_password == '') {
+            alert('Please enter password');
+            return false;
+        }
+        if (reg_conf_password == '') {
+            alert('Please enter confirm password');
+            return false;
+        }
+        if (reg_otp == '') {
+            alert('Please enter valid otp');
+            return false;
+        }
+        if (reg_email == '') {
+            alert('Please enter valid email');
+            return false;
+        }
+
+        $('.reg_message_section').html('');
+        var btn = jQuery(this);
+        var btn_content = btn.html();
+        btn.html('<i class="fa fa-spinner fa-spin"></i>');
+        btn.prop('disabled', true);
+
+        $.ajax({
+            url: '{{ url('/website/init-registration') }}',
+            type: "POST",
+            //dataType: 'json',
+            headers: {
+                'X-CSRF-TOKEN': '{{ csrf_token() }}'
+            },
+            data: {
+                // reg_country: reg_country,
+                // reg_city: reg_city,
+                // reg_area: reg_area,
+                // reg_street_name: reg_street_name,
+                // reg_dob: reg_dob,
+                reg_f_name: reg_f_name,
+                reg_l_name: reg_l_name,
+                // reg_house_no: reg_house_no,
+                // reg_mobile: reg_mobile,
+                // reg_post_code: reg_post_code,
+                reg_password: reg_password,
+                reg_conf_password: reg_conf_password,
+                reg_otp: reg_otp,
+                reg_email: reg_email
+            },
+            success: function (response) {
+                btn.html(btn_content);
+                btn.prop('disabled', false);
+                if (response.responseCode == 1) {
+                    $('.reg_message_section').html('<span style="color: #0d3625;font-weight: bold;">Successfully registered</span>');
+                    location.reload();
+                } else {
+                    $('.reg_message_section').html('<span style="color: red;font-weight: bold;">' + response.message + '</span>');
+                }
+
+            },
+            error: function (jqXHR, textStatus, errorThrown) {
+                location.reload();
+
+            }
+        });
+    })
+
+   $(document).on('click', '.reset_pass_button', function () {
+
+       var reset_email = $('.reset_email').val();
+       var reset_password = $('.reset_password').val();
+       var reset_conf_password = $('.reset_conf_password').val();
+       var reset_otp = $('.reset_otp').val();
+
+       if (reset_password == '') {
+           alert('Please enter password');
+           return false;
+       }
+       if (reset_conf_password == '') {
+           alert('Please enter confirm password');
+           return false;
+       }
+       if (reset_otp == '') {
+           alert('Please enter valid otp');
+           return false;
+       }
+       if (reset_email == '') {
+           alert('Please enter valid email');
+           return false;
+       }
+
+       $('.reset_message_section').html('');
+       var btn = jQuery(this);
+       var btn_content = btn.html();
+       btn.html('<i class="fa fa-spinner fa-spin"></i>');
+       btn.prop('disabled', true);
+
+       $.ajax({
+           url: '{{ url('/website/init-forgot-pass') }}',
+           type: "POST",
+           //dataType: 'json',
+           headers: {
+               'X-CSRF-TOKEN': '{{ csrf_token() }}'
+           },
+           data: {
+               reset_password: reset_password,
+               reset_conf_password: reset_conf_password,
+               reset_otp: reset_otp,
+               reset_email: reset_email
+           },
+           success: function (response) {
+               btn.html(btn_content);
+               btn.prop('disabled', false);
+               if (response.responseCode == 1) {
+                   $('.reset_message_section').html('<span style="color: #0d3625;font-weight: bold;">' + response.message + '</span>');
                    location.reload();
                } else {
-                   $('.reg_message_section').html('<span style="color: red;font-weight: bold;">' + response.message + '</span>');
+                   $('.reset_message_section').html('<span style="color: red;font-weight: bold;">' + response.message + '</span>');
                }
 
            },

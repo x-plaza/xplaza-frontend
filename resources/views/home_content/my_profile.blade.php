@@ -8,6 +8,12 @@
                 <div class="row">
                     <div class="col-lg-6">
                         <div class="input-item">
+                            <label>Email</label>
+                            <input type="text" name="email" class="email" value="{{$email}}" readonly>
+                        </div>
+                    </div>
+                    <div class="col-lg-6">
+                        <div class="input-item">
                             <label>First Name</label>
                             <input type="text" name="first_name" class="first_name" value="{{$profile_data->first_name}}" >
                         </div>
