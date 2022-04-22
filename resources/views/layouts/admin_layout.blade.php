@@ -689,6 +689,7 @@ $searchableProductData = App\Libraries\HandleApi::searchProductData();
                         <label>Enter confirm password</label>
                         <input type="password" name="password" class="reset_conf_password" placeholder="Confirm Password">
 
+                        <div class="forgot_pass_message_section"></div>
                         <button type="button" class="submit reset_pass_button">Reset</button>
                     </form>
                     <div class="reg_message_section"></div>
@@ -1138,16 +1139,22 @@ $searchableProductData = App\Libraries\HandleApi::searchProductData();
            success: function (response) {
                btn.html(btn_content);
                btn.prop('disabled', false);
+
+               $('.reset_email').val('');
+               $('.reset_password').val('');
+               $('.reset_conf_password').val('');
+               $('.reset_otp').val('');
+
                if (response.responseCode == 1) {
-                   $('.reset_message_section').html('<span style="color: #0d3625;font-weight: bold;">' + response.message + '</span>');
-                   location.reload();
+                   $('.forgot_pass_message_section').html('<span style="color: #0d3625;font-weight: bold;">' + response.message + '</span>');
+                  // location.reload();
                } else {
-                   $('.reset_message_section').html('<span style="color: red;font-weight: bold;">' + response.message + '</span>');
+                   $('.forgot_pass_message_section').html('<span style="color: red;font-weight: bold;">' + response.message + '</span>');
                }
 
            },
            error: function (jqXHR, textStatus, errorThrown) {
-               location.reload();
+             //  location.reload();
 
            }
        });

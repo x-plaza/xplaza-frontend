@@ -57,6 +57,7 @@ Route::post('/apiBasedLogin', 'apiAuthenticationsController@loginAttempt');
 Route::get('/apiBasedLogOut', 'apiAuthenticationsController@logOutAttempt');
 Route::post('/forgot-password/get-otp', 'forgotPassController@getOtp');
 Route::post('/forgot-password/set-new-password', 'forgotPassController@setNewPass');
+Route::post('/website/init-forgot-pass', 'forgotPassController@setForgotPass');
 
 
 Route::group(array('middleware' => ['authAndAcl']), function() {
