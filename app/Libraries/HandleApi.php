@@ -52,7 +52,7 @@ class HandleApi {
 	public static function getCURLOutput( $curloptURL, $method, $fieldData ) {
 
 		$onlyToken = self::getValidToken();
-
+dd($curloptURL,$onlyToken);
 		if ( isset( $onlyToken ) ) {
 
 			$curl = curl_init();
