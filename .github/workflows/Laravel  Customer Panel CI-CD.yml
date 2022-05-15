@@ -7,12 +7,14 @@ on:
     branches: [server-deploy]
 
 jobs:
+
   deploy:
-    name: Deploy and Setup
+    name: Deploy to remote server
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v2
+        
       - name: Deploy to Server
         uses: ngocquyhoang/deploy@laravel
         with:
@@ -22,7 +24,12 @@ jobs:
           owner: ${{ secrets.OWNER }}
         env:
           DEPLOY_KEY: ${{ secrets.SSH_KEY }}
-
+          
+  configure:
+    name: Post deployment configuration
+    needs: deploy
+    runs-on: ubuntu-latest
+    steps:
       - name: Run a script on remote server (setup)
         if: always()
         uses: fifsky/ssh-action@master
