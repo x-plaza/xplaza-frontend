@@ -2,9 +2,9 @@ name: Customer Panel Laravel CI/CD
 
 on:
   push:
-    branches: [dev]
+    branches: [server-deploy]
   pull_request:
-    branches: [dev]
+    branches: [server-deploy]
 
 jobs:
 
@@ -20,7 +20,7 @@ jobs:
         with:
           user: ${{ secrets.SSH_USER }}
           host: ${{ secrets.HOST }}
-          path: ${{ secrets.DEV_PATH }}
+          path: ${{ secrets.PATH }}
           owner: ${{ secrets.OWNER }}
         env:
           DEPLOY_KEY: ${{ secrets.SSH_KEY }}
