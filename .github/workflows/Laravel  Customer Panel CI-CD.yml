@@ -28,7 +28,14 @@ jobs:
         uses: fifsky/ssh-action@master
         with:
           command: |
-            cd ${{ secrets.PATH }} && composer install && php artisan config:cache && php artisan config:clear && find . -type f -exec chmod 644 {} \; && find . -type d -exec chmod 755 {} \; &
+            cd ${{ secrets.PATH }} \\
+            && composer install \\
+            && composer dumpautoload -o \\
+            && php artisan optimize --force \\
+            && php artisan config:cache \\
+            && php artisan route:cache \\
+            && find . -type f -exec chmod 644 {} \; \\
+            && find . -type d -exec chmod 755 {} \; &
           host: ${{ secrets.HOST }}
           user: ${{ secrets.SSH_USER }}
           pass: ${{ secrets.SSH_PASSWORD }}
