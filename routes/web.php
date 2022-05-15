@@ -57,10 +57,13 @@ Route::post('/apiBasedLogin', 'apiAuthenticationsController@loginAttempt');
 Route::get('/apiBasedLogOut', 'apiAuthenticationsController@logOutAttempt');
 Route::post('/forgot-password/get-otp', 'forgotPassController@getOtp');
 Route::post('/forgot-password/set-new-password', 'forgotPassController@setNewPass');
+Route::post('/website/init-forgot-pass', 'forgotPassController@setForgotPass');
 
 
 Route::group(array('middleware' => ['authAndAcl']), function() {
     Route::get('/my-dashboard', 'dashboardController@index');
     Route::post('/get-my-order-list', 'dashboardController@myOrderList');
+    Route::post('/get-my-profile-data', 'dashboardController@myProfile');
+    Route::post('/update-profile-data', 'dashboardController@updateProfile');
 });
 

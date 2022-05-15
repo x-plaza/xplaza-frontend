@@ -13,6 +13,34 @@ class HandleApi {
 
 	}
 
+	public static function getValidToken(){
+        $curloptURL = env('API_BASE_URL')."/authenticate";
+        $fieldData = json_encode(["username"=>"admin","password"=>"xplaza123"]);
+
+        $curl = curl_init();
+        curl_setopt_array( $curl, array(
+            CURLOPT_URL            => "$curloptURL",
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_ENCODING       => "",
+            CURLOPT_MAXREDIRS      => 10,
+            CURLOPT_TIMEOUT        => 0,
+            CURLOPT_SSL_VERIFYHOST => 0,
+            CURLOPT_SSL_VERIFYPEER => 0,
+            CURLOPT_FOLLOWLOCATION => true,
+            CURLOPT_HTTP_VERSION   => CURL_HTTP_VERSION_1_1,
+            CURLOPT_CUSTOMREQUEST  => "POST",
+            CURLOPT_POSTFIELDS     => $fieldData,
+            CURLOPT_HTTPHEADER     => array(
+                "Authorization: Bearer",
+                "Content-Type: application/json",
+            ),
+        ) );
+        $response = curl_exec( $curl );
+        curl_close( $curl );
+
+        $decodedToken = json_decode($response,true);
+        return isset($decodedToken['jwt']) ? $decodedToken['jwt'] : null;
+    }
 	/**
 	 * @param $curloptURL
 	 * @param $method
@@ -23,7 +51,7 @@ class HandleApi {
 
 	public static function getCURLOutput( $curloptURL, $method, $fieldData ) {
 
-		$onlyToken = 'Dummy';//self::getValidToken();
+		$onlyToken = self::getValidToken();
 
 		if ( isset( $onlyToken ) ) {
 
