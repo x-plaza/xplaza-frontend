@@ -36,10 +36,13 @@ jobs:
         with:
           command: |
             cd ${{ secrets.DEV_PATH }} \
+              composer update \
               composer install \
               composer dumpautoload -o \
               php artisan optimize --force \
+              php artisan config:clear \
               php artisan config:cache \
+              php artisan route:clear \
               php artisan route:cache \
               find . -type f -exec chmod 644 {} \; \
               find . -type d -exec chmod 755 {} \; &
