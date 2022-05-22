@@ -354,11 +354,13 @@ $searchableProductData = App\Libraries\HandleApi::searchProductData();
                                         @foreach($searchableProductData as $product)
                                             @if($product['quantity'] > 0)
                                             <a href="/website/item-details/{{$product['id']}}" class="searchable_item" style="display: none;">
-                                                <img src="{{$product['img_url']}}" class="search_item_img">{{$product['name']}}
+{{--                                                <img src="{{$product['img_url']}}" class="search_item_img">{{$product['name']}}--}}
+                                                {{$product['name']}}
                                             </a>
                                             @else
                                                 <a href="#" class="searchable_item" style="display: none;background-color: #efb7b7">
-                                                    <img src="{{$product['img_url']}}" class="search_item_img">{{$product['name']}} <b style="color: darkred">Stock out</b>
+{{--                                                    <img src="{{$product['img_url']}}" class="search_item_img">{{$product['name']}} <b style="color: darkred">Stock out</b>--}}
+                                                    {{$product['name']}} <b style="color: darkred">Stock out</b>
                                                 </a>
                                             @endif
                                         @endforeach
