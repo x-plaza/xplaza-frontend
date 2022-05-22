@@ -52,7 +52,7 @@ class HandleApi {
 	public static function getCURLOutput( $curloptURL, $method, $fieldData ) {
 
 		$onlyToken = self::getValidToken();
-
+//dd($curloptURL,$onlyToken);
 		if ( isset( $onlyToken ) ) {
 
 			$curl = curl_init();
@@ -190,7 +190,8 @@ class HandleApi {
             $subData['quantity'] = $data->quantity;
             $subData['id'] = $data->id;
             $subData['name'] = $data->name .' ( '.$data->product_var_type_value.' '.$data->product_var_type_name.' )';
-            $subData['img_url'] = env('IMAGE_BASE_URL','https://test-admin.xwinkel.com').'/item_image/'.$image_name;
+          //  $subData['img_url'] = env('IMAGE_BASE_URL','https://test-admin.xwinkel.com').'/item_image/'.$image_name;
+            $subData['img_url'] = '';//'admin/public/item_image/'.$image_name;
             $allData[] =  $subData;
         }
         return $allData;
