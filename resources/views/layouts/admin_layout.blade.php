@@ -7,7 +7,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
     <title>x-winkel</title>
-    <link rel="shortcut icon" type="image/png" href="website_src/images/Asset 4.png"/>
+    <link rel="shortcut icon" type="image/png" href="{{asset('website_src/images/Asset 4.png')}}"/>
 
     @section('styles')
     @show
