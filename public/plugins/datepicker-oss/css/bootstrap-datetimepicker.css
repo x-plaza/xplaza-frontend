@@ -29,7 +29,7 @@
 }
 .bootstrap-datetimepicker-widget.dropdown-menu:before,
 .bootstrap-datetimepicker-widget.dropdown-menu:after {
-  content: '';
+  content: "";
   display: inline-block;
   position: absolute;
 }
@@ -273,7 +273,7 @@
   width: 54px;
 }
 .bootstrap-datetimepicker-widget table td.cw {
-  font-size: .8em;
+  font-size: 0.8em;
   height: 20px;
   line-height: 20px;
   color: #777777;
@@ -298,7 +298,7 @@
   position: relative;
 }
 .bootstrap-datetimepicker-widget table td.today:before {
-  content: '';
+  content: "";
   display: inline-block;
   border: solid transparent;
   border-width: 0 0 7px 7px;

@@ -35,12 +35,12 @@ class LoginController extends Controller
      */
     public function __construct()
     {
-//        $this->middleware(function ($request, $next) {
-//            $isAuthenticated = session::get('authenticated');
-//            if(isset($isAuthenticated) && $isAuthenticated == 'true'){
-//                return redirect('/home');
-//            }
-//        });
+        //        $this->middleware(function ($request, $next) {
+        //            $isAuthenticated = session::get('authenticated');
+        //            if(isset($isAuthenticated) && $isAuthenticated == 'true'){
+        //                return redirect('/home');
+        //            }
+        //        });
 
         $this->middleware('guest')->except('logout');
     }

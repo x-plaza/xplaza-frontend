@@ -1,13 +1,9 @@
-
-
 // Core variables and mixins
 @import "sub-stylesheet/_variables";
 @import "sub-stylesheet/_mixins";
 
-
 // Reset and dependencies
 @import "sub-stylesheet/_normalize";
-
 
 // Core CSS
 @import "sub-stylesheet/_navs";
@@ -41,7 +37,5 @@
 @import "sub-stylesheet/_newsletter";
 @import "sub-stylesheet/_order-success";
 @import "sub-stylesheet/_dashboard";
-
-
 
 // Components
