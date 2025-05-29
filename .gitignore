@@ -8,7 +8,6 @@ bootstrap/cache/*.php
 
 # Sensitive files
 .env
-.env.*.backup
 
 # IDEs and editors
 .idea
