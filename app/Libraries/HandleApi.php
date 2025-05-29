@@ -11,7 +11,7 @@ class HandleApi
     public static function getValidToken()
     {
         $curloptURL = env('API_BASE_URL').'/authenticate';
-        $fieldData = json_encode(['username' => 'admin', 'password' => 'xplaza123']);
+        $fieldData = json_encode(['username' => env('ADMIN_USERNAME'), 'password' => env('ADMIN_PASSWORD')]);
 
         $curl = curl_init();
         curl_setopt_array($curl, [
