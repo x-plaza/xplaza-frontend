@@ -128,4 +128,3 @@ jobs:
 
       - name: Build Docker image
         run: docker build -t ghcr.io/${{ github.repository_owner }}/xplaza-frontend:v${{ github.event.pull_request.number }}  .
-
