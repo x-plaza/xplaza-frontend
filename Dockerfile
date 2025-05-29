@@ -1,4 +1,4 @@
-FROM php:8.2-fpm-slim-bookworm AS base
+FROM php:8.2-fpm-alpine AS base
 
 RUN apt-get update && apt-get install -y \
     git unzip curl libpng-dev libonig-dev libjpeg-dev libfreetype6-dev libzip-dev \
