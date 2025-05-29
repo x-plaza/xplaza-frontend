@@ -19,7 +19,7 @@
         _paq.push(['trackPageView']);
         _paq.push(['enableLinkTracking']);
         (function() {
-            var u="//analytics.xwinkel.com/";
+            var u="//analytics.xplaza.shop/";
             _paq.push(['setTrackerUrl', u+'matomo.php']);
             _paq.push(['setSiteId', '1']);
             var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0];
@@ -503,7 +503,7 @@ $searchableProductData = App\Libraries\HandleApi::searchProductData();
                                 <a href="{{url('/')}}" class="footer-logo"><img
                                             src="{{asset('website_src/images/logo.svg')}}"
                                             alt="logo"></a>
-                                <p>xwinkel.com is an online supermarket available in Jeffreys Bay, Aston Bay, Paradise Beach and St.Francis Bay. We believe time is valuable to our fellow residents and they should not waste hours in traffic, bad weather and wait in line just to buy basic necessities! This is why "X-winkel" delivers everything you need right at your door-step.</p>
+                                <p>X-Plaza.shop is an online supermarket available in Jeffreys Bay, Aston Bay, Paradise Beach and St.Francis Bay. We believe time is valuable to our fellow residents and they should not waste hours in traffic, bad weather and wait in line just to buy basic necessities! This is why "X-winkel" delivers everything you need right at your door-step.</p>
                                 <ul class="social-media-list d-flex flex-wrap">
                                     <li><a href="https://www.facebook.com/winkelx"><i class="fab fa-facebook-f"></i></a>
                                     <li><a href="https://wa.me/27846347530" target="_blank"><i class="fab fa-whatsapp"></i></a>

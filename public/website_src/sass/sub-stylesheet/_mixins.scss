@@ -1,5 +1,3 @@
-
-
 // BORDER RADIUS
 // @mixin border-radius($radius){
 // 	-webkit-border-radius: $radius;
@@ -7,15 +5,12 @@
 // 	border-radius: $radius;
 // }
 
-
-
-// //   transition 
+// //   transition
 // @mixin transition($transition){
 //   -webkit-transition: all $transition ease-in-out;
 //   -moz-transition: all $transition ease-in-out;
 //   transition: all $transition ease-in-out;
 // }
-
 
 // //  transform property
 // @mixin transform($property){
@@ -25,37 +20,32 @@
 
 // }
 
-
-
 /* transition */
-@mixin transition($property){
-    -webkit-transition: $property;
-        transition: $property;
+@mixin transition($property) {
+  -webkit-transition: $property;
+  transition: $property;
 }
 
 /* flex */
-@mixin flex($property){
-    display: -webkit-box;
-    display: -ms-flexbox;
-    display: flex;
-    align-items: center
+@mixin flex($property) {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  align-items: center;
 }
 
 /* transform */
 @mixin transform($property) {
   -webkit-transform: $property;
-      -ms-transform: $property;
-          transform: $property;
+  -ms-transform: $property;
+  transform: $property;
 }
-
 
 /* opacity */
-@mixin opacity($opacity){
-    opacity: $opacity;
-    -ms-filter: $opacity;
+@mixin opacity($opacity) {
+  opacity: $opacity;
+  -ms-filter: $opacity;
 }
-
-
 
 // @mixin breakpoint($point) {
 //    @if $point == xxs {
