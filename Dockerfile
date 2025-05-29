@@ -53,5 +53,5 @@ RUN chown -R www-data:www-data storage bootstrap/cache \
 USER www-data
 
 # Expose the port that PHP-FPM listens on       
-EXPOSE 9005
+EXPOSE 9000
 CMD ["php-fpm"]
