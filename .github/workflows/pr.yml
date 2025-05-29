@@ -1,0 +1,110 @@
+name: PR Pipeline
+
+on:
+  pull_request:
+    branches:
+      - main
+      - master
+
+permissions:
+  contents: read
+  pull-requests: write
+
+jobs:
+  format-test-coverage:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up PHP with Xdebug (for coverage)
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.2'
+          extensions: mbstring, pdo_mysql, zip, gd, xdebug
+          coverage: xdebug
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install PHP dependencies
+        run: composer install --prefer-dist --no-progress --no-suggest --no-interaction
+
+      - name: Install Node dependencies
+        run: npm ci
+
+      - name: Run Spotless (format + lint)
+        run: npm run spotless
+
+      - name: Run PHPUnit tests with coverage (clover XML)
+        run: |
+          mkdir -p build/logs
+          vendor/bin/phpunit --coverage-clover=build/logs/clover.xml --colors=never || true
+
+      - name: Install PHP XML tools for parsing coverage
+        run: sudo apt-get update && sudo apt-get install -y xmlstarlet jq
+
+      - name: Parse coverage from clover.xml and generate badge JSON
+        id: coverage
+        run: |
+          # Parse line and branch coverage percentages from clover.xml using xmlstarlet
+          LINE_COVERAGE=$(xmlstarlet sel -t -v "sum(//metrics/@coveredstatements) div sum(//metrics/@statements) * 100" build/logs/clover.xml | xargs printf "%.0f")
+          BRANCH_COVERAGE=$(xmlstarlet sel -t -v "sum(//metrics/@coveredconditionals) div sum(//metrics/@conditionals) * 100" build/logs/clover.xml | xargs printf "%.0f")
+
+          # Fallback if values are empty or NaN
+          if [ -z "$LINE_COVERAGE" ] || [ "$LINE_COVERAGE" = "nan" ]; then
+            LINE_COVERAGE=0
+          fi
+          if [ -z "$BRANCH_COVERAGE" ] || [ "$BRANCH_COVERAGE" = "nan" ]; then
+            BRANCH_COVERAGE=0
+          fi
+
+          mkdir -p badges
+          echo "{\"coverage\": $LINE_COVERAGE, \"branches\": $BRANCH_COVERAGE}" > badges/coverage-summary.json
+
+          echo "line_coverage=$LINE_COVERAGE" >> $GITHUB_OUTPUT
+          echo "branch_coverage=$BRANCH_COVERAGE" >> $GITHUB_OUTPUT
+
+      - name: Install GitHub CLI
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y curl
+          curl -fsSL https://cli.github.com/packages/githubcli-archive-keyring.gpg | gpg --dearmor -o /usr/share/keyrings/githubcli-archive-keyring.gpg
+          echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/githubcli-archive-keyring.gpg] https://cli.github.com/packages stable main" | sudo tee /etc/apt/sources.list.d/github-cli.list > /dev/null
+          sudo apt-get update
+          sudo apt-get install -y gh
+
+      - name: Mark Git directory as safe
+        run: git config --global --add safe.directory "$GITHUB_WORKSPACE"
+
+      - name: Comment on PR with Coverage Badges
+        if: ${{ github.event_name == 'pull_request' }}
+        shell: bash
+        run: |
+          COLOR_COV() {
+            if (( $1 >= 90 )); then echo "brightgreen";
+            elif (( $1 >= 75 )); then echo "yellow";
+            elif (( $1 >= 50 )); then echo "orange";
+            else echo "red"; fi
+          }
+
+          COVERAGE=${{ steps.coverage.outputs.line_coverage }}
+          BRANCHES=${{ steps.coverage.outputs.branch_coverage }}
+          COLOR_COV_BADGE=$(COLOR_COV $COVERAGE)
+          COLOR_BRANCH_BADGE=$(COLOR_COV $BRANCHES)
+
+          NEWLINE=$'\n'
+          BODY="## 🧪 Test Coverage Summary${NEWLINE}"
+          BODY+="| Metric     | Coverage |${NEWLINE}"
+          BODY+="|------------|----------|${NEWLINE}"
+          BODY+="| ✅ **Lines**    | ![Lines](https://img.shields.io/badge/Coverage-${COVERAGE}%25-${COLOR_COV_BADGE}) |${NEWLINE}"
+          BODY+="| ✅ **Branches** | ![Branches](https://img.shields.io/badge/Branches-${BRANCHES}%25-${COLOR_BRANCH_BADGE}) |"
+
+          gh pr comment ${{ github.event.pull_request.number }} --body "${BODY}" --edit-last --create-if-none
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

@@ -2,7 +2,10 @@
 vendor
 node_modules
 
-public
+public/storage
+public/hot
+public/*.log
+
 storage
 bootstrap/cache/*.php
 
