@@ -32,6 +32,11 @@ jobs:
         with:
           node-version: "20"
 
+      - name: Prepare Laravel Cache Directory
+        run: |
+          mkdir -p bootstrap/cache
+          chmod -R 777 bootstrap/cache
+
       - name: Install PHP dependencies
         run: composer install --prefer-dist --no-progress --no-suggest --no-interaction
 
