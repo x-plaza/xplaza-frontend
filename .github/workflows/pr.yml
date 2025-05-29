@@ -4,7 +4,6 @@ on:
   pull_request:
     branches:
       - main
-      - master
 
 permissions:
   contents: read
@@ -57,11 +56,9 @@ jobs:
       - name: Parse coverage from clover.xml and generate badge JSON
         id: coverage
         run: |
-          # Parse line and branch coverage percentages from clover.xml using xmlstarlet
           LINE_COVERAGE=$(xmlstarlet sel -t -v "sum(//metrics/@coveredstatements) div sum(//metrics/@statements) * 100" build/logs/clover.xml | xargs printf "%.0f")
           BRANCH_COVERAGE=$(xmlstarlet sel -t -v "sum(//metrics/@coveredconditionals) div sum(//metrics/@conditionals) * 100" build/logs/clover.xml | xargs printf "%.0f")
 
-          # Fallback if values are empty or NaN
           if [ -z "$LINE_COVERAGE" ] || [ "$LINE_COVERAGE" = "nan" ]; then
             LINE_COVERAGE=0
           fi
@@ -114,3 +111,21 @@ jobs:
           gh pr comment ${{ github.event.pull_request.number }} --body "${BODY}" --edit-last --create-if-none
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  build-image:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Log in to GitHub Container Registry
+        uses: docker/login-action@v2
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Build Docker image
+        run: docker build -t ghcr.io/${{ github.repository_owner }}/xplaza-frontend:v${{ github.event.pull_request.number }}  .
+
