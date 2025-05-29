@@ -75,18 +75,17 @@ jobs:
           echo "line_coverage=$LINE_COVERAGE" >> $GITHUB_OUTPUT
           echo "branch_coverage=$BRANCH_COVERAGE" >> $GITHUB_OUTPUT
 
-      - name: Install GitHub CLI
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y curl
-          curl -fsSL https://cli.github.com/packages/githubcli-archive-keyring.gpg | gpg --dearmor -o /usr/share/keyrings/githubcli-archive-keyring.gpg
-          echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/githubcli-archive-keyring.gpg] https://cli.github.com/packages stable main" | sudo tee /etc/apt/sources.list.d/github-cli.list > /dev/null
-          sudo apt-get update
-          sudo apt-get install -y gh
-
+          - name: Install GitHub CLI
+          run: |
+            sudo apt-get update
+            sudo apt-get install -y curl gnupg
+            sudo mkdir -p /usr/share/keyrings
+            curl -fsSL https://cli.github.com/packages/githubcli-archive-keyring.gpg | sudo tee /usr/share/keyrings/githubcli-archive-keyring.gpg > /dev/null
+            echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/githubcli-archive-keyring.gpg] https://cli.github.com/packages stable main" | sudo tee /etc/apt/sources.list.d/github-cli.list > /dev/null
+            sudo apt-get update
+            sudo apt-get install -y gh
       - name: Mark Git directory as safe
         run: git config --global --add safe.directory "$GITHUB_WORKSPACE"
-
       - name: Comment on PR with Coverage Badges
         if: ${{ github.event_name == 'pull_request' }}
         shell: bash
