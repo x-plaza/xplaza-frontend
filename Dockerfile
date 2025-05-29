@@ -32,14 +32,16 @@ FROM base AS final
 # Copy built frontend assets
 COPY --from=nodebuild /app/public /var/www/public
 
-# Install Composer (alpine-safe approach)
+# Ensure directories exist and are writable before composer install
+RUN mkdir -p bootstrap/cache storage \
+    && chmod -R 775 bootstrap/cache storage
+
+# Install composer dependencies and run artisan commands
 COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 RUN composer install --no-dev --optimize-autoloader \
     && php artisan config:cache \
     && php artisan route:clear \
-    && php artisan view:clear \
-    && mkdir -p bootstrap/cache storage \
-    && chmod -R 775 storage bootstrap/cache
+    && php artisan view:clear
 
 EXPOSE 9005
-CMD ["php-fpm"]   
+CMD ["php-fpm"]
