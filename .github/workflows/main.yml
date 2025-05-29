@@ -41,10 +41,10 @@ jobs:
           password: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Build Docker image
-        run: docker build -t ghcr.io/${{ github.repository_owner }}/laravel-app:v${{ steps.set_version.outputs.version }} .
+        run: docker build -t ghcr.io/${{ github.repository_owner }}/xplaza-frontend:v${{ steps.set_version.outputs.version }} .
 
       - name: Push Docker image to GHCR
-        run: docker push ghcr.io/${{ github.repository_owner }}/laravel-app:v${{ steps.set_version.outputs.version }}
+        run: docker push ghcr.io/${{ github.repository_owner }}/xplaza-frontend:v${{ steps.set_version.outputs.version }}
 
       - name: Create GitHub Release
         id: create_release
