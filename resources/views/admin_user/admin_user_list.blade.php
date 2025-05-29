@@ -246,7 +246,7 @@
                         headers: {
                             'X-CSRF-TOKEN': '{{ csrf_token() }}'
                         },
-                        url: '{{url("admin-user/get-list")}}',
+                        url: '{{url("admin-users/get-list")}}',
                         method: 'post'
                     },
                     columns: [
@@ -278,7 +278,7 @@
                 $('.spinner_area').html('<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>');
 
                 $.ajax({
-                    url: '{{ url('/admin-user/get-otp') }}',
+                    url: '{{ url('/admin-users/get-otp') }}',
                     type: "POST",
                     //dataType: 'json',
                     headers: {
@@ -353,7 +353,7 @@
                 $('.spinner-icon').html('<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>');
 
                 $.ajax({
-                    url: '{{ url('/admin-user/add-new-user') }}',
+                    url: '{{ url('/admin-users/add-new-user') }}',
                     type: "POST",
                     //dataType: 'json',
                     headers: {
@@ -415,7 +415,7 @@
                 $.ajax({
                     type: "POST",
                     dataType: "json",
-                    url: "{{ url('/admin-user/get-user-info') }}",
+                    url: "{{ url('/admin-users/get-user-info') }}",
                     data: {
                         _token: $('input[name="_token"]').val(),
                         admin_id: admin_id
@@ -482,7 +482,7 @@
                 $('.spinner-icon').html('<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>');
 
                 $.ajax({
-                    url: '{{ url('/admin-user/update-user') }}',
+                    url: '{{ url('/admin-users/update-user') }}',
                     type: "POST",
                     //dataType: 'json',
                     headers: {
@@ -544,7 +544,7 @@
                 $.ajax({
                     type: "POST",
                     dataType: "json",
-                    url: "{{ url('/admin-user/delete-user') }}",
+                    url: "{{ url('/admin-users/delete-user') }}",
                     data: {
                         _token: $('input[name="_token"]').val(),
                         admin_id: admin_id
