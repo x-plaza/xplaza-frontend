@@ -24,7 +24,7 @@ FROM node:20-alpine AS nodebuild
 
 WORKDIR /app
 COPY . .
-RUN npm ci && npm run build
+RUN npm ci && npm run prod
 
 # ---- Final stage ----
 FROM base AS final
