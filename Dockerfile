@@ -33,26 +33,19 @@ FROM base AS final
 # Copy built frontend assets
 COPY --from=nodebuild /app/public /var/www/public
 
-# Ensure directories exist and writable
+# Ensure Laravel directories exist and are writable
 RUN mkdir -p bootstrap/cache storage/framework/views storage/logs storage/framework/sessions \
     && chmod -R 775 bootstrap/cache storage
 
-# Install composer dependencies
+# Install Composer dependencies
 COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
-RUN composer install
-
-# Set permissions
-RUN chown -R www-data:www-data storage bootstrap/cache \
-    && chmod -R 775 storage bootstrap/cache
+RUN composer install --no-interaction --prefer-dist --optimize-autoloader
 
 # Copy entrypoint script
 COPY docker-entrypoint.sh /usr/local/bin/docker-entrypoint.sh
 RUN chmod +x /usr/local/bin/docker-entrypoint.sh
 
-USER www-data
-
 EXPOSE 8008
 
-# Use entrypoint script instead of CMD directly
 ENTRYPOINT ["docker-entrypoint.sh"]
 CMD ["php", "artisan", "serve", "--host=0.0.0.0", "--port=8008"]
