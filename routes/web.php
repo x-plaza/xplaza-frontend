@@ -1,68 +1,70 @@
 <?php
 
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
-/*
-|--------------------------------------------------------------------------
-| Web Routes
-|--------------------------------------------------------------------------
-|
-| Here is where you can register web routes for your application. These
-| routes are loaded by the RouteServiceProvider within a group which
-| contains the "web" middleware group. Now create something great!
-|
-*/
+// This is a frontend-only Laravel project consuming APIs from a separate backend.
+// All controllers should only act as API consumers, not as business logic providers.
+// Removed Auth::routes() and backend-auth routes, as authentication is handled by the backend API.
 
-Route::get('/', function () {
-    return redirect('/');
+Route::get('/', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+
+// Group all website-related routes for clarity and maintainability
+Route::prefix('website')->name('website.')->group(function () {
+    // Shop/cart/product routes
+    Route::post('/shop-selection', [App\Http\Controllers\WebsiteController::class, 'shopSelection'])->name('shopSelection');
+    Route::post('/item-add-to-cart', [App\Http\Controllers\WebsiteController::class, 'addToCart'])->name('addToCart');
+    Route::post('/item-add-to-cart-by-id', [App\Http\Controllers\WebsiteController::class, 'addToCartById'])->name('addToCartById');
+    Route::post('/open-cart-list', [App\Http\Controllers\WebsiteController::class, 'openCartList'])->name('openCartList');
+    Route::post('/remove-item-from-cart-sitebar', [App\Http\Controllers\WebsiteController::class, 'removeFromCart'])->name('removeFromCart');
+    Route::post('/get-trending-product-list/selected-shop', [App\Http\Controllers\WebsiteController::class, 'trendingProductListForShop'])->name('trendingProductListForShop');
+    Route::post('/get-trending-product-list/all-data', [App\Http\Controllers\WebsiteController::class, 'trendingProductListAllData'])->name('trendingProductListAllData');
+    Route::post('/get-product-list/by-sub-cat', [App\Http\Controllers\WebsiteController::class, 'ProductListBySubCat'])->name('ProductListBySubCat');
+    Route::get('/product-search-data', [App\Http\Controllers\WebsiteController::class, 'searchProductList'])->name('searchProductList');
+    Route::get('/item-details/{item_id}', [App\Http\Controllers\WebsiteController::class, 'itemDetails'])->name('itemDetails');
+    Route::post('/topber-item-counter', [App\Http\Controllers\WebsiteController::class, 'itemCounter'])->name('itemCounter');
+    Route::post('/item-quantity-add-from-checkout', [App\Http\Controllers\WebsiteController::class, 'addQuantity'])->name('addQuantity');
+    Route::post('/item-quantity-add-from-sitebar', [App\Http\Controllers\WebsiteController::class, 'addQuantityFromSitebar'])->name('addQuantityFromSitebar');
+    Route::post('/item-quantity-minus-from-sitebar', [App\Http\Controllers\WebsiteController::class, 'minusQuantityFromSitebar'])->name('minusQuantityFromSitebar');
+    Route::post('/item-quantity-remove-from-checkout', [App\Http\Controllers\WebsiteController::class, 'removeQuantity'])->name('removeQuantity');
+    Route::post('/item-remove-from-checkout', [App\Http\Controllers\WebsiteController::class, 'removeItem'])->name('removeItem');
+    Route::post('/get-location-data', [App\Http\Controllers\WebsiteController::class, 'locationData'])->name('locationData');
+    Route::post('/get-shop-data', [App\Http\Controllers\WebsiteController::class, 'shopData'])->name('shopData');
+    Route::post('/get-reg-otp', [App\Http\Controllers\WebsiteController::class, 'getOtp'])->name('getOtp');
+    // Product and category routes (now under /website prefix)
+    Route::get('/all-trending-products', [App\Http\Controllers\WebsiteController::class, 'allTrendingProducts'])->name('allTrendingProducts');
+    Route::get('/product-by-category/sub/{cat_id}', [App\Http\Controllers\WebsiteController::class, 'productByCategory'])->name('productByCategory');
+    // Checkout routes
+    Route::get('/checkout', [App\Http\Controllers\CheckoutController::class, 'index'])->name('checkout');
+    Route::post('/place-order', [App\Http\Controllers\CheckoutController::class, 'placeOrder'])->name('placeOrder');
+    Route::post('/get-delivery-timeslot', [App\Http\Controllers\CheckoutController::class, 'deliveryTimeSlot'])->name('deliveryTimeSlot');
+    Route::post('/validate-coupon', [App\Http\Controllers\CheckoutController::class, 'validateCoupon'])->name('validateCoupon');
+    // Auth and registration handled by backend API, not locally.
+    Route::post('/init-registration', [App\Http\Controllers\ApiAuthenticationsController::class, 'registration'])->name('registration');
+    Route::post('/init-login', [App\Http\Controllers\ApiAuthenticationsController::class, 'initLogin'])->name('initLogin');
+    Route::post('/init-forgot-pass', [App\Http\Controllers\ForgotPassController::class, 'setForgotPass'])->name('setForgotPass');
 });
 
-Auth::routes();
+// API-based login/logout and forgot password
+Route::post('/apiBasedLogin', [App\Http\Controllers\ApiAuthenticationsController::class, 'loginAttempt'])->name('apiBasedLogin');
+Route::get('/apiBasedLogOut', [App\Http\Controllers\ApiAuthenticationsController::class, 'logOutAttempt'])->name('apiBasedLogOut');
+Route::post('/forgot-password/get-otp', [App\Http\Controllers\ForgotPassController::class, 'getOtp'])->name('forgotPassword.getOtp');
+Route::post('/forgot-password/set-new-password', [App\Http\Controllers\ForgotPassController::class, 'setNewPass'])->name('forgotPassword.setNewPass');
 
-Route::get('/', 'homeController@index')->name('home');
-Route::post('/website/shop-selection', 'websiteController@shopSelection');
-Route::post('/website/item-add-to-cart', 'websiteController@addToCart');
-Route::post('/website/item-add-to-cart-by-id', 'websiteController@addToCartById');
-Route::post('/website/open-cart-list', 'websiteController@openCartList');
-Route::post('/website/remove-item-from-cart-sitebar', 'websiteController@removeFromCart');
-Route::post('/website/get-trending-product-list/selected-shop', 'websiteController@trendingProductListForShop');
-Route::post('/website/get-trending-product-list/all-data', 'websiteController@trendingProductListAllData');
-Route::post('/website/get-product-list/by-sub-cat', 'websiteController@ProductListBySubCat');
-Route::get('/website/product-search-data', 'websiteController@searchProductList');
-Route::get('/website/item-details/{item_id}', 'websiteController@itemDetails');
-
-Route::post('/website/topber-item-counter', 'websiteController@itemCounter');
-Route::post('/website/item-quantity-add-from-checkout', 'websiteController@addQuantity');
-Route::post('/website/item-quantity-add-from-sitebar', 'websiteController@addQuantityFromSitebar');
-Route::post('/website/item-quantity-minus-from-sitebar', 'websiteController@minusQuantityFromSitebar');
-Route::post('/website/item-quantity-remove-from-checkout', 'websiteController@removeQuantity');
-Route::post('/website/item-remove-from-checkout', 'websiteController@removeItem');
-Route::post('/website/get-location-data', 'websiteController@locationData');
-Route::post('/website/get-shop-data', 'websiteController@shopData');
-Route::post('/website/get-reg-otp', 'websiteController@getOtp');
-Route::get('/all-trending-products', 'websiteController@allTrendingProducts');
-Route::get('/product-by-category/sub/{cat_id}', 'websiteController@productByCategory');
-
-Route::get('/checkout', 'checkoutController@index');
-Route::post('/website/place-order', 'checkoutController@placeOrder');
-Route::post('/website/get-delivery-timeslot', 'checkoutController@deliveryTimeSlot');
-Route::post('/website/validate-coupon', 'checkoutController@validateCoupon');
-
-Route::get('/sign-out', 'apiAuthenticationsController@logOutAttempt');
-Route::post('/sign-up', 'apiAuthenticationsController@loginAttempt');
-Route::post('/website/init-registration', 'apiAuthenticationsController@registration');
-Route::post('/website/init-login', 'apiAuthenticationsController@initLogin');
-
-Route::post('/apiBasedLogin', 'apiAuthenticationsController@loginAttempt');
-Route::get('/apiBasedLogOut', 'apiAuthenticationsController@logOutAttempt');
-Route::post('/forgot-password/get-otp', 'forgotPassController@getOtp');
-Route::post('/forgot-password/set-new-password', 'forgotPassController@setNewPass');
-Route::post('/website/init-forgot-pass', 'forgotPassController@setForgotPass');
-
-Route::group(['middleware' => ['authAndAcl']], function () {
-    Route::get('/my-dashboard', 'dashboardController@index');
-    Route::post('/get-my-order-list', 'dashboardController@myOrderList');
-    Route::post('/get-my-profile-data', 'dashboardController@myProfile');
-    Route::post('/update-profile-data', 'dashboardController@updateProfile');
+// Dashboard routes (protected)
+Route::middleware(['authAndAcl'])->group(function () {
+    Route::get('/my-dashboard', [App\Http\Controllers\DashboardController::class, 'index'])->name('dashboard.index');
+    Route::post('/get-my-order-list', [App\Http\Controllers\DashboardController::class, 'myOrderList'])->name('dashboard.myOrderList');
+    Route::post('/get-my-profile-data', [App\Http\Controllers\DashboardController::class, 'myProfile'])->name('dashboard.myProfile');
+    Route::post('/update-profile-data', [App\Http\Controllers\DashboardController::class, 'updateProfile'])->name('dashboard.updateProfile');
 });
+
+// Health check route
+Route::get('/health', function () {
+    return response()->json([
+        'status' => 'ok',
+        'timestamp' => now(),
+        'app' => config('app.name'),
+        'environment' => app()->environment(),
+        'debug' => config('app.debug'),
+    ]);
+})->name('health');

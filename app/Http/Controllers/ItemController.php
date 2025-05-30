@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Libraries\AclHandler;
-use App\Libraries\HandleApi;
+use App\Services\ApiService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Validator;
@@ -13,6 +13,21 @@ use Yajra\DataTables\DataTables;
 class ItemController extends Controller
 {
     /**
+     * @var ApiService
+     */
+    protected $apiService;
+
+    /**
+     * Inject ApiService.
+     *
+     * @param ApiService $apiService
+     */
+    public function __construct(ApiService $apiService)
+    {
+        $this->apiService = $apiService;
+    }
+
+    /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
@@ -21,7 +36,6 @@ class ItemController extends Controller
     {
         if (AclHandler::hasAccess('Product', 'full') == false) {
             exit('Not access . Recorded this ');
-            exit();
         }
 
         return view('item.add_item');
@@ -36,44 +50,20 @@ class ItemController extends Controller
     {
         if (AclHandler::hasAccess('Product', 'full') == false) {
             exit('Not access . Recorded this ');
-            exit();
         }
 
-        $brand_api_url = env('API_BASE_URL').'/brands';
-        $brandCurlOutput = HandleApi::getCURLOutput($brand_api_url, 'GET', []);
-        $brand_json_resp = json_decode($brandCurlOutput);
-        $brands = isset($brand_json_resp->data) ? $brand_json_resp->data : [];
-
-        $category_api_url = env('API_BASE_URL').'/categories';
-        $categoryCurlOutput = HandleApi::getCURLOutput($category_api_url, 'GET', []);
-        $category_json_resp = json_decode($categoryCurlOutput);
-        $categories = isset($category_json_resp->data) ? $category_json_resp->data : [];
-
-        $shop_api_url = env('API_BASE_URL').'/shops?user_id='.Session::get('userId');
-        $shopCurlOutput = HandleApi::getCURLOutput($shop_api_url, 'GET', []);
-        $shop_json_resp = json_decode($shopCurlOutput);
-        $shops = isset($shop_json_resp->data) ? $shop_json_resp->data : [];
-
-        $shop_api_url = env('API_BASE_URL').'/currencies';
-        $shopCurlOutput = HandleApi::getCURLOutput($shop_api_url, 'GET', []);
-        $shop_json_resp = json_decode($shopCurlOutput);
-        $currencies = isset($shop_json_resp->data) ? $shop_json_resp->data : [];
-
-        $shop_api_url = env('API_BASE_URL').'/product-variation-types';
-        $shopCurlOutput = HandleApi::getCURLOutput($shop_api_url, 'GET', []);
-        $shop_json_resp = json_decode($shopCurlOutput);
-        $prodvartypes = isset($shop_json_resp->data) ? $shop_json_resp->data : [];
+        $brands = $this->apiService->get('/brands');
+        $categories = $this->apiService->get('/categories');
+        $shops = $this->apiService->get('/shops', ['user_id' => Session::get('userId')]);
+        $currencies = $this->apiService->get('/currencies');
+        $prodvartypes = $this->apiService->get('/product-variation-types');
 
         return view('item.item_list', compact('brands', 'categories', 'shops', 'currencies', 'prodvartypes'));
     }
 
     public function getList()
     {
-        $api_url = env('API_BASE_URL').'/products?user_id='.Session::get('userId');
-        $curlOutput = HandleApi::getCURLOutput($api_url, 'GET', []);
-
-        $decodedData = json_decode($curlOutput);
-        $data = $decodedData->data;
+        $data = $this->apiService->get('/products', ['user_id' => Session::get('userId')]);
 
         return Datatables::of(collect($data))
             ->addColumn('action', function ($data) {
@@ -167,18 +157,14 @@ class ItemController extends Controller
             'selling_price' => $selling_price,
             'shop_id' => $shop_id,
         ];
-        $fieldData = json_encode($bodyData);
 
-        $api_url = env('API_BASE_URL').'/products';
-        $curlOutputMain = HandleApi::getCURLOutput($api_url, 'POST', $fieldData);
+        $resp = $this->apiService->post('/products', $bodyData);
 
-        $decodedResp = json_decode($curlOutputMain);
-        if ($decodedResp->status == 201) {
+        if (($resp['status'] ?? 0) == 201) {
             return response()->json(['responseCode' => 1, 'message' => 'Successfully added']);
         } else {
-            return response()->json(['responseCode' => 0, 'message' => $decodedResp->message]);
+            return response()->json(['responseCode' => 0, 'message' => $resp['message'] ?? 'Add failed']);
         }
-
     }
 
     /**
@@ -196,40 +182,13 @@ class ItemController extends Controller
 
         $item_id = $request->get('item_id');
 
-        $brand_api_url = env('API_BASE_URL').'/brands';
-        $brandCurlOutput = HandleApi::getCURLOutput($brand_api_url, 'GET', []);
-        $brand_json_resp = json_decode($brandCurlOutput);
-        $brands = isset($brand_json_resp->data) ? $brand_json_resp->data : [];
-
-        $category_api_url = env('API_BASE_URL').'/categories';
-        $categoryCurlOutput = HandleApi::getCURLOutput($category_api_url, 'GET', []);
-        $category_json_resp = json_decode($categoryCurlOutput);
-        $categories = isset($category_json_resp->data) ? $category_json_resp->data : [];
-
-        $shop_api_url = env('API_BASE_URL').'/shops?user_id='.Session::get('userId');
-        $shopCurlOutput = HandleApi::getCURLOutput($shop_api_url, 'GET', []);
-        $shop_json_resp = json_decode($shopCurlOutput);
-        $shops = isset($shop_json_resp->data) ? $shop_json_resp->data : [];
-
-        $api_url = env('API_BASE_URL').'/products/'.intval($item_id);
-        $curlOutput = HandleApi::getCURLOutput($api_url, 'GET', []);
-        $decodedData = json_decode($curlOutput);
-        $item_data = isset($decodedData->data) ? $decodedData->data : [];
-
-        $api_url = env('API_BASE_URL').'/products/'.intval($item_id);
-        $curlOutputMain = HandleApi::getCURLOutput($api_url, 'GET', []);
-        $decodedDataForItem = json_decode($curlOutputMain);
-        $itemInfo = $decodedDataForItem->data;
-
-        $shop_api_url = env('API_BASE_URL').'/currencies';
-        $shopCurlOutput = HandleApi::getCURLOutput($shop_api_url, 'GET', []);
-        $shop_json_resp = json_decode($shopCurlOutput);
-        $currencies = isset($shop_json_resp->data) ? $shop_json_resp->data : [];
-
-        $shop_api_url = env('API_BASE_URL').'/product-variation-types';
-        $shopCurlOutput = HandleApi::getCURLOutput($shop_api_url, 'GET', []);
-        $shop_json_resp = json_decode($shopCurlOutput);
-        $prodvartypes = isset($shop_json_resp->data) ? $shop_json_resp->data : [];
+        $brands = $this->apiService->get('/brands');
+        $categories = $this->apiService->get('/categories');
+        $shops = $this->apiService->get('/shops', ['user_id' => Session::get('userId')]);
+        $item_data = $this->apiService->get('/products/' . intval($item_id));
+        $itemInfo = $this->apiService->get('/products/' . intval($item_id));
+        $currencies = $this->apiService->get('/currencies');
+        $prodvartypes = $this->apiService->get('/product-variation-types');
 
         if (isset($itemInfo->productImageList[0]->name)) {
             $image_url = $itemInfo->productImageList[0]->name;
@@ -243,7 +202,6 @@ class ItemController extends Controller
         $public_html = strval(view('item.modal_data', compact('item_data', 'brands', 'categories', 'shops', 'itemInfo', 'image_url', 'currencies', 'prodvartypes', 'image_id')));
 
         return response()->json(['responseCode' => 1, 'html' => $public_html, 'message' => 'Successfully fetches']);
-
     }
 
     /**
@@ -261,10 +219,7 @@ class ItemController extends Controller
 
         $item_id = $request->get('item_id');
 
-        $api_url = env('API_BASE_URL').'/products/'.intval($item_id);
-        $curlOutputMain = HandleApi::getCURLOutput($api_url, 'GET', []);
-        $decodedDataForItem = json_decode($curlOutputMain);
-        $itemInfo = $decodedDataForItem->data;
+        $itemInfo = $this->apiService->get('/products/' . intval($item_id));
 
         if (isset($itemInfo->productImageList[0]->name)) {
             $image_url = $itemInfo->productImageList[0]->name;
@@ -278,7 +233,6 @@ class ItemController extends Controller
         $public_html = strval(view('item.modal_data_view', compact('itemInfo', 'image_url')));
 
         return response()->json(['responseCode' => 1, 'html' => $public_html, 'message' => 'Successfully fetches']);
-
     }
 
     /**
@@ -352,18 +306,14 @@ class ItemController extends Controller
             'selling_price' => $selling_price,
             'shop_id' => $shop_id,
         ];
-        $fieldData = json_encode($bodyData);
 
-        $api_url = env('API_BASE_URL').'/products';
-        $curlOutputMain = HandleApi::getCURLOutput($api_url, 'PUT', $fieldData);
+        $resp = $this->apiService->put('/products', $bodyData);
 
-        $decodedResp = json_decode($curlOutputMain);
-        if ($decodedResp->status == 200) {
+        if (($resp['status'] ?? 0) == 200) {
             return response()->json(['responseCode' => 1, 'message' => 'Successfully updated']);
         } else {
-            return response()->json(['responseCode' => 0, 'message' => $decodedResp->message]);
+            return response()->json(['responseCode' => 0, 'message' => $resp['message'] ?? 'Update failed']);
         }
-
     }
 
     /**
@@ -371,7 +321,6 @@ class ItemController extends Controller
      */
     public function deleteItem(Request $request)
     {
-
         if (AclHandler::hasAccess('Product', 'delete') == false) {
             return response()->json(['responseCode' => 0, 'message' => 'Not access . Recorded this']);
         }
@@ -384,15 +333,12 @@ class ItemController extends Controller
             return response()->json(['responseCode' => 0, 'message' => 'Please fill up required field']);
         }
 
-        $api_url = env('API_BASE_URL').'/products/'.intval($request->get('item_id'));
-        $curlOutput = HandleApi::getCURLOutput($api_url, 'DELETE', []);
+        $resp = $this->apiService->delete('/products/' . intval($request->get('item_id')));
 
-        $decodedData = json_decode($curlOutput);
-
-        if ($decodedData->status == 200) {
-            return response()->json(['responseCode' => 1, 'message' => 'Successfully updated']);
+        if (($resp['status'] ?? 0) == 200) {
+            return response()->json(['responseCode' => 1, 'message' => 'Successfully deleted']);
         } else {
-            return response()->json(['responseCode' => 0, 'message' => $decodedData->message]);
+            return response()->json(['responseCode' => 0, 'message' => $resp['message'] ?? 'Delete failed']);
         }
     }
 }

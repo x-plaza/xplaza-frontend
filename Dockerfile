@@ -35,7 +35,7 @@ FROM base AS final
 COPY --from=nodebuild /app/public /var/www/public
 
 # Ensure directories exist and are writable
-RUN mkdir -p bootstrap/cache storage/framework/views storage/logs \
+RUN mkdir -p bootstrap/cache storage/framework/views storage/logs storage/framework/sessions \
     && chmod -R 775 bootstrap/cache storage
 
 # Install composer dependencies and artisan setup

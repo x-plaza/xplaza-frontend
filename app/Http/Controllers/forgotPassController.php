@@ -2,117 +2,122 @@
 
 namespace App\Http\Controllers;
 
-use App\Libraries\HandleApi;
+use App\Services\ApiService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
-class forgotPassController extends Controller
+class ForgotPassController extends Controller
 {
+    /**
+     * @var ApiService
+     */
+    protected $apiService;
+
+    /**
+     * Inject ApiService.
+     *
+     * @param ApiService $apiService
+     */
+    public function __construct(ApiService $apiService)
+    {
+        $this->apiService = $apiService;
+    }
+
+    /**
+     * Send OTP to user for password reset.
+     */
     public function getOtp(Request $request)
     {
-        $rules = [
+        $validator = Validator::make($request->all(), [
             'user_name' => 'required',
-        ];
-        $validator = Validator::make($request->all(), $rules);
+        ]);
         if ($validator->fails()) {
             return response()->json(['responseCode' => 0, 'message' => 'Please fill up required field']);
         }
-
         $user_name = $request->get('user_name');
-
-        $api_url = env('API_BASE_URL').'/login/send-otp?username='.$user_name;
-        $curlOutput = HandleApi::getCURLOutput($api_url, 'POST', []);
-
-        $decodedResp = json_decode($curlOutput);
-
-        if ($decodedResp->status == 201) {
-            return response()->json(['responseCode' => 1, 'message' => $decodedResp->message]);
+        $response = $this->apiService->post('/login/send-otp', ['username' => $user_name]);
+        if (($response['status'] ?? 0) == 201) {
+            return response()->json(['responseCode' => 1, 'message' => $response['message'] ?? 'OTP sent']);
         } else {
-            return response()->json(['responseCode' => 0, 'message' => $decodedResp->message]);
+            return response()->json(['responseCode' => 0, 'message' => $response['message'] ?? 'OTP failed']);
         }
     }
 
+    /**
+     * Set new password after OTP validation.
+     */
     public function setNewPass(Request $request)
     {
-        $rules = [
+        $validator = Validator::make($request->all(), [
             'user_name' => 'required',
             'otp_code' => 'required',
             'new_password' => 'required',
             'confirm_password' => 'required',
-        ];
-        $validator = Validator::make($request->all(), $rules);
+        ]);
         if ($validator->fails()) {
             return response()->json(['responseCode' => 0, 'message' => 'Please fill up required field']);
         }
-
         $user_name = $request->get('user_name');
         $otp_code = $request->get('otp_code');
         $new_password = $request->get('new_password');
         $confirm_password = $request->get('confirm_password');
-
         if ($new_password != $confirm_password) {
             return response()->json(['responseCode' => 0, 'message' => 'Confirm password does not match']);
         }
-
-        $api_url = env('API_BASE_URL').'/login/validate-otp?OTP='.$otp_code.'&username='.$user_name;
-        $curlOutput = HandleApi::getCURLOutput($api_url, 'POST', []);
-        $decodedResp = json_decode($curlOutput);
-
-        if ($decodedResp->status != 200) {
-            return response()->json(['responseCode' => 0, 'message' => $decodedResp->message]);
+        $otpResp = $this->apiService->post('/login/validate-otp', [
+            'OTP' => $otp_code,
+            'username' => $user_name
+        ]);
+        if (($otpResp['status'] ?? 0) != 200) {
+            return response()->json(['responseCode' => 0, 'message' => $otpResp['message'] ?? 'OTP validation failed']);
         }
-
-        $change_pass_api_url = env('API_BASE_URL').'/login/change-password?newPassword='.$new_password.'&username='.$user_name;
-        $change_pass_curlOutput = HandleApi::getCURLOutput($change_pass_api_url, 'POST', []);
-
-        $change_pass_decodedResp = json_decode($change_pass_curlOutput);
-
-        if ($change_pass_decodedResp->status == 200) {
-            return response()->json(['responseCode' => 1, 'message' => $change_pass_decodedResp->message]);
+        $changePassResp = $this->apiService->post('/login/change-password', [
+            'newPassword' => $new_password,
+            'username' => $user_name
+        ]);
+        if (($changePassResp['status'] ?? 0) == 200) {
+            return response()->json(['responseCode' => 1, 'message' => $changePassResp['message'] ?? 'Password changed']);
         } else {
-            return response()->json(['responseCode' => 0, 'message' => $change_pass_decodedResp->message]);
+            return response()->json(['responseCode' => 0, 'message' => $changePassResp['message'] ?? 'Password change failed']);
         }
     }
 
+    /**
+     * Set new password for forgot password (customer login).
+     */
     public function setForgotPass(Request $request)
     {
-        $rules = [
+        $validator = Validator::make($request->all(), [
             'reset_password' => 'required',
             'reset_conf_password' => 'required',
             'reset_otp' => 'required',
             'reset_email' => 'required',
-        ];
-        $validator = Validator::make($request->all(), $rules);
+        ]);
         if ($validator->fails()) {
             return response()->json(['responseCode' => 0, 'message' => 'Please fill up required field']);
         }
-
         $user_name = $request->get('reset_email');
         $otp_code = $request->get('reset_otp');
         $new_password = $request->get('reset_password');
         $confirm_password = $request->get('reset_conf_password');
-
         if ($new_password != $confirm_password) {
             return response()->json(['responseCode' => 0, 'message' => 'Confirm password does not match']);
         }
-
-        $api_url = env('API_BASE_URL').'/customer-login/validate-otp?OTP='.$otp_code.'&username='.urlencode($user_name);
-        $curlOutput = HandleApi::getCURLOutput($api_url, 'POST', []);
-        $decodedResp = json_decode($curlOutput);
-
-        if ($decodedResp->status != 200) {
-            return response()->json(['responseCode' => 0, 'message' => $decodedResp->message]);
+        $otpResp = $this->apiService->post('/customer-login/validate-otp', [
+            'OTP' => $otp_code,
+            'username' => $user_name
+        ]);
+        if (($otpResp['status'] ?? 0) != 200) {
+            return response()->json(['responseCode' => 0, 'message' => $otpResp['message'] ?? 'OTP validation failed']);
         }
-
-        $change_pass_api_url = env('API_BASE_URL').'/customer-login/change-password?newPassword='.$new_password.'&username='.urlencode($user_name);
-        $change_pass_curlOutput = HandleApi::getCURLOutput($change_pass_api_url, 'POST', []);
-
-        $change_pass_decodedResp = json_decode($change_pass_curlOutput);
-
-        if ($change_pass_decodedResp->status == 200) {
-            return response()->json(['responseCode' => 1, 'message' => $change_pass_decodedResp->message]);
+        $changePassResp = $this->apiService->post('/customer-login/change-password', [
+            'newPassword' => $new_password,
+            'username' => $user_name
+        ]);
+        if (($changePassResp['status'] ?? 0) == 200) {
+            return response()->json(['responseCode' => 1, 'message' => $changePassResp['message'] ?? 'Password changed']);
         } else {
-            return response()->json(['responseCode' => 0, 'message' => $change_pass_decodedResp->message]);
+            return response()->json(['responseCode' => 0, 'message' => $changePassResp['message'] ?? 'Password change failed']);
         }
     }
 }
