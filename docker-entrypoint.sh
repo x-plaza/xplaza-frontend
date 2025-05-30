@@ -13,8 +13,6 @@ if [ ! -f .env ]; then
   cp .env.example .env
 
   # Replace placeholders with environment variables passed by Coolify
-
-  # Example replacements (add more as needed)
   sed -i "s|APP_NAME=.*|APP_NAME=${APP_NAME:-Xplaza}|g" .env
   sed -i "s|APP_KEY=.*|APP_KEY=${APP_KEY}|g" .env
   sed -i "s|APP_DEBUG=.*|APP_DEBUG=${APP_DEBUG:-true}|g" .env
