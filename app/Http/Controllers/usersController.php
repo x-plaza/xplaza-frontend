@@ -2,13 +2,26 @@
 
 namespace App\Http\Controllers;
 
-use App\Libraries\HandleApi;
+use App\Services\ApiService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Validator;
 
 class usersController extends Controller
 {
+    /**
+     * @var ApiService
+     */
+    protected $apiService;
+
+    /**
+     * Inject ApiService.
+     */
+    public function __construct(ApiService $apiService)
+    {
+        $this->apiService = $apiService;
+    }
+
     /**
      * Store a newly created resource in storage.
      *
@@ -41,17 +54,12 @@ class usersController extends Controller
             'username' => $email,
         ];
 
-        $finalData = json_encode($bodyData);
+        $resp = $this->apiService->post('/admin-users/change-password', $bodyData);
 
-        $api_url = env('API_BASE_URL').'/admin-users/change-password?newPassword='.$new_password.'&oldPassword='.$old_password.'&username='.$email;
-        $curlOutput = HandleApi::getCURLOutput($api_url, 'POST', $finalData);
-
-        $decodedResp = json_decode($curlOutput);
-
-        if ($decodedResp->status == 200) {
-            return response()->json(['responseCode' => 1, 'message' => 'Successfully added']);
+        if (($resp['status'] ?? 0) == 200) {
+            return response()->json(['responseCode' => 1, 'message' => 'Successfully changed']);
         } else {
-            return response()->json(['responseCode' => 0, 'message' => $decodedResp->message]);
+            return response()->json(['responseCode' => 0, 'message' => $resp['message'] ?? 'Change failed']);
         }
     }
 }

@@ -35,4 +35,8 @@ return [
         'secret' => env('STRIPE_SECRET'),
     ],
 
+    'api' => [
+        'base_url' => env('API_BASE_URL'),
+    ],
+
 ];

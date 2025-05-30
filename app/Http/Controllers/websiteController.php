@@ -3,72 +3,60 @@
 namespace App\Http\Controllers;
 
 use App\Libraries\HandleApi;
+use App\Services\ApiService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Session;
-use Storage;
 
-class websiteController extends Controller
+class WebsiteController extends Controller
 {
+    /**
+     * @var ApiService
+     */
+    protected $apiService;
+
+    /**
+     * Inject ApiService.
+     */
+    public function __construct(ApiService $apiService)
+    {
+        $this->apiService = $apiService;
+    }
+
     public function allTrendingProducts()
     {
-        $api_url = env('API_BASE_URL').'/cities';
-        $curlOutput = HandleApi::getCURLOutput($api_url, 'GET', []);
-        $decodedData = json_decode($curlOutput);
-        $city_data = isset($decodedData->data) ? $decodedData->data : [];
-
-        $category_data = (Session::get('category_data_array')) ? Session::get('category_data_array') : null;
+        $cityResponse = $this->apiService->get('/cities');
+        $city_data = $cityResponse['data'] ?? [];
+        $category_data = Session::get('category_data_array');
         if ($category_data == null) {
-            $api_url = env('API_BASE_URL').'/categories';
-            $curlOutput = HandleApi::getCURLOutput($api_url, 'GET', []);
-            $decodedData = json_decode($curlOutput);
-            $category_data = isset($decodedData->data) ? $decodedData->data : [];
-
+            $categoryResponse = $this->apiService->get('/categories');
+            $category_data = $categoryResponse['data'] ?? [];
             session()->put('category_data_array', $category_data);
             Session::save();
         }
-
         $cubCat = [];
 
         return view('all_trending_products', compact('city_data', 'category_data', 'cubCat'));
-
     }
 
     public function productByCategory($cat_id)
     {
-        $api_url = env('API_BASE_URL').'/cities';
-        $curlOutput = HandleApi::getCURLOutput($api_url, 'GET', []);
-        $decodedData = json_decode($curlOutput);
-        $city_data = isset($decodedData->data) ? $decodedData->data : [];
-
-        $category_data = (Session::get('category_data_array')) ? Session::get('category_data_array') : null;
+        $cityResponse = $this->apiService->get('/cities');
+        $city_data = $cityResponse['data'] ?? [];
+        $category_data = Session::get('category_data_array');
         if ($category_data == null) {
-            $api_url = env('API_BASE_URL').'/categories';
-            $curlOutput = HandleApi::getCURLOutput($api_url, 'GET', []);
-            $decodedData = json_decode($curlOutput);
-            $category_data = isset($decodedData->data) ? $decodedData->data : [];
-
+            $categoryResponse = $this->apiService->get('/categories');
+            $category_data = $categoryResponse['data'] ?? [];
             session()->put('category_data_array', $category_data);
             Session::save();
         }
-
-        $cat_api_url = env('API_BASE_URL').'/categories/'.intval($cat_id);
-        $cat_curlOutput = HandleApi::getCURLOutput($cat_api_url, 'GET', []);
-        $cat_decodedData = json_decode($cat_curlOutput);
-        $cat_data = isset($cat_decodedData->data) ? $cat_decodedData->data : [];
-
-        $category_name = isset($cat_data->name) ? $cat_data->name : 'x-winkel';
-
+        $catResponse = $this->apiService->get('/categories/'.intval($cat_id));
+        $cat_data = $catResponse['data'] ?? [];
+        $category_name = $cat_data['name'] ?? 'x-winkel';
         $cubCat = [];
 
         return view('products_by_category', compact('city_data', 'category_data', 'cubCat', 'cat_id', 'category_name'));
-
     }
 
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function shopSelection(Request $request)
     {
         $shop_id = $request->get('shop_id');
@@ -94,10 +82,8 @@ class websiteController extends Controller
     public function trendingProductListForShop(Request $request)
     {
         $shop_id = intval($request->get('shop_id'));
-        $api_url = env('API_BASE_URL').'/products/by-trending?shop_id='.$shop_id;
-        $curlOutput = HandleApi::getCURLOutput($api_url, 'GET', []);
-        $decodedData = json_decode($curlOutput);
-        $product_data = isset($decodedData->data) ? $decodedData->data : [];
+        $response = $this->apiService->get('/products/by-trending', ['shop_id' => $shop_id]);
+        $product_data = $response['data'] ?? [];
         $public_html = strval(view('home_content.trending_product_content', compact('product_data')));
 
         return response()->json(['responseCode' => 1, 'html' => $public_html]);
@@ -106,10 +92,8 @@ class websiteController extends Controller
     public function trendingProductListAllData(Request $request)
     {
         $shop_id = intval($request->get('shop_id'));
-        $api_url = env('API_BASE_URL').'/products/by-trending?shop_id='.$shop_id;
-        $curlOutput = HandleApi::getCURLOutput($api_url, 'GET', []);
-        $decodedData = json_decode($curlOutput);
-        $product_data = isset($decodedData->data) ? $decodedData->data : [];
+        $response = $this->apiService->get('/products/by-trending', ['shop_id' => $shop_id]);
+        $product_data = $response['data'] ?? [];
         $public_html = strval(view('home_content.trending_product_content_all_data', compact('product_data')));
 
         return response()->json(['responseCode' => 1, 'html' => $public_html]);
@@ -119,14 +103,12 @@ class websiteController extends Controller
     {
         $shop_id = intval($request->get('shop_id'));
         $product_cat_id = intval($request->get('product_cat_id'));
-
-        $api_url = env('API_BASE_URL').'/products/by-category?category_id='.intval($product_cat_id).'&shop_id='.intval($shop_id);
-        $curlOutput = HandleApi::getCURLOutput($api_url, 'GET', []);
-        $decodedData = json_decode($curlOutput);
-        $product_data = isset($decodedData->data) ? $decodedData->data : [];
-        $has_product = json_decode($curlOutput, true);
-
-        if (count($has_product['data']) == 0) {
+        $response = $this->apiService->get('/products/by-category', [
+            'category_id' => $product_cat_id,
+            'shop_id' => $shop_id,
+        ]);
+        $product_data = $response['data'] ?? [];
+        if (count($product_data) == 0) {
             $public_html = '<h3><center>No product found</center></h3>';
         } else {
             $public_html = strval(view('home_content.product_content_all_data', compact('product_data')));
@@ -135,31 +117,26 @@ class websiteController extends Controller
         return response()->json(['responseCode' => 1, 'html' => $public_html]);
     }
 
-    /**
-     * @param  $term
-     * @return \Illuminate\Http\JsonResponse
-     */
     public function searchProductList(Request $request)
     {
         $product_name = trim($request->term);
         $shop_id = Session::get('selected_shop_id');
-        $api_url = env('API_BASE_URL').'/products/by-name?product_name='.$product_name.'&shop_id='.intval($shop_id);
-        $curlOutput = HandleApi::getCURLOutput($api_url, 'GET', []);
-        $decodedData = json_decode($curlOutput);
-        $product_data = isset($decodedData->data) ? $decodedData->data : [];
-
+        $response = $this->apiService->get('/products/by-name', [
+            'product_name' => $product_name,
+            'shop_id' => intval($shop_id),
+        ]);
+        $product_data = $response['data'] ?? [];
         $output = [];
-
         if (count($product_data) > 0) {
             foreach ($product_data as $row) {
                 $image_full_img = 'website_src/product_sample.png';
-                if (isset($row->productImages[0]->name)) {
-                    $image_full_img = env('IMAGE_BASE_URL').'/item_image/'.$row->productImages[0]->name;
+                if (isset($row['productImages'][0]['name'])) {
+                    $image_full_img = config('services.image_base_url').'/item_image/'.$row['productImages'][0]['name'];
                 }
-                $full_url = url('/website/item-details/'.$row->id);
+                $full_url = url('/website/item-details/'.$row['id']);
                 $temp_array = [];
-                $temp_array['value'] = $row->id;
-                $temp_array['label'] = '<a href="'.$full_url.'"><img src="'.$image_full_img.'" width="35" height="25" /></a>&nbsp;&nbsp;&nbsp;'.$row->name.'';
+                $temp_array['value'] = $row['id'];
+                $temp_array['label'] = '<a href="'.$full_url.'"><img src="'.$image_full_img.'" width="35" height="25" /></a>&nbsp;&nbsp;&nbsp;'.$row['name'].'';
                 $output[] = $temp_array;
             }
         } else {
@@ -174,52 +151,35 @@ class websiteController extends Controller
     {
         $product_id = intval($item_id);
         $shop_id = Session::get('selected_shop_id');
-        $api_url = env('API_BASE_URL').'/products/'.$product_id;
-        $curlOutput = HandleApi::getCURLOutput($api_url, 'GET', []);
-        $decodedData = json_decode($curlOutput);
-        $product_data = isset($decodedData->data) ? $decodedData->data : [];
-        $has_product_data = isset($decodedData->data) ? true : false;
-
-        $api_url = env('API_BASE_URL').'/cities';
-        $curlOutput = HandleApi::getCURLOutput($api_url, 'GET', []);
-        $decodedData = json_decode($curlOutput);
-        $city_data = isset($decodedData->data) ? $decodedData->data : [];
-
-        $category_data = (Session::get('category_data_array')) ? Session::get('category_data_array') : null;
+        $productResponse = $this->apiService->get('/products/'.$product_id);
+        $product_data = $productResponse['data'] ?? [];
+        $has_product_data = ! empty($product_data);
+        $cityResponse = $this->apiService->get('/cities');
+        $city_data = $cityResponse['data'] ?? [];
+        $category_data = Session::get('category_data_array');
         if ($category_data == null) {
-            $api_url = env('API_BASE_URL').'/categories';
-            $curlOutput = HandleApi::getCURLOutput($api_url, 'GET', []);
-            $decodedData = json_decode($curlOutput);
-            $category_data = isset($decodedData->data) ? $decodedData->data : [];
-
+            $categoryResponse = $this->apiService->get('/categories');
+            $category_data = $categoryResponse['data'] ?? [];
             session()->put('category_data_array', $category_data);
             Session::save();
         }
-
         $cubCat = [];
-
         $totalPrice = 0;
         $sessionData = Session::get('cart_item_array');
-        $finalItemArray = isset($sessionData) ? $sessionData : [];
+        $finalItemArray = $sessionData ?? [];
         foreach ($finalItemArray as $item) {
             $totalPrice += $item['item_unit_price'] * $item['quantity'];
         }
-
         $authId = Session::get('auth_user_id');
-        $imageName = isset($product_data->productImageList[0]->name) ? $product_data->productImageList[0]->name : null;
+        $imageName = $product_data['productImageList'][0]['name'] ?? null;
         $imagePath = 'website_src/product_sample.png';
-        if (isset($imageName)) {
-            $imagePath = env('IMAGE_BASE_URL').'/item_image/'.$imageName;
+        if ($imageName) {
+            $imagePath = config('services.image_base_url').'/item_image/'.$imageName;
         }
 
         return view('product_details', compact('city_data', 'category_data', 'cubCat', 'authId', 'product_data', 'has_product_data', 'imagePath'));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function addToCart(Request $request)
     {
         $request_itemcode = $request->get('itemcode');
@@ -246,7 +206,6 @@ class websiteController extends Controller
         $details['quantity_type'] = $request->get('itemquantitytype');
         $item_array[$request_itemcode] = $details;
 
-        //  array_push( $session_cart_item_array, $item_array );
         if (isset($session_cart_item_array[$request_itemcode])) {
             $session_cart_item_array[$request_itemcode]['quantity'] = $session_cart_item_array[$request_itemcode]['quantity'] + 1;
             $finalItemArray = $session_cart_item_array;
@@ -290,7 +249,6 @@ class websiteController extends Controller
         $details['quantity_type'] = $product->product_var_type_name;
         $item_array[$request_itemcode] = $details;
 
-        //  array_push( $session_cart_item_array, $item_array );
         if (isset($session_cart_item_array[$request_itemcode])) {
             $session_cart_item_array[$request_itemcode]['quantity'] = $session_cart_item_array[$request_itemcode]['quantity'] + 1;
             $finalItemArray = $session_cart_item_array;
@@ -423,11 +381,6 @@ class websiteController extends Controller
         return response()->json(['responseCode' => 1, 'data' => $itemCounter]);
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function removeFromCart(Request $request)
     {
         $request_itemcode = $request->get('itemcode');
@@ -442,20 +395,11 @@ class websiteController extends Controller
         return response()->json(['responseCode' => 1, 'html' => $public_html]);
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function locationData(Request $request)
     {
         $city_id = $request->get('city_id');
-        $api_url = env('API_BASE_URL').'/locations';
-        $curlOutput = HandleApi::getCURLOutput($api_url, 'GET', []);
-        $decodedData = json_decode($curlOutput, true);
-        $location_data = isset($decodedData['data']) ? $decodedData['data'] : [];
-
+        $response = $this->apiService->get('/locations');
+        $location_data = $response['data'] ?? [];
         $filteredArray = [];
         foreach ($location_data as $data) {
             $subData = [];
@@ -471,20 +415,11 @@ class websiteController extends Controller
         return response()->json(['responseCode' => 1, 'locations' => $filteredArray]);
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function shopData(Request $request)
     {
         $location_id = $request->get('location_id');
-        $api_url = env('API_BASE_URL').'/shops/by-location/'.intval($location_id);
-        $curlOutput = HandleApi::getCURLOutput($api_url, 'GET', []);
-        $decodedData = json_decode($curlOutput, true);
-        $shop_data = isset($decodedData['data']) ? $decodedData['data'] : [];
-
+        $response = $this->apiService->get('/shops/by-location/'.intval($location_id));
+        $shop_data = $response['data'] ?? [];
         $filteredArray = [];
         foreach ($shop_data as $data) {
             $subData = [];
@@ -496,7 +431,6 @@ class websiteController extends Controller
             }
             $filteredArray[] = $subData;
         }
-
         if (count($filteredArray) == 0) {
             return response()->json(['responseCode' => 2, 'shops' => $filteredArray]);
         }
@@ -510,11 +444,7 @@ class websiteController extends Controller
         if (! isset($email) || $email == null) {
             return response()->json(['responseCode' => 2, 'message' => 'Not sent otp']);
         }
-
-        $api_url = env('API_BASE_URL').'/confirmation-tokens/to-customer?username='.$email;
-        $curlOutput = HandleApi::getCURLOutput($api_url, 'POST', []);
-        $response = json_decode($curlOutput, true);
-
+        $response = $this->apiService->post('/confirmation-tokens/to-customer', ['username' => $email]);
         if (! isset($response['status']) || $response['status'] != 201) {
             return response()->json(['responseCode' => 0, 'message' => 'Not sent otp']);
         }

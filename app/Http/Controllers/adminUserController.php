@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Libraries\AclHandler;
-use App\Libraries\HandleApi;
+use App\Services\ApiService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Validator;
@@ -11,34 +11,40 @@ use Yajra\DataTables\DataTables;
 
 class adminUserController extends Controller
 {
+    /**
+     * @var ApiService
+     */
+    protected $apiService;
+
+    /**
+     * Inject ApiService.
+     */
+    public function __construct(ApiService $apiService)
+    {
+        $this->apiService = $apiService;
+    }
+
     public function userList()
     {
         if (AclHandler::hasAccess('User Creation', 'full') == false) {
             exit('Not access . Recorded this ');
-            exit();
         }
 
-        $api_url = env('API_BASE_URL').'/roles';
-        $curlOutput = HandleApi::getCURLOutput($api_url, 'GET', []);
-        $json_resp = json_decode($curlOutput);
-        $roles = isset($json_resp->data) ? $json_resp->data : [];
+        $rolesResp = $this->apiService->get('/roles');
+        $roles = $rolesResp['data'] ?? [];
 
-        $api_url = env('API_BASE_URL').'/shops?user_id='.Session::get('userId');
-        $curlOutput = HandleApi::getCURLOutput($api_url, 'GET', []);
-        $json_resp = json_decode($curlOutput);
-        $shops = isset($json_resp->data) ? $json_resp->data : [];
+        $shopsResp = $this->apiService->get('/shops', ['user_id' => Session::get('userId')]);
+        $shops = $shopsResp['data'] ?? [];
 
         return view('admin_user.admin_user_list', compact('roles', 'shops'));
     }
 
     public function getList()
     {
+        $resp = $this->apiService->get('/admin-users', ['user_id' => Session::get('userId')]);
+        $decodedData = (object) $resp;
 
-        $api_url = env('API_BASE_URL').'/admin-users?user_id='.Session::get('userId');
-        $curlOutput = HandleApi::getCURLOutput($api_url, 'GET', []);
-
-        $decodedData = json_decode($curlOutput);
-
+        $data = [];
         if (isset($decodedData->data) && substr(json_encode($decodedData->data), 0, 1) == '{') {
             $data[] = $decodedData->data;
         } else {
@@ -62,9 +68,6 @@ class adminUserController extends Controller
             ->make(true);
     }
 
-    /**
-     * @return \Illuminate\Http\JsonResponse
-     */
     public function store(Request $request)
     {
         if (AclHandler::hasAccess('User Creation', 'add') == false) {
@@ -78,7 +81,6 @@ class adminUserController extends Controller
             'confirmation_code' => 'required',
             'name' => 'required',
             'password' => 'required',
-            // 'salt'      => 'required'
         ];
         $validator = Validator::make($request->all(), $rules);
         if ($validator->fails()) {
@@ -112,20 +114,13 @@ class adminUserController extends Controller
             'salt' => $salt,
             'user_name' => $user_name,
         ];
-        $data = json_encode($bodyData);
-        $removedSlash = str_replace('\\', '', $data);
-        $removedStartClose = str_replace(':"[', ':[', $removedSlash);
-        $finalData = str_replace(']"', ']', $removedStartClose);
 
-        $api_url = env('API_BASE_URL').'/admin-users';
-        $curlOutput = HandleApi::getCURLOutput($api_url, 'POST', $finalData);
+        $resp = $this->apiService->post('/admin-users', $bodyData);
 
-        $decodedResp = json_decode($curlOutput);
-
-        if ($decodedResp->status == 201) {
+        if (($resp['status'] ?? 0) == 201) {
             return response()->json(['responseCode' => 1, 'message' => 'Successfully added']);
         } else {
-            return response()->json(['responseCode' => 0, 'message' => $decodedResp->message]);
+            return response()->json(['responseCode' => 0, 'message' => $resp['message'] ?? 'Add failed']);
         }
     }
 
@@ -145,21 +140,15 @@ class adminUserController extends Controller
 
         $user_name = $request->get('user_name');
 
-        $api_url = env('API_BASE_URL').'/confirmation-tokens?username='.$user_name;
-        $curlOutput = HandleApi::getCURLOutput($api_url, 'POST', []);
+        $resp = $this->apiService->post('/confirmation-tokens', ['username' => $user_name]);
 
-        $decodedResp = json_decode($curlOutput);
-
-        if ($decodedResp->status == 201) {
-            return response()->json(['responseCode' => 1, 'message' => $decodedResp->message]);
+        if (($resp['status'] ?? 0) == 201) {
+            return response()->json(['responseCode' => 1, 'message' => $resp['message'] ?? 'OTP sent']);
         } else {
-            return response()->json(['responseCode' => 0, 'message' => $decodedResp->message]);
+            return response()->json(['responseCode' => 0, 'message' => $resp['message'] ?? 'OTP failed']);
         }
     }
 
-    /**
-     * @return \Illuminate\Http\JsonResponse
-     */
     public function adminInfo(Request $request)
     {
         $rules = [
@@ -172,41 +161,31 @@ class adminUserController extends Controller
 
         $admin_id = $request->get('admin_id');
 
-        $api_url = env('API_BASE_URL').'/roles';
-        $curlOutput = HandleApi::getCURLOutput($api_url, 'GET', []);
-        $json_resp = json_decode($curlOutput);
-        $roles = isset($json_resp->data) ? $json_resp->data : [];
+        $rolesResp = $this->apiService->get('/roles');
+        $roles = $rolesResp['data'] ?? [];
 
-        $api_url = env('API_BASE_URL').'/shops?user_id='.Session::get('userId');
-        $curlOutput = HandleApi::getCURLOutput($api_url, 'GET', []);
-        $json_resp = json_decode($curlOutput);
-        $shops = isset($json_resp->data) ? $json_resp->data : [];
+        $shopsResp = $this->apiService->get('/shops', ['user_id' => Session::get('userId')]);
+        $shops = $shopsResp['data'] ?? [];
 
-        $api_url = env('API_BASE_URL').'/admin-users/'.intval($admin_id);
-        $curlOutput = HandleApi::getCURLOutput($api_url, 'GET', []);
-        $decodedData = json_decode($curlOutput);
-        $admin_data = isset($decodedData->data) ? $decodedData->data : [];
+        $adminResp = $this->apiService->get('/admin-users/'.intval($admin_id));
+        $admin_data = $adminResp['data'] ?? [];
 
         $shopArr = [];
-        foreach ($admin_data->shopList as $shop) {
-            $shopArr[] = $shop->shop_id;
+        foreach ($admin_data['shopList'] ?? [] as $shop) {
+            $shopArr[] = $shop['shop_id'];
         }
 
         $public_html = strval(view('admin_user.modal_data', compact('admin_data', 'roles', 'shops', 'shopArr')));
 
         return response()->json(['responseCode' => 1, 'html' => $public_html, 'message' => 'Successfully fetches']);
-
     }
 
-    /**
-     * @return \Illuminate\Http\JsonResponse
-     */
     public function updateAdmin(Request $request)
     {
-
         if (AclHandler::hasAccess('User Creation', 'update') == false) {
             return response()->json(['responseCode' => 0, 'message' => 'Not access . Recorded this']);
         }
+
         $rules = [
             'edit_admin_id' => 'required',
             'edit_role_id' => 'required',
@@ -214,7 +193,6 @@ class adminUserController extends Controller
             'edit_user_name' => 'required',
             'edit_shop_id' => 'required',
             'edit_password' => 'required',
-            // 'edit_salt'      => 'required'
         ];
         $validator = Validator::make($request->all(), $rules);
         if ($validator->fails()) {
@@ -248,26 +226,16 @@ class adminUserController extends Controller
             'salt' => $salt,
             'user_name' => $user_name,
         ];
-        $data = json_encode($bodyData);
-        $removedSlash = str_replace('\\', '', $data);
-        $removedStartClose = str_replace(':"[', ':[', $removedSlash);
-        $finalData = str_replace(']"', ']', $removedStartClose);
 
-        $api_url = env('API_BASE_URL').'/admin-users';
-        $curlOutput = HandleApi::getCURLOutput($api_url, 'PUT', $finalData);
+        $resp = $this->apiService->put('/admin-users', $bodyData);
 
-        $decodedResp = json_decode($curlOutput);
-        if ($decodedResp->status == 200) {
+        if (($resp['status'] ?? 0) == 200) {
             return response()->json(['responseCode' => 1, 'message' => 'Successfully updated']);
         } else {
-            return response()->json(['responseCode' => 0, 'message' => $decodedResp->message]);
+            return response()->json(['responseCode' => 0, 'message' => $resp['message'] ?? 'Update failed']);
         }
-
     }
 
-    /**
-     * @return \Illuminate\Http\JsonResponse
-     */
     public function deleteAdmin(Request $request)
     {
         if (AclHandler::hasAccess('User Creation', 'delete') == false) {
@@ -282,12 +250,10 @@ class adminUserController extends Controller
             return response()->json(['responseCode' => 0, 'message' => 'Please fill up required field']);
         }
 
-        $api_url = env('API_BASE_URL').'/admin-users/'.intval($request->get('admin_id'));
-        $curlOutput = HandleApi::getCURLOutput($api_url, 'DELETE', []);
+        $admin_id = $request->get('admin_id');
 
-        $decodedData = json_decode($curlOutput);
+        $resp = $this->apiService->delete('/admin-users/'.intval($admin_id));
 
         return response()->json(['responseCode' => 1, 'message' => 'Successfully Deleted']);
-
     }
 }

@@ -6,7 +6,7 @@ use App\Libraries\HandleApi;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Session;
 
-class homeController extends Controller
+class HomeController extends Controller
 {
     /**
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\Foundation\Application|\Illuminate\View\View

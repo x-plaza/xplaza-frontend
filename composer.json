@@ -11,7 +11,8 @@
     "mpdf/mpdf": "^8.2",
     "yajra/laravel-datatables-oracle": "^10.8",
     "endroid/qr-code": "^5.0",
-    "laravel/ui": "^4.6"
+    "laravel/ui": "^4.6",
+    "guzzlehttp/guzzle": "^7.9"
   },
   "require-dev": {
     "filp/whoops": "^2.15",

@@ -2,6 +2,8 @@
 
 namespace App\Libraries;
 
+use GuzzleHttp\Client;
+use GuzzleHttp\Exception\RequestException;
 use Illuminate\Support\Facades\Session;
 
 class HandleApi
@@ -10,33 +12,24 @@ class HandleApi
 
     public static function getValidToken()
     {
-        $curloptURL = env('API_BASE_URL').'/authenticate';
-        $fieldData = json_encode(['username' => env('ADMIN_USERNAME'), 'password' => env('ADMIN_PASSWORD')]);
+        $client = new Client(['verify' => false]);
+        $curloptURL = config('services.api.base_url').'/authenticate';
+        $fieldData = ['username' => env('ADMIN_USERNAME'), 'password' => env('ADMIN_PASSWORD')];
+        try {
+            $response = $client->post($curloptURL, [
+                'json' => $fieldData,
+                'headers' => [
+                    'Authorization' => 'Bearer',
+                    'Content-Type' => 'application/json',
+                ],
+                'timeout' => 10,
+            ]);
+            $decodedToken = json_decode($response->getBody(), true);
 
-        $curl = curl_init();
-        curl_setopt_array($curl, [
-            CURLOPT_URL => "$curloptURL",
-            CURLOPT_RETURNTRANSFER => true,
-            CURLOPT_ENCODING => '',
-            CURLOPT_MAXREDIRS => 10,
-            CURLOPT_TIMEOUT => 0,
-            CURLOPT_SSL_VERIFYHOST => 0,
-            CURLOPT_SSL_VERIFYPEER => 0,
-            CURLOPT_FOLLOWLOCATION => true,
-            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-            CURLOPT_CUSTOMREQUEST => 'POST',
-            CURLOPT_POSTFIELDS => $fieldData,
-            CURLOPT_HTTPHEADER => [
-                'Authorization: Bearer',
-                'Content-Type: application/json',
-            ],
-        ]);
-        $response = curl_exec($curl);
-        curl_close($curl);
-
-        $decodedToken = json_decode($response, true);
-
-        return isset($decodedToken['jwtToken']) ? $decodedToken['jwtToken'] : null;
+            return isset($decodedToken['jwtToken']) ? $decodedToken['jwtToken'] : null;
+        } catch (RequestException $e) {
+            return null;
+        }
     }
 
     /**
@@ -45,31 +38,25 @@ class HandleApi
     public static function getCURLOutput($curloptURL, $method, $fieldData)
     {
         $onlyToken = self::getValidToken();
-        // dd($curloptURL,$onlyToken);
         if (isset($onlyToken)) {
-
-            $curl = curl_init();
-            curl_setopt_array($curl, [
-                CURLOPT_URL => "$curloptURL",
-                CURLOPT_RETURNTRANSFER => true,
-                CURLOPT_ENCODING => '',
-                CURLOPT_MAXREDIRS => 10,
-                CURLOPT_TIMEOUT => 0,
-                CURLOPT_SSL_VERIFYHOST => 0,
-                CURLOPT_SSL_VERIFYPEER => 0,
-                CURLOPT_FOLLOWLOCATION => true,
-                CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-                CURLOPT_CUSTOMREQUEST => "$method",
-                CURLOPT_POSTFIELDS => $fieldData,
-                CURLOPT_HTTPHEADER => [
-                    "Authorization: Bearer $onlyToken",
-                    'Content-Type: application/json',
+            $client = new Client(['verify' => false]);
+            $options = [
+                'headers' => [
+                    'Authorization' => "Bearer $onlyToken",
+                    'Content-Type' => 'application/json',
                 ],
-            ]);
-            $response = curl_exec($curl);
-            curl_close($curl);
+                'timeout' => 10,
+            ];
+            if ($method === 'POST' || $method === 'PUT') {
+                $options['body'] = $fieldData;
+            }
+            try {
+                $response = $client->request($method, $curloptURL, $options);
 
-            return $response;
+                return $response->getBody()->getContents();
+            } catch (RequestException $e) {
+                return false;
+            }
         } else {
             return false;
         }
@@ -79,7 +66,7 @@ class HandleApi
     {
         $sessionDeliveryCostSlots = Session::get('session_delivery_cost_slots');
         if ($sessionDeliveryCostSlots == null) {
-            $api_url = env('API_BASE_URL').'/delivery-costs';
+            $api_url = config('services.api.base_url').'/delivery-costs';
             $curlOutput = self::getCURLOutput($api_url, 'GET', []);
             $decodedData = json_decode($curlOutput, true);
             $sessionDeliveryCostSlots = isset($decodedData['data']) ? $decodedData['data'] : null;
@@ -114,7 +101,7 @@ class HandleApi
     {
         $sessionDeliverySchedule = Session::get('session_delivery_schedule');
         if ($sessionDeliverySchedule == null) {
-            $api_url = env('API_BASE_URL').'/delivery-schedules';
+            $api_url = config('services.api.base_url').'/delivery-schedules';
             $curlOutput = HandleApi::getCURLOutput($api_url, 'GET', []);
             $decodedData = json_decode($curlOutput, true);
             $delivery_schedule_data = isset($decodedData['data']) ? $decodedData['data'] : [];
@@ -143,7 +130,7 @@ class HandleApi
         $category_data = (Session::get('category_data_array')) ? Session::get('category_data_array') : null;
 
         if ($category_data == null) {
-            $api_url = env('API_BASE_URL').'/categories';
+            $api_url = config('services.api.base_url').'/categories';
             $curlOutput = HandleApi::getCURLOutput($api_url, 'GET', []);
             $decodedData = json_decode($curlOutput);
             $category_data = isset($decodedData->data) ? $decodedData->data : [];
@@ -166,7 +153,7 @@ class HandleApi
     public static function searchProductData()
     {
         $shop_id = Session::get('selected_shop_id');
-        $api_url = env('API_BASE_URL').'/products/by-shop?shop_id='.intval($shop_id);
+        $api_url = config('services.api.base_url').'/products/by-shop?shop_id='.intval($shop_id);
         $curlOutput = HandleApi::getCURLOutput($api_url, 'GET', []);
         $decodedData = json_decode($curlOutput);
         $product_data = isset($decodedData->data) ? $decodedData->data : [];
@@ -189,7 +176,7 @@ class HandleApi
         $category_data = (Session::get('category_data_array')) ? Session::get('category_data_array') : null;
 
         if ($category_data == null) {
-            $api_url = env('API_BASE_URL').'/categories';
+            $api_url = config('services.api.base_url').'/categories';
             $curlOutput = HandleApi::getCURLOutput($api_url, 'GET', []);
             $decodedData = json_decode($curlOutput);
             $category_data = isset($decodedData->data) ? $decodedData->data : [];

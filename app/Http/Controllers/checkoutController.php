@@ -2,33 +2,42 @@
 
 namespace App\Http\Controllers;
 
-use App\Libraries\HandleApi;
+use App\Services\ApiService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Session;
 
-class checkoutController extends Controller
+class CheckoutController extends Controller
 {
+    /**
+     * @var ApiService
+     */
+    protected $apiService;
+
+    /**
+     * Inject ApiService.
+     */
+    public function __construct(ApiService $apiService)
+    {
+        $this->apiService = $apiService;
+    }
+
     /**
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\Foundation\Application|\Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector|\Illuminate\View\View
      */
     public function index()
     {
-        $session_cart_item_array = (Session::get('cart_item_array')) ? Session::get('cart_item_array') : [];
+        $session_cart_item_array = Session::get('cart_item_array', []);
         if (count($session_cart_item_array) == 0) {
             return redirect('/');
         }
 
-        $api_url = env('API_BASE_URL').'/cities';
-        $curlOutput = HandleApi::getCURLOutput($api_url, 'GET', []);
-        $decodedData = json_decode($curlOutput);
-        $city_data = isset($decodedData->data) ? $decodedData->data : [];
+        $cityResponse = $this->apiService->get('/cities');
+        $city_data = $cityResponse['data'] ?? [];
 
-        $category_data = (Session::get('category_data_array')) ? Session::get('category_data_array') : null;
+        $category_data = Session::get('category_data_array');
         if ($category_data == null) {
-            $api_url = env('API_BASE_URL').'/categories';
-            $curlOutput = HandleApi::getCURLOutput($api_url, 'GET', []);
-            $decodedData = json_decode($curlOutput);
-            $category_data = isset($decodedData->data) ? $decodedData->data : [];
+            $categoryResponse = $this->apiService->get('/categories');
+            $category_data = $categoryResponse['data'] ?? [];
             session()->put('category_data_array', $category_data);
             Session::save();
         }
@@ -36,11 +45,11 @@ class checkoutController extends Controller
         $cubCat = [];
         $totalPrice = 0;
         $sessionData = Session::get('cart_item_array');
-        $finalItemArray = isset($sessionData) ? $sessionData : [];
+        $finalItemArray = $sessionData ?? [];
         foreach ($finalItemArray as $item) {
             $totalPrice += $item['item_unit_price'] * $item['quantity'];
         }
-        $deliveryCost = HandleApi::getDeliveryCost($totalPrice);
+        $deliveryCost = $this->apiService->get('/delivery-cost', ['total_price' => $totalPrice]);
         $authId = Session::get('auth_user_id');
 
         return view('checkout', compact('city_data', 'category_data', 'cubCat', 'deliveryCost', 'authId'));
@@ -51,10 +60,8 @@ class checkoutController extends Controller
      */
     public function placeOrder(Request $request)
     {
-        // Checking Auth
-        // ====================
-        $auth_user_id = (Session::get('auth_user_id')) ? Session::get('auth_user_id') : null;
-        if (! isset($auth_user_id) || $auth_user_id == null) {
+        $auth_user_id = Session::get('auth_user_id');
+        if (! isset($auth_user_id)) {
             return response()->json(['responseCode' => 5, 'message' => 'Please sign up first']);
         }
         $delivery_schedule_id = $request->get('delivery_schedule_id');
@@ -69,37 +76,35 @@ class checkoutController extends Controller
             return response()->json(['responseCode' => 0, 'message' => 'Input data missing']);
         }
 
-        $session_cart_item_array = (Session::get('cart_item_array')) ? Session::get('cart_item_array') : [];
-        $session_others_array = (Session::get('session_others_array')) ? Session::get('session_others_array') : [];
+        $session_cart_item_array = Session::get('cart_item_array', []);
+        $session_others_array = Session::get('session_others_array', []);
         if (count($session_cart_item_array) == 0) {
             return response()->json(['responseCode' => 0, 'message' => 'Cart is empty']);
         }
 
         $itemData = [];
-        $subItemData = [];
         $totalPrice = 0;
-        foreach ($session_cart_item_array as $key => $item) {
+        foreach ($session_cart_item_array as $item) {
             $totalPrice += $item['item_unit_price'] * $item['quantity'];
-            $subItemData['currency_id'] = intval($item['currency_id']);
-            $subItemData['product_id'] = intval($item['product_id']);
-            $subItemData['item_name'] = $item['item_name'];
-            $subItemData['item_image'] = $item['item_image'];
-            $subItemData['item_category'] = $item['item_category'];
-            $subItemData['item_var_type_name'] = $item['item_var_type_name'];
-            $subItemData['item_var_type_value'] = intval($item['item_var_type_value']);
-            $subItemData['quantity'] = intval($item['quantity']);
-            $subItemData['quantity_type'] = $item['quantity_type'];
-            $itemData[] = $subItemData;
+            $itemData[] = [
+                'currency_id' => intval($item['currency_id']),
+                'product_id' => intval($item['product_id']),
+                'item_name' => $item['item_name'],
+                'item_image' => $item['item_image'],
+                'item_category' => $item['item_category'],
+                'item_var_type_name' => $item['item_var_type_name'],
+                'item_var_type_value' => intval($item['item_var_type_value']),
+                'quantity' => intval($item['quantity']),
+                'quantity_type' => $item['quantity_type'],
+            ];
         }
 
-        $session_others_array = (Session::get('session_others_array')) ? Session::get('session_others_array') : null;
-
-        $customer_email = $session_others_array['user_email'];
-        $customer_full_name = $session_others_array['user_name'];
+        $customer_email = $session_others_array['user_email'] ?? '';
+        $customer_full_name = $session_others_array['user_name'] ?? '';
 
         $finalOrderData = [
-            'shop_id' => intval($session_others_array['shop_id']),
-            'shop_name' => $session_others_array['shop_name'],
+            'shop_id' => intval($session_others_array['shop_id'] ?? 0),
+            'shop_name' => $session_others_array['shop_name'] ?? '',
             'customer_id' => intval($auth_user_id),
             'customer_name' => trim($customer_full_name),
             'mobile_no' => trim($customer_mobile),
@@ -113,19 +118,16 @@ class checkoutController extends Controller
             'currency_id' => 1,
             'coupon_id' => null,
             'coupon_code' => $coupon_number,
-            'delivery_cost_id' => intval($session_others_array['delivery_cost_id']),
+            'delivery_cost_id' => intval($session_others_array['delivery_cost_id'] ?? 0),
             'orderItemList' => $itemData,
         ];
 
-        $api_url = env('API_BASE_URL').'/orders';
-        $curlOutput = HandleApi::getCURLOutput($api_url, 'POST', json_encode($finalOrderData));
-        $response = json_decode($curlOutput, true);
-
-        $orderResp = json_decode($response['data']);
-        $grandTotalPrice = isset($orderResp->grand_total_price) ? $orderResp->grand_total_price : '';
-        $invoice = isset($orderResp->invoice_number) ? $orderResp->invoice_number : '';
+        $response = $this->apiService->post('/orders', $finalOrderData);
+        $orderResp = isset($response['data']) ? json_decode($response['data']) : null;
+        $grandTotalPrice = $orderResp->grand_total_price ?? '';
+        $invoice = $orderResp->invoice_number ?? '';
         if (! isset($response['status']) || $response['status'] != 201) {
-            return response()->json(['responseCode' => 0, 'message' => $response['message'], 'Total_price' => 'R '.$grandTotalPrice, 'invoice' => $invoice]);
+            return response()->json(['responseCode' => 0, 'message' => $response['message'] ?? 'Order failed', 'Total_price' => 'R '.$grandTotalPrice, 'invoice' => $invoice]);
         }
 
         session()->put('cart_item_array', []);
@@ -144,24 +146,26 @@ class checkoutController extends Controller
 
         $totalPrice = 0;
         $sessionData = Session::get('cart_item_array');
-        $finalItemArray = isset($sessionData) ? $sessionData : [];
+        $finalItemArray = $sessionData ?? [];
         foreach ($finalItemArray as $item) {
             $totalPrice += $item['item_unit_price'] * $item['quantity'];
         }
 
-        $session_others_array = (Session::get('session_others_array')) ? Session::get('session_others_array') : [];
-        $shopId = intval($session_others_array['shop_id']);
+        $session_others_array = Session::get('session_others_array', []);
+        $shopId = intval($session_others_array['shop_id'] ?? 0);
 
-        $api_url = env('API_BASE_URL').'/coupons/validate-coupon?coupon_code='.$coupon_number.'&net_order_amount='.$totalPrice.'&shop_id='.$shopId;
-        $curlOutput = HandleApi::getCURLOutput($api_url, 'POST', []);
-        $response = json_decode($curlOutput, true);
+        $response = $this->apiService->post('/coupons/validate-coupon', [
+            'coupon_code' => $coupon_number,
+            'net_order_amount' => $totalPrice,
+            'shop_id' => $shopId,
+        ]);
 
         if (! isset($response['status']) || $response['status'] != 200) {
-            return response()->json(['responseCode' => 0, 'message' => $response['message'], 'final_amount' => round($totalPrice + $delivery_cost_section_hidden, 2)]);
+            return response()->json(['responseCode' => 0, 'message' => $response['message'] ?? 'Coupon validation failed', 'final_amount' => round($totalPrice + $delivery_cost_section_hidden, 2)]);
         }
 
-        $finalAmount = floatval($totalPrice) - floatval($response['data']);
-        $message = floatval($response['data']);
+        $finalAmount = floatval($totalPrice) - floatval($response['data'] ?? 0);
+        $message = floatval($response['data'] ?? 0);
 
         return response()->json(['responseCode' => 1, 'final_amount' => round($finalAmount + $delivery_cost_section_hidden, 2), 'message' => $message]);
     }
@@ -170,7 +174,7 @@ class checkoutController extends Controller
     {
         $deliveryDate = $request->get('delivery_date');
         $selectedDay = date('D', strtotime($deliveryDate));
-        $deliverySchedule = HandleApi::getDeliverySchedule();
+        $deliverySchedule = $this->apiService->get('/delivery-schedule')['data'] ?? [];
 
         $filteredArray = [];
         foreach ($deliverySchedule as $data) {
