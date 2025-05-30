@@ -8,10 +8,10 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Session;
 
 /**
- * Class WebsiteController
- * Handles website-related functionalities such as product listings, cart management, and user interactions.
+ * Class HomePageController
+ * Handles homepage related functionalities such as product listings, cart management, and user interactions.
  */
-class WebsiteController extends Controller
+class HomePageController extends Controller
 {
     /**
      * @var ApiService

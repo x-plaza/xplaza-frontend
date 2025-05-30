@@ -2,15 +2,15 @@
 
 namespace App\Http\Controllers;
 
+use App\Services\ApiService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Session;
-use App\Services\ApiService;
 
 /**
- * Class HomeController
- * Handles the home page and dashboard functionalities.
+ * Class InitController
+ * Handles the initial functionalities of homepage.
  */
-class HomeController extends Controller
+class InitController extends Controller
 {
     protected $apiService;
 
@@ -49,14 +49,13 @@ class HomeController extends Controller
     /**
      * Return dashboard content as JSON.
      *
-     * @param \Illuminate\Http\Request $request
      * @return \Illuminate\Http\JsonResponse
      */
     public function dashboardContent(Request $request)
     {
         try {
             $shop_id = intval($request->get('shop_id'));
-            $response = $this->apiService->post('/dashboard?shop_id=' . $shop_id, []);
+            $response = $this->apiService->post('/dashboard?shop_id='.$shop_id, []);
             $shop_data = isset($response->data) ? $response->data : [];
 
             $public_html = strval(view('dashboard_content', compact('shop_data')));

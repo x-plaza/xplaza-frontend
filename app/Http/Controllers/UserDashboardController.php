@@ -7,10 +7,10 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Session;
 
 /**
- * Class AuthController
- * Handles user authentication functionalities.
+ * Class UserDashboardController
+ * Handles user related functionalities.
  */
-class DashboardController extends Controller
+class UserDashboardController extends Controller
 {
     protected ApiService $apiService;
 

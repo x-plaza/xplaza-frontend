@@ -87,7 +87,7 @@ class ForgotPasswordController extends Controller
     /**
      * Set new password for forgot password (customer login).
      */
-    public function setForgotPass(Request $request)
+    public function setForgotPassword(Request $request)
     {
         $validator = Validator::make($request->all(), [
             'reset_password' => 'required',
