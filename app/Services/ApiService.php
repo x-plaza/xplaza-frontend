@@ -32,5 +32,30 @@ class ApiService
         return json_decode($curlOutput);
     }
 
-    // You can add post, delete, etc. as needed
+    /**
+     * Make a POST request to the API and return decoded response.
+     *
+     * @return object|null
+     */
+    public function post(string $endpoint, array $data)
+    {
+        $url = config('services.api.base_url').$endpoint;
+        $fieldData = json_encode($data);
+        $curlOutput = HandleApi::getCURLOutput($url, 'POST', $fieldData);
+
+        return json_decode($curlOutput);
+    }
+
+    /**
+     * Make a DELETE request to the API and return decoded response.
+     *
+     * @return object|null
+     */
+    public function delete(string $endpoint)
+    {
+        $url = config('services.api.base_url').$endpoint;
+        $curlOutput = HandleApi::getCURLOutput($url, 'DELETE', []);
+
+        return json_decode($curlOutput);
+    }
 }
