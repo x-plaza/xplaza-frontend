@@ -2,9 +2,9 @@
 
 namespace App\Libraries;
 
-use Illuminate\Support\Facades\Session;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\RequestException;
+use Illuminate\Support\Facades\Session;
 
 class HandleApi
 {
@@ -25,6 +25,7 @@ class HandleApi
                 'timeout' => 10,
             ]);
             $decodedToken = json_decode($response->getBody(), true);
+
             return isset($decodedToken['jwtToken']) ? $decodedToken['jwtToken'] : null;
         } catch (RequestException $e) {
             return null;
@@ -51,6 +52,7 @@ class HandleApi
             }
             try {
                 $response = $client->request($method, $curloptURL, $options);
+
                 return $response->getBody()->getContents();
             } catch (RequestException $e) {
                 return false;

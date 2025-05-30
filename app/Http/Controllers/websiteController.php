@@ -6,7 +6,6 @@ use App\Libraries\HandleApi;
 use App\Services\ApiService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Session;
-use Storage;
 
 class WebsiteController extends Controller
 {
@@ -17,8 +16,6 @@ class WebsiteController extends Controller
 
     /**
      * Inject ApiService.
-     *
-     * @param ApiService $apiService
      */
     public function __construct(ApiService $apiService)
     {
@@ -37,6 +34,7 @@ class WebsiteController extends Controller
             Session::save();
         }
         $cubCat = [];
+
         return view('all_trending_products', compact('city_data', 'category_data', 'cubCat'));
     }
 
@@ -51,10 +49,11 @@ class WebsiteController extends Controller
             session()->put('category_data_array', $category_data);
             Session::save();
         }
-        $catResponse = $this->apiService->get('/categories/' . intval($cat_id));
+        $catResponse = $this->apiService->get('/categories/'.intval($cat_id));
         $cat_data = $catResponse['data'] ?? [];
         $category_name = $cat_data['name'] ?? 'x-winkel';
         $cubCat = [];
+
         return view('products_by_category', compact('city_data', 'category_data', 'cubCat', 'cat_id', 'category_name'));
     }
 
@@ -86,6 +85,7 @@ class WebsiteController extends Controller
         $response = $this->apiService->get('/products/by-trending', ['shop_id' => $shop_id]);
         $product_data = $response['data'] ?? [];
         $public_html = strval(view('home_content.trending_product_content', compact('product_data')));
+
         return response()->json(['responseCode' => 1, 'html' => $public_html]);
     }
 
@@ -95,6 +95,7 @@ class WebsiteController extends Controller
         $response = $this->apiService->get('/products/by-trending', ['shop_id' => $shop_id]);
         $product_data = $response['data'] ?? [];
         $public_html = strval(view('home_content.trending_product_content_all_data', compact('product_data')));
+
         return response()->json(['responseCode' => 1, 'html' => $public_html]);
     }
 
@@ -104,7 +105,7 @@ class WebsiteController extends Controller
         $product_cat_id = intval($request->get('product_cat_id'));
         $response = $this->apiService->get('/products/by-category', [
             'category_id' => $product_cat_id,
-            'shop_id' => $shop_id
+            'shop_id' => $shop_id,
         ]);
         $product_data = $response['data'] ?? [];
         if (count($product_data) == 0) {
@@ -112,6 +113,7 @@ class WebsiteController extends Controller
         } else {
             $public_html = strval(view('home_content.product_content_all_data', compact('product_data')));
         }
+
         return response()->json(['responseCode' => 1, 'html' => $public_html]);
     }
 
@@ -121,7 +123,7 @@ class WebsiteController extends Controller
         $shop_id = Session::get('selected_shop_id');
         $response = $this->apiService->get('/products/by-name', [
             'product_name' => $product_name,
-            'shop_id' => intval($shop_id)
+            'shop_id' => intval($shop_id),
         ]);
         $product_data = $response['data'] ?? [];
         $output = [];
@@ -141,6 +143,7 @@ class WebsiteController extends Controller
             $output['value'] = '';
             $output['label'] = 'No Record Found';
         }
+
         return response()->json($output);
     }
 
@@ -148,9 +151,9 @@ class WebsiteController extends Controller
     {
         $product_id = intval($item_id);
         $shop_id = Session::get('selected_shop_id');
-        $productResponse = $this->apiService->get('/products/' . $product_id);
+        $productResponse = $this->apiService->get('/products/'.$product_id);
         $product_data = $productResponse['data'] ?? [];
-        $has_product_data = !empty($product_data);
+        $has_product_data = ! empty($product_data);
         $cityResponse = $this->apiService->get('/cities');
         $city_data = $cityResponse['data'] ?? [];
         $category_data = Session::get('category_data_array');
@@ -173,6 +176,7 @@ class WebsiteController extends Controller
         if ($imageName) {
             $imagePath = config('services.image_base_url').'/item_image/'.$imageName;
         }
+
         return view('product_details', compact('city_data', 'category_data', 'cubCat', 'authId', 'product_data', 'has_product_data', 'imagePath'));
     }
 
@@ -407,13 +411,14 @@ class WebsiteController extends Controller
             }
             $filteredArray[] = $subData;
         }
+
         return response()->json(['responseCode' => 1, 'locations' => $filteredArray]);
     }
 
     public function shopData(Request $request)
     {
         $location_id = $request->get('location_id');
-        $response = $this->apiService->get('/shops/by-location/' . intval($location_id));
+        $response = $this->apiService->get('/shops/by-location/'.intval($location_id));
         $shop_data = $response['data'] ?? [];
         $filteredArray = [];
         foreach ($shop_data as $data) {
@@ -429,19 +434,21 @@ class WebsiteController extends Controller
         if (count($filteredArray) == 0) {
             return response()->json(['responseCode' => 2, 'shops' => $filteredArray]);
         }
+
         return response()->json(['responseCode' => 1, 'shops' => $filteredArray]);
     }
 
     public function getOtp(Request $request)
     {
         $email = $request->get('reg_email');
-        if (!isset($email) || $email == null) {
+        if (! isset($email) || $email == null) {
             return response()->json(['responseCode' => 2, 'message' => 'Not sent otp']);
         }
         $response = $this->apiService->post('/confirmation-tokens/to-customer', ['username' => $email]);
-        if (!isset($response['status']) || $response['status'] != 201) {
+        if (! isset($response['status']) || $response['status'] != 201) {
             return response()->json(['responseCode' => 0, 'message' => 'Not sent otp']);
         }
+
         return response()->json(['responseCode' => 1, 'message' => 'Successfully sent otp']);
     }
 }

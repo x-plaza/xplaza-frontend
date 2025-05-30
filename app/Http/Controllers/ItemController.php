@@ -19,8 +19,6 @@ class ItemController extends Controller
 
     /**
      * Inject ApiService.
-     *
-     * @param ApiService $apiService
      */
     public function __construct(ApiService $apiService)
     {
@@ -185,8 +183,8 @@ class ItemController extends Controller
         $brands = $this->apiService->get('/brands');
         $categories = $this->apiService->get('/categories');
         $shops = $this->apiService->get('/shops', ['user_id' => Session::get('userId')]);
-        $item_data = $this->apiService->get('/products/' . intval($item_id));
-        $itemInfo = $this->apiService->get('/products/' . intval($item_id));
+        $item_data = $this->apiService->get('/products/'.intval($item_id));
+        $itemInfo = $this->apiService->get('/products/'.intval($item_id));
         $currencies = $this->apiService->get('/currencies');
         $prodvartypes = $this->apiService->get('/product-variation-types');
 
@@ -219,7 +217,7 @@ class ItemController extends Controller
 
         $item_id = $request->get('item_id');
 
-        $itemInfo = $this->apiService->get('/products/' . intval($item_id));
+        $itemInfo = $this->apiService->get('/products/'.intval($item_id));
 
         if (isset($itemInfo->productImageList[0]->name)) {
             $image_url = $itemInfo->productImageList[0]->name;
@@ -333,7 +331,7 @@ class ItemController extends Controller
             return response()->json(['responseCode' => 0, 'message' => 'Please fill up required field']);
         }
 
-        $resp = $this->apiService->delete('/products/' . intval($request->get('item_id')));
+        $resp = $this->apiService->delete('/products/'.intval($request->get('item_id')));
 
         if (($resp['status'] ?? 0) == 200) {
             return response()->json(['responseCode' => 1, 'message' => 'Successfully deleted']);

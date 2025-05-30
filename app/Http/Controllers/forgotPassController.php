@@ -15,8 +15,6 @@ class ForgotPassController extends Controller
 
     /**
      * Inject ApiService.
-     *
-     * @param ApiService $apiService
      */
     public function __construct(ApiService $apiService)
     {
@@ -66,14 +64,14 @@ class ForgotPassController extends Controller
         }
         $otpResp = $this->apiService->post('/login/validate-otp', [
             'OTP' => $otp_code,
-            'username' => $user_name
+            'username' => $user_name,
         ]);
         if (($otpResp['status'] ?? 0) != 200) {
             return response()->json(['responseCode' => 0, 'message' => $otpResp['message'] ?? 'OTP validation failed']);
         }
         $changePassResp = $this->apiService->post('/login/change-password', [
             'newPassword' => $new_password,
-            'username' => $user_name
+            'username' => $user_name,
         ]);
         if (($changePassResp['status'] ?? 0) == 200) {
             return response()->json(['responseCode' => 1, 'message' => $changePassResp['message'] ?? 'Password changed']);
@@ -105,14 +103,14 @@ class ForgotPassController extends Controller
         }
         $otpResp = $this->apiService->post('/customer-login/validate-otp', [
             'OTP' => $otp_code,
-            'username' => $user_name
+            'username' => $user_name,
         ]);
         if (($otpResp['status'] ?? 0) != 200) {
             return response()->json(['responseCode' => 0, 'message' => $otpResp['message'] ?? 'OTP validation failed']);
         }
         $changePassResp = $this->apiService->post('/customer-login/change-password', [
             'newPassword' => $new_password,
-            'username' => $user_name
+            'username' => $user_name,
         ]);
         if (($changePassResp['status'] ?? 0) == 200) {
             return response()->json(['responseCode' => 1, 'message' => $changePassResp['message'] ?? 'Password changed']);

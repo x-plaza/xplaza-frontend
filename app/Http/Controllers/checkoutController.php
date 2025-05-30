@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Libraries\HandleApi;
 use App\Services\ApiService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Session;
@@ -16,8 +15,6 @@ class CheckoutController extends Controller
 
     /**
      * Inject ApiService.
-     *
-     * @param ApiService $apiService
      */
     public function __construct(ApiService $apiService)
     {
@@ -64,7 +61,7 @@ class CheckoutController extends Controller
     public function placeOrder(Request $request)
     {
         $auth_user_id = Session::get('auth_user_id');
-        if (!isset($auth_user_id)) {
+        if (! isset($auth_user_id)) {
             return response()->json(['responseCode' => 5, 'message' => 'Please sign up first']);
         }
         $delivery_schedule_id = $request->get('delivery_schedule_id');
@@ -75,7 +72,7 @@ class CheckoutController extends Controller
         $delivery_date = $request->get('delivery_date');
         $order_additional_info = $request->get('order_additional_info');
 
-        if (!isset($delivery_schedule_text) || !isset($customer_address) || !isset($customer_mobile)) {
+        if (! isset($delivery_schedule_text) || ! isset($customer_address) || ! isset($customer_mobile)) {
             return response()->json(['responseCode' => 0, 'message' => 'Input data missing']);
         }
 
@@ -129,7 +126,7 @@ class CheckoutController extends Controller
         $orderResp = isset($response['data']) ? json_decode($response['data']) : null;
         $grandTotalPrice = $orderResp->grand_total_price ?? '';
         $invoice = $orderResp->invoice_number ?? '';
-        if (!isset($response['status']) || $response['status'] != 201) {
+        if (! isset($response['status']) || $response['status'] != 201) {
             return response()->json(['responseCode' => 0, 'message' => $response['message'] ?? 'Order failed', 'Total_price' => 'R '.$grandTotalPrice, 'invoice' => $invoice]);
         }
 
@@ -143,7 +140,7 @@ class CheckoutController extends Controller
     {
         $coupon_number = $request->get('coupon_number');
         $delivery_cost_section_hidden = floatval($request->get('delivery_cost_section_hidden'));
-        if (!isset($coupon_number) || $coupon_number == null) {
+        if (! isset($coupon_number) || $coupon_number == null) {
             return response()->json(['responseCode' => 2, 'message' => 'Coupon number required']);
         }
 
@@ -160,10 +157,10 @@ class CheckoutController extends Controller
         $response = $this->apiService->post('/coupons/validate-coupon', [
             'coupon_code' => $coupon_number,
             'net_order_amount' => $totalPrice,
-            'shop_id' => $shopId
+            'shop_id' => $shopId,
         ]);
 
-        if (!isset($response['status']) || $response['status'] != 200) {
+        if (! isset($response['status']) || $response['status'] != 200) {
             return response()->json(['responseCode' => 0, 'message' => $response['message'] ?? 'Coupon validation failed', 'final_amount' => round($totalPrice + $delivery_cost_section_hidden, 2)]);
         }
 

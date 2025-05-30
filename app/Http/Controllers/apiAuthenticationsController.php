@@ -17,8 +17,6 @@ class ApiAuthenticationsController extends Controller
 
     /**
      * Inject ApiService.
-     *
-     * @param ApiService $apiService
      */
     public function __construct(ApiService $apiService)
     {
@@ -28,7 +26,6 @@ class ApiAuthenticationsController extends Controller
     /**
      * Attempt to log in a user.
      *
-     * @param Request $request
      * @return \Illuminate\Http\JsonResponse
      */
     public function loginAttempt(Request $request)
@@ -65,7 +62,6 @@ class ApiAuthenticationsController extends Controller
     /**
      * Register a new user.
      *
-     * @param Request $request
      * @return \Illuminate\Http\JsonResponse
      */
     public function registration(Request $request)
@@ -120,7 +116,7 @@ class ApiAuthenticationsController extends Controller
             session()->put('auth_user_id', $shopData['id'] ?? null);
             $sessionOthers = Session::get('session_others_array', []);
             $sessionOthers['user_email'] = $validated['reg_email'];
-            $sessionOthers['user_name'] = $validated['reg_f_name'] . ' ' . $validated['reg_l_name'];
+            $sessionOthers['user_name'] = $validated['reg_f_name'].' '.$validated['reg_l_name'];
             session()->put('session_others_array', $sessionOthers);
             Session::save();
 
@@ -133,7 +129,6 @@ class ApiAuthenticationsController extends Controller
     /**
      * Initialize login (alternative login endpoint).
      *
-     * @param Request $request
      * @return \Illuminate\Http\JsonResponse
      */
     public function initLogin(Request $request)

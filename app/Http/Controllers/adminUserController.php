@@ -18,8 +18,6 @@ class adminUserController extends Controller
 
     /**
      * Inject ApiService.
-     *
-     * @param ApiService $apiService
      */
     public function __construct(ApiService $apiService)
     {
@@ -44,7 +42,7 @@ class adminUserController extends Controller
     public function getList()
     {
         $resp = $this->apiService->get('/admin-users', ['user_id' => Session::get('userId')]);
-        $decodedData = (object)$resp;
+        $decodedData = (object) $resp;
 
         $data = [];
         if (isset($decodedData->data) && substr(json_encode($decodedData->data), 0, 1) == '{') {
@@ -169,7 +167,7 @@ class adminUserController extends Controller
         $shopsResp = $this->apiService->get('/shops', ['user_id' => Session::get('userId')]);
         $shops = $shopsResp['data'] ?? [];
 
-        $adminResp = $this->apiService->get('/admin-users/' . intval($admin_id));
+        $adminResp = $this->apiService->get('/admin-users/'.intval($admin_id));
         $admin_data = $adminResp['data'] ?? [];
 
         $shopArr = [];
@@ -254,7 +252,7 @@ class adminUserController extends Controller
 
         $admin_id = $request->get('admin_id');
 
-        $resp = $this->apiService->delete('/admin-users/' . intval($admin_id));
+        $resp = $this->apiService->delete('/admin-users/'.intval($admin_id));
 
         return response()->json(['responseCode' => 1, 'message' => 'Successfully Deleted']);
     }

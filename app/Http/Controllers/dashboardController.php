@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Libraries\HandleApi;
 use App\Services\ApiService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Session;
@@ -50,18 +49,18 @@ class DashboardController extends Controller
     /**
      * Fetch order list for the authenticated user.
      *
-     * @param Request $request
      * @return \Illuminate\Http\JsonResponse
      */
     public function myOrderList(Request $request)
     {
         $auth_user_id = Session::get('auth_user_id') ?? null;
-        if (!$auth_user_id) {
+        if (! $auth_user_id) {
             return response()->json(['responseCode' => 0, 'message' => 'User not authenticated']);
         }
         try {
-            $product_data = $this->apiService->get('/orders/by-customer?customer_id=' . intval($auth_user_id));
+            $product_data = $this->apiService->get('/orders/by-customer?customer_id='.intval($auth_user_id));
             $public_html = strval(view('home_content.my_order', compact('product_data')));
+
             return response()->json(['responseCode' => 1, 'html' => $public_html]);
         } catch (\Exception $e) {
             return response()->json(['responseCode' => 0, 'message' => 'Could not fetch order list.']);
@@ -71,20 +70,20 @@ class DashboardController extends Controller
     /**
      * Fetch profile data for the authenticated user.
      *
-     * @param Request $request
      * @return \Illuminate\Http\JsonResponse
      */
     public function myProfile(Request $request)
     {
         $auth_user_id = Session::get('auth_user_id') ?? null;
         $session_others_array = Session::get('session_others_array') ?? null;
-        if (!$auth_user_id || !$session_others_array) {
+        if (! $auth_user_id || ! $session_others_array) {
             return response()->json(['responseCode' => 0, 'message' => 'User not authenticated']);
         }
         try {
-            $profile_data = $this->apiService->get('/customers/' . intval($auth_user_id));
+            $profile_data = $this->apiService->get('/customers/'.intval($auth_user_id));
             $email = $session_others_array['user_email'];
             $public_html = strval(view('home_content.my_profile', compact('profile_data', 'email')));
+
             return response()->json(['responseCode' => 1, 'html' => $public_html]);
         } catch (\Exception $e) {
             return response()->json(['responseCode' => 0, 'message' => 'Could not fetch profile data.']);
@@ -94,7 +93,6 @@ class DashboardController extends Controller
     /**
      * Update the profile for the authenticated user.
      *
-     * @param Request $request
      * @return \Illuminate\Http\JsonResponse
      */
     public function updateProfile(Request $request)
@@ -113,7 +111,7 @@ class DashboardController extends Controller
         ]);
         $auth_user_id = Session::get('auth_user_id') ?? null;
         $session_others_array = Session::get('session_others_array') ?? null;
-        if (!$auth_user_id || !$session_others_array) {
+        if (! $auth_user_id || ! $session_others_array) {
             return response()->json(['responseCode' => 0, 'message' => 'User not authenticated']);
         }
         $bodyData = [
@@ -136,6 +134,7 @@ class DashboardController extends Controller
                 return response()->json(['responseCode' => 1, 'message' => 'Successfully updated']);
             } else {
                 $msg = isset($decodedResp->message) ? $decodedResp->message : 'Update failed.';
+
                 return response()->json(['responseCode' => 0, 'message' => $msg]);
             }
         } catch (\Exception $e) {
