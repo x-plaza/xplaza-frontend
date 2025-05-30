@@ -6,7 +6,7 @@ use App\Services\ApiService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
-class ForgotPassController extends Controller
+class ForgotPasswordController extends Controller
 {
     /**
      * @var ApiService
@@ -44,7 +44,7 @@ class ForgotPassController extends Controller
     /**
      * Set new password after OTP validation.
      */
-    public function setNewPass(Request $request)
+    public function setNewPassword(Request $request)
     {
         $validator = Validator::make($request->all(), [
             'user_name' => 'required',

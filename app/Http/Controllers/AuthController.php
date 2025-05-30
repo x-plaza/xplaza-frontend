@@ -6,7 +6,7 @@ use App\Services\ApiService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Session;
 
-class ApiAuthenticationsController extends Controller
+class AuthController extends Controller
 {
     /**
      * ApiService instance.

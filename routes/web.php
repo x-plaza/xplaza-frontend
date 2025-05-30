@@ -39,16 +39,16 @@ Route::prefix('website')->name('website.')->group(function () {
     Route::post('/get-delivery-timeslot', [App\Http\Controllers\CheckoutController::class, 'deliveryTimeSlot'])->name('deliveryTimeSlot');
     Route::post('/validate-coupon', [App\Http\Controllers\CheckoutController::class, 'validateCoupon'])->name('validateCoupon');
     // Auth and registration handled by backend API, not locally.
-    Route::post('/init-registration', [App\Http\Controllers\ApiAuthenticationsController::class, 'registration'])->name('registration');
-    Route::post('/init-login', [App\Http\Controllers\ApiAuthenticationsController::class, 'initLogin'])->name('initLogin');
-    Route::post('/init-forgot-pass', [App\Http\Controllers\ForgotPassController::class, 'setForgotPass'])->name('setForgotPass');
+    Route::post('/init-registration', [App\Http\Controllers\AuthController::class, 'registration'])->name('registration');
+    Route::post('/init-login', [App\Http\Controllers\AuthController::class, 'initLogin'])->name('initLogin');
+    Route::post('/init-forgot-pass', [App\Http\Controllers\ForgotPasswordController::class, 'setForgotPass'])->name('setForgotPass');
 });
 
 // API-based login/logout and forgot password
-Route::post('/apiBasedLogin', [App\Http\Controllers\ApiAuthenticationsController::class, 'loginAttempt'])->name('apiBasedLogin');
-Route::get('/apiBasedLogOut', [App\Http\Controllers\ApiAuthenticationsController::class, 'logOutAttempt'])->name('apiBasedLogOut');
-Route::post('/forgot-password/get-otp', [App\Http\Controllers\ForgotPassController::class, 'getOtp'])->name('forgotPassword.getOtp');
-Route::post('/forgot-password/set-new-password', [App\Http\Controllers\ForgotPassController::class, 'setNewPass'])->name('forgotPassword.setNewPass');
+Route::post('/apiBasedLogin', [App\Http\Controllers\AuthController::class, 'loginAttempt'])->name('apiBasedLogin');
+Route::get('/apiBasedLogOut', [App\Http\Controllers\AuthController::class, 'logOutAttempt'])->name('apiBasedLogOut');
+Route::post('/forgot-password/get-otp', [App\Http\Controllers\ForgotPasswordController::class, 'getOtp'])->name('forgotPassword.getOtp');
+Route::post('/forgot-password/set-new-password', [App\Http\Controllers\ForgotPasswordController::class, 'setNewPassword'])->name('forgotPassword.setNewPassword');
 
 // Dashboard routes (protected)
 Route::middleware(['authAndAcl'])->group(function () {
