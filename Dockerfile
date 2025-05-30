@@ -1,7 +1,6 @@
 # ---- PHP base image ----
 FROM php:8.2-cli-alpine AS base
 
-# Install PHP dependencies using Alpine's apk
 RUN apk update && apk add --no-cache \
     git \
     unzip \
@@ -34,27 +33,26 @@ FROM base AS final
 # Copy built frontend assets
 COPY --from=nodebuild /app/public /var/www/public
 
-# Ensure directories exist and are writable
+# Ensure directories exist and writable
 RUN mkdir -p bootstrap/cache storage/framework/views storage/logs storage/framework/sessions \
     && chmod -R 775 bootstrap/cache storage
 
-# Install composer dependencies and artisan setup
+# Install composer dependencies
 COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
-RUN composer install && \
-    php artisan config:clear && \
-    php artisan route:clear && \
-    php artisan view:clear && \
-    php artisan storage:link
+RUN composer install
 
 # Set permissions
 RUN chown -R www-data:www-data storage bootstrap/cache \
     && chmod -R 775 storage bootstrap/cache
 
-# Use www-data user
+# Copy entrypoint script
+COPY docker-entrypoint.sh /usr/local/bin/docker-entrypoint.sh
+RUN chmod +x /usr/local/bin/docker-entrypoint.sh
+
 USER www-data
 
-# Expose port
 EXPOSE 8008
 
-# Run development server
+# Use entrypoint script instead of CMD directly
+ENTRYPOINT ["docker-entrypoint.sh"]
 CMD ["php", "artisan", "serve", "--host=0.0.0.0", "--port=8008"]
