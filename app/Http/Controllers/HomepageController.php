@@ -8,10 +8,10 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Session;
 
 /**
- * Class HomePageController
+ * Class HomepageController
  * Handles homepage related functionalities such as product listings, cart management, and user interactions.
  */
-class HomePageController extends Controller
+class HomepageController extends Controller
 {
     /**
      * @var ApiService
