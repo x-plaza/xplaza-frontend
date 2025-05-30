@@ -6,6 +6,10 @@ use App\Services\ApiService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
+/**
+ * Class ForgotPasswordController
+ * Handles password reset functionalities.
+ */
 class ForgotPasswordController extends Controller
 {
     /**

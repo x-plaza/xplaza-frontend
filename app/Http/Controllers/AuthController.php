@@ -6,6 +6,10 @@ use App\Services\ApiService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Session;
 
+/**
+ * Class AuthController
+ * Handles user authentication functionalities.
+ */
 class AuthController extends Controller
 {
     /**
