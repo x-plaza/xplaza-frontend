@@ -7,8 +7,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Session;
 
 /**
- * Class AuthController
- * Handles user authentication functionalities.
+ * Class CheckoutController
+ * Handles check-out functionalities.
  */
 class CheckoutController extends Controller
 {
