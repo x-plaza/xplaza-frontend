@@ -55,7 +55,7 @@ class HomepageController extends Controller
         }
         $catResponse = $this->apiService->get('/categories/'.intval($cat_id));
         $cat_data = $catResponse['data'] ?? [];
-        $category_name = $cat_data['name'] ?? 'x-winkel';
+        $category_name = $cat_data['name'] ?? 'X-Plaza';
         $cubCat = [];
 
         return view('products_by_category', compact('city_data', 'category_data', 'cubCat', 'cat_id', 'category_name'));

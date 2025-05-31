@@ -6,7 +6,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
-    <title>x-winkel</title>
+    <title>X-Plaza</title>
     <link rel="shortcut icon" type="image/png" href="{{asset('website_src/images/Asset 4.png')}}"/>
 
     @section('styles')
@@ -503,7 +503,7 @@ $searchableProductData = App\Libraries\HandleApi::searchProductData();
                                 <a href="{{url('/')}}" class="footer-logo"><img
                                             src="{{asset('website_src/images/logo.svg')}}"
                                             alt="logo"></a>
-                                <p>X-Plaza.shop is an online supermarket available in Jeffreys Bay, Aston Bay, Paradise Beach and St.Francis Bay. We believe time is valuable to our fellow residents and they should not waste hours in traffic, bad weather and wait in line just to buy basic necessities! This is why "X-winkel" delivers everything you need right at your door-step.</p>
+                                <p>X-Plaza.shop is an online supermarket available in Jeffreys Bay, Aston Bay, Paradise Beach and St.Francis Bay. We believe time is valuable to our fellow residents and they should not waste hours in traffic, bad weather and wait in line just to buy basic necessities! This is why "X-Plaza" delivers everything you need right at your door-step.</p>
                                 <ul class="social-media-list d-flex flex-wrap">
                                     <li><a href="https://www.facebook.com/winkelx"><i class="fab fa-facebook-f"></i></a>
                                     <li><a href="https://wa.me/27846347530" target="_blank"><i class="fab fa-whatsapp"></i></a>
@@ -572,7 +572,7 @@ $searchableProductData = App\Libraries\HandleApi::searchProductData();
                 <div class="footer-bottom">
                     <div class="row">
                         <div class="col-md-6 text-center text-md-left mb-3 mb-md-0">
-                            <p class="copyright">Copyright &copy; 2021 <a href="">X-Winkel</a>. All Rights Reserved.
+                            <p class="copyright">Copyright &copy; 2021 <a href="">X-Plaza</a>. All Rights Reserved.
                             </p>
                         </div>
 
