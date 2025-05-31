@@ -5,7 +5,7 @@ namespace App\Http\Middleware;
 use Closure;
 use Illuminate\Support\Facades\Session;
 
-class authAndAcl
+class ACL
 {
     /**
      * Handle an incoming request.

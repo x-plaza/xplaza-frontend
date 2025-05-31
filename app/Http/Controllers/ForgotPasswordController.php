@@ -6,6 +6,10 @@ use App\Services\ApiService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
+/**
+ * Class ForgotPasswordController
+ * Handles password reset functionalities.
+ */
 class ForgotPasswordController extends Controller
 {
     /**
@@ -83,7 +87,7 @@ class ForgotPasswordController extends Controller
     /**
      * Set new password for forgot password (customer login).
      */
-    public function setForgotPass(Request $request)
+    public function setForgotPassword(Request $request)
     {
         $validator = Validator::make($request->all(), [
             'reset_password' => 'required',

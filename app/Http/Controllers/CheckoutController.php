@@ -6,6 +6,10 @@ use App\Services\ApiService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Session;
 
+/**
+ * Class CheckoutController
+ * Handles check-out functionalities.
+ */
 class CheckoutController extends Controller
 {
     /**

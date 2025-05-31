@@ -7,7 +7,11 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Validator;
 
-class usersController extends Controller
+/**
+ * Class UserController
+ * Handles user-related functionalities such as changing passwords.
+ */
+class UserController extends Controller
 {
     /**
      * @var ApiService

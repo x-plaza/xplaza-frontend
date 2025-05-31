@@ -7,7 +7,11 @@ use App\Services\ApiService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Session;
 
-class WebsiteController extends Controller
+/**
+ * Class HomepageController
+ * Handles homepage related functionalities such as product listings, cart management, and user interactions.
+ */
+class HomepageController extends Controller
 {
     /**
      * @var ApiService

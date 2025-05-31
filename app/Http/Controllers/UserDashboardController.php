@@ -6,7 +6,11 @@ use App\Services\ApiService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Session;
 
-class DashboardController extends Controller
+/**
+ * Class UserDashboardController
+ * Handles user related functionalities.
+ */
+class UserDashboardController extends Controller
 {
     protected ApiService $apiService;
 

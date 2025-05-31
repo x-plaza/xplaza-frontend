@@ -10,6 +10,10 @@ use Illuminate\Support\Facades\Validator;
 use Intervention\Image\Facades\Image;
 use Yajra\DataTables\DataTables;
 
+/**
+ * Class ItemController
+ * Handles item management functionalities.
+ */
 class ItemController extends Controller
 {
     /**
